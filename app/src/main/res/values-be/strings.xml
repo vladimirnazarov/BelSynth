@@ -35,10 +35,20 @@
     <string name="confirm_email_bottom">Не атрымалі email з пацвярджэннем?</string>
     <string name="confirm_email_action">Паўторна адправіць email</string>
 
+    <string name="pass_rec_1_title">Забылі пароль?</string>
+    <string name="pass_rec_1_body">Не турбуйцеся, мы вышлем інструкцыю па аднаўленню на email</string>
+    <string name="pass_rec_1_btn">Даслаць</string>
+    <string name="pass_rec_1_exist_err">Акаўнт з такім email не зарэгістраваны</string>
+
     <string name="pass_rec_2_title">Email быў адпраўлены</string>
     <string name="pass_rec_2_body">Праверце сваю электронную пошту і перайдзіце па атрыманай спасылцы, каб аднавіць пароль</string>
     <string name="pass_rec_2_bottom">Не атрымалі email для аднаўлення пароля?</string>
     <string name="pass_rec_2_action">Паўторна адправіць email</string>
+
+    <string name="pass_rec_3_title">Стварыце новы пароль</string>
+    <string name="pass_rec_3_et_1">Новы пароль</string>
+    <string name="pass_rec_3_et_2">Паўтарыце пароль</string>
+    <string name="pass_rec_3_btn">Аднавіць пароль</string>
 
     <!--  Choose  -->
     <string name="choose_title">Абярыце суразмоўцу</string>

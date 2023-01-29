@@ -45,6 +45,13 @@
             app:popEnterAnim="@anim/nav_pop_enter_anim"
             app:popExitAnim="@anim/nav_pop_exit_anim"
             app:destination="@id/registerFragment"/>
+        <action
+            android:id="@+id/action_loginFragment_to_resetPassword1Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:destination="@id/resetPassword1Fragment" />
 
     </fragment>
 
@@ -63,6 +70,10 @@
 
         <action
             android:id="@+id/action_registerFragment_to_confirmEmailFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
             app:destination="@id/confirmEmailFragment" />
 
     </fragment>
@@ -71,5 +82,33 @@
         android:id="@+id/confirmEmailFragment"
         android:name="com.ssrlab.assistant.ui.login.fragments.register.ConfirmEmailFragment"
         android:label="ConfirmEmailFragment" />
+
+    <fragment
+        android:id="@+id/resetPassword1Fragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.login.ResetPassword1Fragment"
+        android:label="ResetPassword1Fragment" >
+
+        <action
+            android:id="@+id/action_resetPassword1Fragment_to_resetPassword2Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:destination="@id/resetPassword2Fragment" />
+
+        <action
+            android:id="@+id/action_resetPassword1Fragment_to_loginFragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:destination="@id/loginFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPassword2Fragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.login.ResetPassword2Fragment"
+        android:label="ResetPassword2Fragment" />
 
 </navigation>
