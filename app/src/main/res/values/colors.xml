@@ -5,6 +5,26 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    
+    <color name="icon_color">#065986</color>
+
+    <color name="speaker_active">#0981C2</color>
+    <color name="speaker_ripple">#096DA3</color>
+    <color name="speaker_inactive">#959595</color>
+
+    <color name="primary_text">#010411</color>
+    <color name="secondary_text">#73747A</color>
+    <color name="speaker_text">#FFFFFF</color>
+    <color name="clickable_text">#0981C2</color>
+    <color name="ripple_text">#096DA3</color>
+
+    <color name="status_bar_color">#FFFFFF</color>
+    <color name="navigation_bar_color">#FFFFFF</color>
+
+    <color name="background_color">#FFFFFF</color>
+    <color name="icon_button_ripple">#99AAAAAA</color>
+    
 </resources>
