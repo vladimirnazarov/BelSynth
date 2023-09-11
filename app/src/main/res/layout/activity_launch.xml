@@ -85,6 +85,8 @@
             android:textSize="17sp"
             android:textStyle="bold"
 
+            android:gravity="center"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/launch_toolbar_settings"
             app:layout_constraintStart_toEndOf="@id/launch_toolbar_back"

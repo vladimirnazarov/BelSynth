@@ -7,10 +7,29 @@
     <fragment
         android:id="@+id/chooseFragment"
         android:name="com.ssrlab.assistant.ui.launch.fragments.ChooseFragment"
-        android:label="ChooseFragment" />
+        android:label="ChooseFragment" >
+        <action
+            android:id="@+id/action_chooseFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_chooseFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.ssrlab.assistant.ui.launch.fragments.ContactsFragment"
         android:label="ContactsFragment" >
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ssrlab.assistant.ui.launch.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>

@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.databinding.FragmentContactsBinding
+import com.ssrlab.assistant.databinding.FragmentSettingsBinding
 import com.ssrlab.assistant.ui.launch.fragments.base.BaseFragment
 
-class ContactsFragment: BaseFragment() {
+class SettingsFragment: BaseFragment() {
 
-    private lateinit var binding: FragmentContactsBinding
+    private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,7 +18,7 @@ class ContactsFragment: BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentContactsBinding.inflate(layoutInflater)
+        binding = FragmentSettingsBinding.inflate(layoutInflater)
 
         return binding.root
     }
@@ -26,6 +26,6 @@ class ContactsFragment: BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        launchActivity.setUpToolbar(resources.getString(R.string.contacts_title), isBackButtonVisible = true)
+        launchActivity.setUpToolbar(resources.getString(R.string.settings_title), isBackButtonVisible = true)
     }
 }

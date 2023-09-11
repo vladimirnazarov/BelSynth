@@ -13,6 +13,16 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setUpToolbar()
+    }
+
+    private fun setUpToolbar() {
+        binding.apply {
+            mainToolbarBack.setOnClickListener { goBack() }
+
+            mainToolbarTitle.text = intent.getStringExtra("chat_name")
+        }
     }
 
     private fun goBack() { onBackPressedDispatcher.onBackPressed() }
