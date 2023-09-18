@@ -10,10 +10,15 @@
     <color name="transparent">#00FFFFFF</color>
     
     <color name="icon_color">#065986</color>
+    <color name="switch_inactive">#959595</color>
+    <color name="switch_active">#36B6FB</color>
+    <color name="switch_thumb">#FFFFFF</color>
 
     <color name="speaker_active">#0981C2</color>
     <color name="speaker_ripple">#096DA3</color>
     <color name="speaker_inactive">#959595</color>
+
+    <color name="radio_primary">#0981C2</color>
 
     <color name="primary_text">#010411</color>
     <color name="secondary_text">#73747A</color>
@@ -22,9 +27,14 @@
     <color name="ripple_text">#096DA3</color>
 
     <color name="status_bar_color">#FFFFFF</color>
-    <color name="navigation_bar_color">#FFFFFF</color>
+    <color name="launch_navigation_bar_color">#FFFFFF</color>
+    <color name="main_navigation_bar_color">#065986</color>
 
     <color name="background_color">#FFFFFF</color>
     <color name="icon_button_ripple">#99AAAAAA</color>
-    
+
+    <color name="main_bottom_bar_color">#0981C2</color>
+    <color name="main_bottom_bar_icon_color">#FFFFFF</color>
+    <color name="main_bottom_bar_icon_ripple">#096DA3</color>
+
 </resources>

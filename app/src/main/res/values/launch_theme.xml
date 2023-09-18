@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="MainTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="LaunchTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -13,7 +13,7 @@
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:navigationBarColor">@color/main_navigation_bar_color</item>
+        <item name="android:navigationBarColor">@color/launch_navigation_bar_color</item>
 
     </style>
 
