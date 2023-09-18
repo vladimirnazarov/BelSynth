@@ -37,4 +37,11 @@
     <color name="main_bottom_bar_icon_color">#FFFFFF</color>
     <color name="main_bottom_bar_icon_ripple">#096DA3</color>
 
+    <color name="main_loader_color">#959595</color>
+    <color name="main_record_beep_color">#EB5757</color>
+
+    <color name="chat_bot_background">#F6F6F6</color>
+    <color name="chat_user_background">#B1E2FF</color>
+    <color name="chat_icon_color">#0981C2</color>
+
 </resources>
