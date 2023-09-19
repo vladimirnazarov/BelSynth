@@ -1,39 +1,36 @@
 package com.ssrlab.assistant.ui.chat
 
-import android.Manifest
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
-import android.view.animation.AnimationUtils
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
 import com.ssrlab.assistant.utils.ChatHelper
 import com.ssrlab.assistant.utils.FFTVisualizerView
-import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
-import kotlinx.coroutines.*
+import com.ssrlab.assistant.utils.vm.ChatViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
-private const val PERMISSIONS_REQUEST_CODE = 1
-private const val SAMPLE_RATE = 44100
-private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
+const val PERMISSIONS_REQUEST_CODE = 1
+const val SAMPLE_RATE = 44100
+const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
+const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var chatHelper: ChatHelper
-
-    private lateinit var audioRecord: AudioRecord
     private lateinit var visualizerView: FFTVisualizerView
-    private var isRecording = false
+
+    private val viewModel: ChatViewModel by viewModels()
+    private var originalScreenHeight = 0
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
@@ -48,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         setUpToolbar()
 
         setUpFFTLayout()
-        setUpRecordButton()
+        setUpKeyBoardAction()
+        viewModel.setUpRecordButton(binding, this@MainActivity)
     }
 
     override fun onResume() {
@@ -66,114 +64,31 @@ class MainActivity : AppCompatActivity() {
         fftLayout.addView(visualizerView)
     }
 
-    private fun setUpRecordButton() {
-        binding.mainRecordRipple.setOnClickListener {
-            if (!isRecording) {
-                if (checkPermissions()) {
-                    startRecording()
-                    binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
-                }
-            } else {
-                stopRecording()
-                binding.mainRecordImage.setImageResource(R.drawable.ic_mic_on)
-            }
-        }
-    }
-
-    private fun checkPermissions() : Boolean {
-        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
-            return false
-        }
-        return true
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun startRecording() {
-        val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
-        audioRecord = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            minBufferSize
-        )
-
-        audioRecord.startRecording()
-        isRecording = true
-
+    private fun setUpKeyBoardAction() {
         binding.apply {
-            val alphaInAnim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.alpha_in)
+            mainKeyboardButton.setOnClickListener {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-            mainWaveLayout.startAnimation(alphaInAnim)
-            mainWaveCenter.startAnimation(alphaInAnim)
-            mainDurationHolder.startAnimation(alphaInAnim)
+                mainChatMsgInput.requestFocus()
+                imm.showSoftInput(mainChatMsgInput, InputMethodManager.SHOW_IMPLICIT)
+            }
 
-            mainWaveLayout.animation.setAnimationListener(object : AnimationListener {
-                override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationEnd(p0: Animation?) {
-                    mainWaveLayout.visibility = View.VISIBLE
-                    mainWaveCenter.visibility = View.VISIBLE
-                    mainDurationHolder.visibility = View.VISIBLE
-                    mainWaveReplacement.visibility = View.GONE
+            val keyboardVisibilityListener = ViewTreeObserver.OnGlobalLayoutListener {
+                if (originalScreenHeight == 0) originalScreenHeight = mainView.height
+                val screenHeight = mainView.height
+
+                if (originalScreenHeight != screenHeight) {
+                    mainChatMsgHolder.visibility = View.VISIBLE
+                    mainBottomBar.visibility = View.GONE
+                    mainRecordButton.visibility = View.GONE
+                } else {
+                    mainChatMsgHolder.visibility = View.GONE
+                    mainBottomBar.visibility = View.VISIBLE
+                    mainRecordButton.visibility = View.VISIBLE
                 }
-                override fun onAnimationRepeat(p0: Animation?) {}
-            })
-        }
-
-        scope.launch {
-            var currentTime = 0
-
-            while (isRecording) {
-                runOnUiThread { binding.mainDurationText.text = chatHelper.convertToTimeMillis(currentTime) }
-
-                delay(1000)
-                currentTime += 1000
             }
-        }
 
-        Thread {
-            val bufferSize = 1024
-            val buffer = ShortArray(bufferSize)
-            val fftData = FloatArray(bufferSize)
-
-            while (isRecording) {
-
-                val bytesRead = audioRecord.read(buffer, 0, bufferSize)
-                for (i in 0 until bytesRead) fftData[i] = buffer[i].toFloat() / Short.MAX_VALUE
-
-                val fft = FloatFFT_1D(bufferSize)
-                fft.realForward(fftData)
-
-                visualizerView.updateFFTData(fftData)
-            }
-        }.start()
-    }
-
-    private fun stopRecording() {
-        if (isRecording) {
-            audioRecord.stop()
-            audioRecord.release()
-            isRecording = false
-
-            binding.apply {
-                val alphaOutAnim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.alpha_out)
-
-                mainWaveLayout.startAnimation(alphaOutAnim)
-                mainWaveCenter.startAnimation(alphaOutAnim)
-                mainDurationHolder.startAnimation(alphaOutAnim)
-
-                mainWaveLayout.animation.setAnimationListener(object : AnimationListener {
-                    override fun onAnimationStart(p0: Animation?) {}
-                    override fun onAnimationEnd(p0: Animation?) {
-                        mainWaveLayout.visibility = View.GONE
-                        mainWaveCenter.visibility = View.GONE
-                        mainDurationHolder.visibility = View.GONE
-                        mainWaveReplacement.visibility = View.VISIBLE
-                    }
-                    override fun onAnimationRepeat(p0: Animation?) {}
-                })
-            }
+            mainView.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
         }
     }
 
@@ -185,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startRecording()
+                viewModel.startRecording(binding, this@MainActivity)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
             }
         }
@@ -199,4 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goBack() { onBackPressedDispatcher.onBackPressed() }
+
+    fun getChatHelper() = chatHelper
+    fun getVisualizerView() = visualizerView
 }
