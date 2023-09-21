@@ -471,7 +471,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
-                android:background="@drawable/background_speaker_inactive"
+                android:background="@drawable/background_speaker_active"
 
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="8dp"
@@ -480,6 +480,18 @@
                 app:layout_constraintStart_toEndOf="@id/choose_separator_central"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/choose_speaker_4">
+
+                <ImageButton
+                    android:id="@+id/choose_speaker_6_ripple"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+
+                    android:background="@drawable/ripple_speaker"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <ImageView
                     android:id="@+id/choose_speaker_6_image"
@@ -608,7 +620,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:text="@string/voice_ready"
+                    android:text="@string/voice_in_progress"
                     android:textSize="12sp"
                     android:textColor="@color/speaker_text"
                     android:fontFamily="@font/roboto"

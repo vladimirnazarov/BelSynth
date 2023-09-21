@@ -28,7 +28,7 @@ class LaunchActivity : AppCompatActivity() {
         animHelper.setUpToolbar(this@LaunchActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
-    fun intentToChat(chatId: Int, title: String) {
+    fun intentToChat(chatId: String, title: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("chat_id", chatId)
         intent.putExtra("chat_name", title)

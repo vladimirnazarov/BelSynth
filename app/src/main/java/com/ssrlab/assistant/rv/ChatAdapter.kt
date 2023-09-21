@@ -48,13 +48,13 @@ class ChatAdapter(
             share.setOnClickListener { Log.d("share", "${message.id} share") }
             clipboard.setOnClickListener { Log.d("clipboard", "${message.id} clipboard") }
 
-        } else if (position % 2 != 0 && !message!!.audio) {
+        } else if (position % 2 != 0 && message!!.audioSend == null) {
 
             val textMsg = view.findViewById<TextView>(R.id.rv_user_msg)
 
             textMsg.text = message.text
 
-        } else if (position % 2 != 0 && message!!.audio) {
+        } else if (position % 2 != 0 && message!!.audioSend != null) {
 
             val playButton = view.findViewById<ImageButton>(R.id.rv_user_voice_button)
 
@@ -66,7 +66,7 @@ class ChatAdapter(
         return if (position >= messages.size) 3
         else if ((position) % 2 == 0) 0
         else {
-            if (!messages[position].audio) 1
+            if (messages[position].audioSend == null) 1
             else 2
         }
     }
