@@ -113,6 +113,9 @@
         android:layout_height="wrap_content"
 
         android:visibility="gone"
+        android:background="@color/white"
+
+        android:elevation="4dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -144,7 +147,7 @@
             android:textColorLink="@color/chat_icon_color"
             android:textColorHighlight="@color/chat_highlight_color"
 
-            android:textColor="@color/chat_input_text"
+            android:textColor="@color/primary_text"
             android:textSize="16sp"
             android:fontFamily="@font/roboto"
 

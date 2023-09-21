@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
 import com.ssrlab.assistant.ui.chat.*
+import com.ssrlab.assistant.utils.AUDIO_FORMAT
+import com.ssrlab.assistant.utils.CHANNEL_CONFIG
+import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.SAMPLE_RATE
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.*
 
@@ -31,16 +35,42 @@ class ChatViewModel : ViewModel() {
                 if (checkPermissions(mainActivity)) {
                     startRecording(binding, mainActivity)
                     binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
+                    binding.mainKeyboardButton.isClickable = false
                 }
             } else {
                 stopRecording(binding, mainActivity)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_on)
+                binding.mainKeyboardButton.isClickable = true
             }
         }
     }
 
     fun startRecording(binding: ActivityMainBinding, mainActivity: MainActivity) {
         startRecordingFunctionality(binding, mainActivity)
+    }
+
+    fun controlBottomVisibility(mainActivity: MainActivity, binding: ActivityMainBinding, hideBottom: Boolean = true) {
+        if (hideBottom) {
+            binding.apply {
+                mainActivity.runOnUiThread {
+                    mainChatMsgHolder.visibility = View.VISIBLE
+                    mainBottomBar.visibility = View.GONE
+                    mainRecordButton.visibility = View.GONE
+                }
+            }
+        } else {
+            scope.launch {
+                delay(50)
+
+                mainActivity.runOnUiThread {
+                    binding.apply {
+                        mainChatMsgHolder.visibility = View.GONE
+                        mainBottomBar.visibility = View.VISIBLE
+                        mainRecordButton.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")

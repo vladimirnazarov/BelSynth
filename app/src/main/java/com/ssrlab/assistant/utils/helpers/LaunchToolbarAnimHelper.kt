@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.utils
+package com.ssrlab.assistant.utils.helpers
 
 import android.view.View
 import android.view.animation.Animation

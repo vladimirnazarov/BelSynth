@@ -2,26 +2,23 @@ package com.ssrlab.assistant.ui.chat
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.AudioFormat
 import android.os.Bundle
-import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
-import com.ssrlab.assistant.utils.ChatHelper
-import com.ssrlab.assistant.utils.FFTVisualizerView
+import com.ssrlab.assistant.db.ChatMessage
+import com.ssrlab.assistant.rv.ChatAdapter
+import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-
-const val PERMISSIONS_REQUEST_CODE = 1
-const val SAMPLE_RATE = 44100
-const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var visualizerView: FFTVisualizerView
 
     private val viewModel: ChatViewModel by viewModels()
+    private lateinit var imm: InputMethodManager
+    private var id = 0
     private var originalScreenHeight = 0
+
+    private val messages = arrayListOf<ChatMessage>()
+    private lateinit var adapter: ChatAdapter
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
@@ -56,6 +58,28 @@ class MainActivity : AppCompatActivity() {
             loadDotsAnim(this@MainActivity, binding, scope)
             loadRecordAnim(this@MainActivity, binding)
         }
+
+        binding.apply {
+            messages.add(ChatMessage(id, resources.getString(R.string.chat_greeting)))
+            messages.add(ChatMessage(id, "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test "))
+            messages.add(ChatMessage(id, "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test "))
+            messages.add(ChatMessage(id, audio = true))
+            messages.add(ChatMessage(id, "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test "))
+            messages.add(ChatMessage(id, audio = true))
+            messages.add(ChatMessage(id, "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test "))
+            messages.add(ChatMessage(id, "test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test test "))
+
+            adapter = ChatAdapter(messages)
+
+            val layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager.reverseLayout = true
+
+            mainChatRv.layoutManager = LinearLayoutManager(this@MainActivity)
+            mainChatRv.adapter = adapter
+            mainChatRv.scrollToPosition(messages.size - 1)
+        }
+
+        setUpMessageSendButton()
     }
 
     private fun setUpFFTLayout() {
@@ -67,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpKeyBoardAction() {
         binding.apply {
             mainKeyboardButton.setOnClickListener {
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
                 mainChatMsgInput.requestFocus()
                 imm.showSoftInput(mainChatMsgInput, InputMethodManager.SHOW_IMPLICIT)
@@ -78,17 +102,31 @@ class MainActivity : AppCompatActivity() {
                 val screenHeight = mainView.height
 
                 if (originalScreenHeight != screenHeight) {
-                    mainChatMsgHolder.visibility = View.VISIBLE
-                    mainBottomBar.visibility = View.GONE
-                    mainRecordButton.visibility = View.GONE
-                } else {
-                    mainChatMsgHolder.visibility = View.GONE
-                    mainBottomBar.visibility = View.VISIBLE
-                    mainRecordButton.visibility = View.VISIBLE
+                    viewModel.controlBottomVisibility(this@MainActivity, binding)
+                    mainChatRv.smoothScrollToPosition(adapter.itemCount)
+                }
+                else {
+                    viewModel.controlBottomVisibility( this@MainActivity, binding, false)
+                    mainChatRv.smoothScrollToPosition(adapter.itemCount)
                 }
             }
 
             mainView.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
+        }
+    }
+
+    private fun setUpMessageSendButton() {
+        binding.apply {
+            mainChatMsgSend.setOnClickListener {
+                if (mainChatMsgInput.text?.isNotEmpty() == true) {
+                    currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
+                    messages.add(ChatMessage(id, mainChatMsgInput.text?.toString()!!))
+                    adapter.notifyItemInserted(messages.size - 1)
+
+                    mainChatRv.adapter = adapter
+                    mainChatMsgInput.text?.clear()
+                }
+            }
         }
     }
 
@@ -102,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 viewModel.startRecording(binding, this@MainActivity)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
+                binding.mainKeyboardButton.isClickable = false
             }
         }
     }
