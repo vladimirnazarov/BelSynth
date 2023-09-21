@@ -7,7 +7,7 @@ import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
-class ChatAnimHelper {
+class ChatHelper {
 
     fun loadDotsAnim(context: Context, binding: ActivityMainBinding, scope: CoroutineScope) {
         val viewArray = arrayListOf<ImageView>()
@@ -32,5 +32,17 @@ class ChatAnimHelper {
 
     fun loadRecordAnim(context: Context, binding: ActivityMainBinding) {
         binding.mainDurationIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.record_animation))
+    }
+
+    fun convertToTimeMillis(duration: Int) : String {
+        val minute = duration % (1000 * 60 * 60) / (1000 * 60)
+        val seconds = duration % (1000 * 60 * 60) % (1000 * 60) / 1000
+
+        var finalString = ""
+        finalString += "0$minute:"
+        if (seconds < 10) finalString += "0"
+        finalString += "$seconds"
+
+        return finalString
     }
 }

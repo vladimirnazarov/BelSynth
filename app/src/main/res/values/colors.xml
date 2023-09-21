@@ -42,6 +42,12 @@
 
     <color name="chat_bot_background">#F6F6F6</color>
     <color name="chat_user_background">#B1E2FF</color>
+    <color name="chat_input_background">#F6F6F6</color>
+    <color name="chat_input_text">#010411</color>
+    <color name="chat_input_hint">#939393</color>
     <color name="chat_icon_color">#0981C2</color>
+    <color name="chat_highlight_color">#660981C2</color>
+
+    <color name="record_wave">#FFFFFF</color>
 
 </resources>
