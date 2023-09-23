@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
 import com.ssrlab.assistant.ui.chat.MainActivity
-import com.ssrlab.assistant.utils.LaunchToolbarAnimHelper
+import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : AppCompatActivity() {
@@ -28,7 +28,7 @@ class LaunchActivity : AppCompatActivity() {
         animHelper.setUpToolbar(this@LaunchActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
-    fun intentToChat(chatId: Int, title: String) {
+    fun intentToChat(chatId: String, title: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("chat_id", chatId)
         intent.putExtra("chat_name", title)

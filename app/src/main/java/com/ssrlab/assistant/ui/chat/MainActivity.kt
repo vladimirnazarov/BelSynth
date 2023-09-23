@@ -2,26 +2,22 @@ package com.ssrlab.assistant.ui.chat
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.AudioFormat
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
-import com.ssrlab.assistant.utils.ChatHelper
-import com.ssrlab.assistant.utils.FFTVisualizerView
+import com.ssrlab.assistant.db.*
+import com.ssrlab.assistant.rv.ChatAdapter
+import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-
-const val PERMISSIONS_REQUEST_CODE = 1
-const val SAMPLE_RATE = 44100
-const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
-const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +26,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var visualizerView: FFTVisualizerView
 
     private val viewModel: ChatViewModel by viewModels()
+    private var speaker = ""
+
+    private lateinit var imm: InputMethodManager
     private var originalScreenHeight = 0
+
+    private var id = 1
+    private val messages = arrayListOf(ChatMessage(text = resources.getString(R.string.chat_greeting)))
+    private val messagesI = arrayListOf(MessageInfoObject(id, 1))
+    private val botMessages = arrayListOf(BotMessage(id, resources.getString(R.string.chat_greeting)))
+    private val userMessages = arrayListOf<UserMessage>()
+    private val userVoiceMessages = arrayListOf<UserVoiceMessage>()
+    private lateinit var adapter: ChatAdapter
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
@@ -40,6 +47,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        speaker = intent.getStringExtra("chat_id").toString()
 
         chatHelper = ChatHelper()
         setUpToolbar()
@@ -52,10 +61,17 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        chatHelper.apply {
-            loadDotsAnim(this@MainActivity, binding, scope)
-            loadRecordAnim(this@MainActivity, binding)
+        chatHelper.loadRecordAnim(this@MainActivity, binding)
+
+        binding.apply {
+            adapter = ChatAdapter(messages)
+
+            mainChatRv.layoutManager = LinearLayoutManager(this@MainActivity)
+            mainChatRv.adapter = adapter
+            mainChatRv.smoothScrollToPosition(adapter.itemCount)
         }
+
+        setUpMessageSendButton()
     }
 
     private fun setUpFFTLayout() {
@@ -67,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpKeyBoardAction() {
         binding.apply {
             mainKeyboardButton.setOnClickListener {
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
                 mainChatMsgInput.requestFocus()
                 imm.showSoftInput(mainChatMsgInput, InputMethodManager.SHOW_IMPLICIT)
@@ -78,18 +94,49 @@ class MainActivity : AppCompatActivity() {
                 val screenHeight = mainView.height
 
                 if (originalScreenHeight != screenHeight) {
-                    mainChatMsgHolder.visibility = View.VISIBLE
-                    mainBottomBar.visibility = View.GONE
-                    mainRecordButton.visibility = View.GONE
-                } else {
-                    mainChatMsgHolder.visibility = View.GONE
-                    mainBottomBar.visibility = View.VISIBLE
-                    mainRecordButton.visibility = View.VISIBLE
+                    viewModel.controlBottomVisibility(this@MainActivity, binding)
+                    mainChatRv.smoothScrollToPosition(adapter.itemCount - 1)
+                }
+                else {
+                    viewModel.apply {
+                        controlBottomVisibility( this@MainActivity, binding, false)
+                    }
                 }
             }
 
             mainView.viewTreeObserver.addOnGlobalLayoutListener(keyboardVisibilityListener)
         }
+    }
+
+    private fun setUpMessageSendButton() {
+        binding.apply {
+            mainChatMsgSend.setOnClickListener {
+                if (mainChatMsgInput.text?.isNotEmpty() == true) {
+                    val message = ChatMessage(text = mainChatMsgInput.text?.toString()!!)
+                    loadMessage(message)
+
+                    currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
+                    mainChatMsgInput.text?.clear()
+
+                    sendTextMessage(message)
+                }
+            }
+        }
+    }
+
+    private fun sendTextMessage(message: ChatMessage) {
+        viewModel.sendMessage(text = message.text, speaker = speaker, mainActivity = this@MainActivity)
+        binding.apply {
+            mainProgressHolder.visibility = View.VISIBLE
+            chatHelper.loadDotsAnim(this@MainActivity, binding, scope)
+
+            mainRecordButton.isClickable = false
+            mainKeyboardButton.isClickable = false
+        }
+    }
+
+    private fun sendAudioMessage(message: ChatMessage) {
+        viewModel.sendMessage(audio = message.audioSend, speaker = speaker, mainActivity = this@MainActivity)
     }
 
     override fun onRequestPermissionsResult(
@@ -102,6 +149,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 viewModel.startRecording(binding, this@MainActivity)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
+                binding.mainKeyboardButton.isClickable = false
             }
         }
     }
@@ -114,6 +162,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goBack() { onBackPressedDispatcher.onBackPressed() }
+
+    fun loadMessage(chatMessage: ChatMessage) {
+        messages.add(chatMessage)
+        adapter.notifyItemInserted(messages.size - 1)
+
+        scope.launch {
+            delay(200)
+            binding.mainChatRv.smoothScrollToPosition(adapter.itemCount - 1)
+        }
+    }
+
+    fun hideLoadingUtils() {
+        binding.apply {
+            mainProgressHolder.visibility = View.GONE
+
+            mainRecordButton.isClickable = true
+            mainKeyboardButton.isClickable = true
+        }
+    }
 
     fun getChatHelper() = chatHelper
     fun getVisualizerView() = visualizerView

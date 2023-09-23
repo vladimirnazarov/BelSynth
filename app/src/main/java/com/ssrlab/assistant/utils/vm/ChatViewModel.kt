@@ -10,12 +10,20 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.databinding.ActivityMainBinding
+import com.ssrlab.assistant.db.ChatMessage
 import com.ssrlab.assistant.ui.chat.*
+import com.ssrlab.assistant.utils.AUDIO_FORMAT
+import com.ssrlab.assistant.utils.CHANNEL_CONFIG
+import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.SAMPLE_RATE
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.*
+import java.io.File
 
 class ChatViewModel : ViewModel() {
 
@@ -31,16 +39,70 @@ class ChatViewModel : ViewModel() {
                 if (checkPermissions(mainActivity)) {
                     startRecording(binding, mainActivity)
                     binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
+                    binding.mainKeyboardButton.isClickable = false
                 }
             } else {
                 stopRecording(binding, mainActivity)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_on)
+                binding.mainKeyboardButton.isClickable = true
             }
         }
     }
 
     fun startRecording(binding: ActivityMainBinding, mainActivity: MainActivity) {
         startRecordingFunctionality(binding, mainActivity)
+    }
+
+    fun controlBottomVisibility(mainActivity: MainActivity, binding: ActivityMainBinding, hideBottom: Boolean = true) {
+        if (!isRecording) {
+            if (hideBottom) {
+                binding.apply {
+                    mainActivity.runOnUiThread {
+                        mainChatMsgHolder.visibility = View.VISIBLE
+                        mainBottomBar.visibility = View.GONE
+                        mainRecordButton.visibility = View.GONE
+                    }
+                }
+            } else {
+                scope.launch {
+                    delay(50)
+
+                    mainActivity.runOnUiThread {
+                        binding.apply {
+                            mainChatMsgHolder.visibility = View.GONE
+                            mainBottomBar.visibility = View.VISIBLE
+                            mainRecordButton.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun sendMessage(text: String? = null, audio: File? = null, speaker: String, role: String = "assistant", mainActivity: MainActivity) {
+
+        val message = MutableLiveData<ChatMessage>()
+
+        if (text != null && audio == null) {
+            scope.launch {
+                MessageClient.sendMessage(text, speaker, role) { responseAudio, responseText ->
+                    mainActivity.runOnUiThread { message.value = ChatMessage(text = responseText, audioResponse = responseAudio ) }
+                }
+            }
+        } else if (text == null && audio != null) {
+            scope.launch {
+                MessageClient.sendMessage(audio, speaker, role) { responseAudio, responseText ->
+                    mainActivity.runOnUiThread { message.value = ChatMessage(text = responseText, audioResponse = responseAudio) }
+                }
+            }
+        }
+
+        message.observe(mainActivity) {
+            mainActivity.apply {
+                loadMessage(it)
+                hideLoadingUtils()
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")

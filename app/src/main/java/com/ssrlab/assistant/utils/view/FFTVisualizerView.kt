@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.utils
+package com.ssrlab.assistant.utils.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -33,7 +33,8 @@ class FFTVisualizerView(context: Context, attrs: AttributeSet?) : View(context, 
                 val xLeft = halfWidth - (i * barWidth)
                 val xRight = halfWidth + (i * barWidth)
 
-                val reducedBarHeight = fftData[i] * height * heightFraction
+                var reducedBarHeight = 0f
+                if (fftData[i] > 0.25) reducedBarHeight = fftData[i] * height * heightFraction
 
                 val top = (height - reducedBarHeight) / 2
                 val bottom = height - top

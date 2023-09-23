@@ -32,11 +32,12 @@ class ChooseFragment: BaseFragment() {
 
     private fun setUpChats() {
         binding.apply {
-            chooseSpeaker1Ripple.setOnClickListener { launchActivity.intentToChat(1, binding.chooseSpeaker1Name.text.toString()) }
-            chooseSpeaker2Ripple.setOnClickListener { launchActivity.intentToChat(2, binding.chooseSpeaker2Name.text.toString()) }
-            chooseSpeaker3Ripple.setOnClickListener { launchActivity.intentToChat(3, binding.chooseSpeaker3Name.text.toString()) }
-            chooseSpeaker4Ripple.setOnClickListener { launchActivity.intentToChat(4, binding.chooseSpeaker4Name.text.toString()) }
-            chooseSpeaker5Ripple.setOnClickListener { launchActivity.intentToChat(5, binding.chooseSpeaker5Name.text.toString()) }
+            chooseSpeaker1Ripple.setOnClickListener { launchActivity.intentToChat("ales", binding.chooseSpeaker1Name.text.toString()) }
+            chooseSpeaker2Ripple.setOnClickListener { launchActivity.intentToChat("alesia", binding.chooseSpeaker2Name.text.toString()) }
+            chooseSpeaker3Ripple.setOnClickListener { launchActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString()) }
+            chooseSpeaker4Ripple.setOnClickListener { launchActivity.intentToChat("boris", binding.chooseSpeaker4Name.text.toString()) }
+            chooseSpeaker5Ripple.setOnClickListener { launchActivity.intentToChat("kiryl", binding.chooseSpeaker5Name.text.toString()) }
+            chooseSpeaker6Ripple.setOnClickListener { launchActivity.intentToChat("vasil", binding.chooseSpeaker5Name.text.toString()) }
         }
     }
 }
