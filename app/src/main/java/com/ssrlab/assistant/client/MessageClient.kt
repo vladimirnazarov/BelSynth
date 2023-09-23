@@ -15,7 +15,7 @@ object MessageClient {
 
     private var client: OkHttpClient? = null
 
-    fun sendMessage(message: String, speaker: String, role: String, onResponse: (String, String) -> Unit) {
+    fun sendMessage(message: String, speaker: String, role: String, onResponse: (String, String) -> Unit, onFailure: (String) -> Unit) {
         if (client == null) {
             client = OkHttpClient.Builder()
                 .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
@@ -34,7 +34,7 @@ object MessageClient {
 
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.message?.let { Log.e("client_error", it) }
+                onFailure(e.message!!)
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -51,7 +51,7 @@ object MessageClient {
         })
     }
 
-    fun sendMessage(audioFile: File, speaker: String, role: String, onResponse: (String, String) -> Unit) {
+    fun sendMessage(audioFile: File, speaker: String, role: String, onResponse: (String, String) -> Unit, onFailure: (String) -> Unit) {
         if (client == null) {
             client = OkHttpClient.Builder()
                 .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
@@ -72,7 +72,7 @@ object MessageClient {
 
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.message?.let { Log.e("client_error", it) }
+                onFailure(e.message!!)
             }
 
             override fun onResponse(call: Call, response: Response) {
