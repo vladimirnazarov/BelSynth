@@ -77,6 +77,7 @@ object MessageClient {
 
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
+
                 val jsonObject = responseBody?.let { JSONObject(it) }
 
                 val audio = jsonObject?.getString("audio")

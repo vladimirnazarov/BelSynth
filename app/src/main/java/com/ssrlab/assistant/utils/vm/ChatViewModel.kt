@@ -1,8 +1,10 @@
 package com.ssrlab.assistant.utils.vm
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.os.Build
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -18,17 +20,39 @@ import com.ssrlab.assistant.utils.SAMPLE_RATE
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.*
 import java.io.File
+import java.io.FileOutputStream
 
 class ChatViewModel : ViewModel() {
 
     private lateinit var audioRecord: AudioRecord
+    private lateinit var mediaRecorder: MediaRecorder
     private var isRecording = false
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun startRecording(binding: ActivityMainBinding, mainActivity: MainActivity) {
-        startRecordingFunctionality(binding, mainActivity)
+    fun startRecording(binding: ActivityMainBinding, mainActivity: MainActivity, outputFile: File) {
+        startRecordingFunctionality(binding, mainActivity, outputFile)
+    }
+
+    fun stopRecording(binding: ActivityMainBinding) {
+        if (isRecording()) {
+            this.apply {
+                getAudioRecord().stop()
+                getMediaRecorder().stop()
+
+                getAudioRecord().release()
+                getMediaRecorder().release()
+                setIsRecording(false)
+            }
+
+            binding.apply {
+                mainWaveLayout.visibility = View.GONE
+                mainWaveCenter.visibility = View.GONE
+                mainDurationHolder.visibility = View.GONE
+                mainWaveReplacement.visibility = View.VISIBLE
+            }
+        }
     }
 
     fun controlBottomVisibility(mainActivity: MainActivity, binding: ActivityMainBinding, hideBottom: Boolean = true) {
@@ -100,8 +124,15 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    @Suppress("DEPRECATION")
+    private fun createMediaRecorder(context: Context) : MediaRecorder {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            MediaRecorder(context)
+        } else MediaRecorder()
+    }
+
     @SuppressLint("MissingPermission")
-    private fun startRecordingFunctionality(binding: ActivityMainBinding, mainActivity: MainActivity) {
+    private fun startRecordingFunctionality(binding: ActivityMainBinding, mainActivity: MainActivity, outputFile: File) {
         val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
         audioRecord = AudioRecord(
             MediaRecorder.AudioSource.MIC,
@@ -111,7 +142,22 @@ class ChatViewModel : ViewModel() {
             minBufferSize
         )
 
+        createMediaRecorder(mainActivity).apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setAudioSamplingRate(44100)
+            setAudioChannels(1)
+            setAudioEncodingBitRate(128000)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFile(FileOutputStream(outputFile).fd)
+
+            prepare()
+
+            mediaRecorder = this
+        }
+
         audioRecord.startRecording()
+        mediaRecorder.start()
         isRecording = true
 
         binding.apply {
@@ -159,4 +205,5 @@ class ChatViewModel : ViewModel() {
     fun isRecording() = isRecording
     fun setIsRecording(value: Boolean) { isRecording = value }
     fun getAudioRecord() = audioRecord
+    fun getMediaRecorder() = mediaRecorder
 }

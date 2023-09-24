@@ -57,7 +57,7 @@ class ChatAdapter(
                 3 -> {
                     val playButton = view.findViewById<ImageButton>(R.id.rv_user_voice_button)
 
-                    playButton.setOnClickListener { Log.d("play", "${messageI[position].id} play") }
+                    playButton.setOnClickListener { Log.d("play", "${userVoiceMessage.find { it.id == messageI[position].id }?.audio?.path}") }
                 }
             }
         }
