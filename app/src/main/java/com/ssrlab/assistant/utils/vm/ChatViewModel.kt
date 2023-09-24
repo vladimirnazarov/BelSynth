@@ -1,25 +1,19 @@
 package com.ssrlab.assistant.utils.vm
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.databinding.ActivityMainBinding
-import com.ssrlab.assistant.db.ChatMessage
 import com.ssrlab.assistant.ui.chat.*
 import com.ssrlab.assistant.utils.AUDIO_FORMAT
 import com.ssrlab.assistant.utils.CHANNEL_CONFIG
-import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
 import com.ssrlab.assistant.utils.SAMPLE_RATE
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.*
@@ -32,22 +26,6 @@ class ChatViewModel : ViewModel() {
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
-
-    fun setUpRecordButton(binding: ActivityMainBinding, mainActivity: MainActivity) {
-        binding.mainRecordRipple.setOnClickListener {
-            if (!isRecording) {
-                if (checkPermissions(mainActivity)) {
-                    startRecording(binding, mainActivity)
-                    binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
-                    binding.mainKeyboardButton.isClickable = false
-                }
-            } else {
-                stopRecording(binding, mainActivity)
-                binding.mainRecordImage.setImageResource(R.drawable.ic_mic_on)
-                binding.mainKeyboardButton.isClickable = true
-            }
-        }
-    }
 
     fun startRecording(binding: ActivityMainBinding, mainActivity: MainActivity) {
         startRecordingFunctionality(binding, mainActivity)
@@ -81,25 +59,42 @@ class ChatViewModel : ViewModel() {
 
     fun sendMessage(text: String? = null, audio: File? = null, speaker: String, role: String = "assistant", mainActivity: MainActivity) {
 
-        val message = MutableLiveData<ChatMessage>()
+        val botText = MutableLiveData<String>()
+        var botAudio = ""
 
         if (text != null && audio == null) {
             scope.launch {
-                MessageClient.sendMessage(text, speaker, role) { responseAudio, responseText ->
-                    mainActivity.runOnUiThread { message.value = ChatMessage(text = responseText, audioResponse = responseAudio ) }
+                MessageClient.sendMessage(text, speaker, role, { responseAudio, responseText ->
+                    mainActivity.runOnUiThread {
+                        botAudio = responseAudio
+                        botText.value = responseText
+                    }
+                }) {
+                    mainActivity.runOnUiThread {
+                        Toast.makeText(mainActivity, "$it, try again", Toast.LENGTH_SHORT).show()
+                        mainActivity.hideLoadingUtils()
+                    }
                 }
             }
         } else if (text == null && audio != null) {
             scope.launch {
-                MessageClient.sendMessage(audio, speaker, role) { responseAudio, responseText ->
-                    mainActivity.runOnUiThread { message.value = ChatMessage(text = responseText, audioResponse = responseAudio) }
+                MessageClient.sendMessage(audio, speaker, role, { responseAudio, responseText ->
+                    mainActivity.runOnUiThread {
+                        botAudio = responseAudio
+                        botText.value = responseText
+                    }
+                }) {
+                    mainActivity.runOnUiThread {
+                        Toast.makeText(mainActivity, "$it, try again", Toast.LENGTH_SHORT).show()
+                        mainActivity.hideLoadingUtils()
+                    }
                 }
             }
         }
 
-        message.observe(mainActivity) {
+        botText.observe(mainActivity) {
             mainActivity.apply {
-                loadMessage(it)
+                loadBotMessage(it, botAudio)
                 hideLoadingUtils()
             }
         }
@@ -126,16 +121,10 @@ class ChatViewModel : ViewModel() {
             mainWaveCenter.startAnimation(alphaInAnim)
             mainDurationHolder.startAnimation(alphaInAnim)
 
-            mainWaveLayout.animation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationEnd(p0: Animation?) {
-                    mainWaveLayout.visibility = View.VISIBLE
-                    mainWaveCenter.visibility = View.VISIBLE
-                    mainDurationHolder.visibility = View.VISIBLE
-                    mainWaveReplacement.visibility = View.GONE
-                }
-                override fun onAnimationRepeat(p0: Animation?) {}
-            })
+            mainWaveLayout.visibility = View.VISIBLE
+            mainWaveCenter.visibility = View.VISIBLE
+            mainDurationHolder.visibility = View.VISIBLE
+            mainWaveReplacement.visibility = View.GONE
         }
 
         scope.launch {
@@ -167,38 +156,7 @@ class ChatViewModel : ViewModel() {
         }.start()
     }
 
-    private fun stopRecording(binding: ActivityMainBinding, mainActivity: MainActivity) {
-        if (isRecording) {
-            audioRecord.stop()
-            audioRecord.release()
-            isRecording = false
-
-            binding.apply {
-                val alphaOutAnim = AnimationUtils.loadAnimation(mainActivity, R.anim.alpha_out)
-
-                mainWaveLayout.startAnimation(alphaOutAnim)
-                mainWaveCenter.startAnimation(alphaOutAnim)
-                mainDurationHolder.startAnimation(alphaOutAnim)
-
-                mainWaveLayout.animation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(p0: Animation?) {}
-                    override fun onAnimationEnd(p0: Animation?) {
-                        mainWaveLayout.visibility = View.GONE
-                        mainWaveCenter.visibility = View.GONE
-                        mainDurationHolder.visibility = View.GONE
-                        mainWaveReplacement.visibility = View.VISIBLE
-                    }
-                    override fun onAnimationRepeat(p0: Animation?) {}
-                })
-            }
-        }
-    }
-
-    private fun checkPermissions(mainActivity: MainActivity) : Boolean {
-        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mainActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
-            return false
-        }
-        return true
-    }
+    fun isRecording() = isRecording
+    fun setIsRecording(value: Boolean) { isRecording = value }
+    fun getAudioRecord() = audioRecord
 }

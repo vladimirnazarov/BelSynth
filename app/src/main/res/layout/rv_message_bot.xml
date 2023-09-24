@@ -34,8 +34,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/background_message_bot"
-
         android:layout_marginVertical="8dp"
         android:layout_marginStart="16dp"
 
@@ -44,58 +42,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
-            android:id="@+id/rv_bot_clipboard"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:src="@drawable/ic_clipboard"
-            android:background="@drawable/ripple_rounded"
+            android:background="@drawable/background_message_bot"
 
-            android:padding="4dp"
-
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <ImageButton
-            android:id="@+id/rv_bot_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:src="@drawable/ic_share"
-            android:background="@drawable/ripple_rounded"
-
-            android:padding="4dp"
-
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-
-            app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/rv_bot_msg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:textStyle="normal"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            android:fontFamily="@font/roboto"
-
-            android:gravity="start"
-
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginHorizontal="12dp"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/rv_bot_share"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/rv_bot_clipboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_clipboard"
+                android:background="@drawable/ripple_rounded"
+
+                android:padding="4dp"
+
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageButton
+                android:id="@+id/rv_bot_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_share"
+                android:background="@drawable/ripple_rounded"
+
+                android:padding="4dp"
+
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+
+                app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/rv_bot_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textStyle="normal"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto"
+
+                android:gravity="start"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginHorizontal="16dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/rv_bot_share"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,13 +1,18 @@
 package com.ssrlab.assistant.ui.chat
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
@@ -18,6 +23,7 @@ import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
 import kotlinx.coroutines.*
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,11 +38,12 @@ class MainActivity : AppCompatActivity() {
     private var originalScreenHeight = 0
 
     private var id = 1
-    private val messages = arrayListOf(ChatMessage(text = resources.getString(R.string.chat_greeting)))
+
     private val messagesI = arrayListOf(MessageInfoObject(id, 1))
-    private val botMessages = arrayListOf(BotMessage(id, resources.getString(R.string.chat_greeting)))
+    private val botMessages = arrayListOf(BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?"))
     private val userMessages = arrayListOf<UserMessage>()
     private val userVoiceMessages = arrayListOf<UserVoiceMessage>()
+
     private lateinit var adapter: ChatAdapter
 
     private val job = Job()
@@ -55,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         setUpFFTLayout()
         setUpKeyBoardAction()
-        viewModel.setUpRecordButton(binding, this@MainActivity)
+        setUpRecordButton()
     }
 
     override fun onResume() {
@@ -64,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         chatHelper.loadRecordAnim(this@MainActivity, binding)
 
         binding.apply {
-            adapter = ChatAdapter(messages)
+            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages)
 
             mainChatRv.layoutManager = LinearLayoutManager(this@MainActivity)
             mainChatRv.adapter = adapter
@@ -113,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             mainChatMsgSend.setOnClickListener {
                 if (mainChatMsgInput.text?.isNotEmpty() == true) {
                     val message = ChatMessage(text = mainChatMsgInput.text?.toString()!!)
-                    loadMessage(message)
+                    loadUserMessage(mainChatMsgInput.text!!.toString())
 
                     currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
                     mainChatMsgInput.text?.clear()
@@ -126,17 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendTextMessage(message: ChatMessage) {
         viewModel.sendMessage(text = message.text, speaker = speaker, mainActivity = this@MainActivity)
-        binding.apply {
-            mainProgressHolder.visibility = View.VISIBLE
-            chatHelper.loadDotsAnim(this@MainActivity, binding, scope)
-
-            mainRecordButton.isClickable = false
-            mainKeyboardButton.isClickable = false
-        }
-    }
-
-    private fun sendAudioMessage(message: ChatMessage) {
-        viewModel.sendMessage(audio = message.audioSend, speaker = speaker, mainActivity = this@MainActivity)
+        showLoadingUtils()
     }
 
     override fun onRequestPermissionsResult(
@@ -163,13 +160,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun goBack() { onBackPressedDispatcher.onBackPressed() }
 
-    fun loadMessage(chatMessage: ChatMessage) {
-        messages.add(chatMessage)
-        adapter.notifyItemInserted(messages.size - 1)
+    fun loadBotMessage(text: String, audioLink: String) {
+        id += 1
+        botMessages.add(BotMessage(id, text, audioLink))
+        messagesI.add(MessageInfoObject(id, 1))
+
+        updateAdapter()
+    }
+    private fun loadUserMessage(text: String) {
+        id += 1
+        userMessages.add(UserMessage(id, text))
+        messagesI.add(MessageInfoObject(id, 2))
+
+        updateAdapter()
+    }
+    private fun loadUserVoiceMessage(audio: File? = null) {
+        id += 1
+        userVoiceMessages.add(UserVoiceMessage(id, audio))
+        messagesI.add(MessageInfoObject(id, 3))
+
+        updateAdapter()
+    }
+
+    private fun updateAdapter() {
+        adapter.notifyItemInserted(messagesI.size - 1)
 
         scope.launch {
             delay(200)
-            binding.mainChatRv.smoothScrollToPosition(adapter.itemCount - 1)
+            binding.mainChatRv.smoothScrollToPosition(adapter.itemCount)
+            delay(200)
+            binding.mainChatRv.smoothScrollToPosition(adapter.itemCount)
         }
     }
 
@@ -179,6 +199,72 @@ class MainActivity : AppCompatActivity() {
 
             mainRecordButton.isClickable = true
             mainKeyboardButton.isClickable = true
+        }
+    }
+
+    private fun setUpRecordButton() {
+        binding.mainRecordRipple.setOnClickListener {
+            if (!viewModel.isRecording()) {
+                if (checkPermissions()) {
+                    viewModel.startRecording(binding, this@MainActivity)
+                    binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
+                    binding.mainKeyboardButton.isClickable = false
+                }
+            } else {
+                stopRecording()
+
+                binding.mainRecordImage.setImageResource(R.drawable.ic_mic_on)
+                binding.mainKeyboardButton.isClickable = true
+
+                loadUserVoiceMessage()
+                viewModel.sendMessage(audio = userVoiceMessages.last().audio, speaker = speaker, mainActivity = this@MainActivity)
+                showLoadingUtils()
+            }
+        }
+    }
+
+    private fun stopRecording() {
+        if (viewModel.isRecording()) {
+            viewModel.getAudioRecord().stop()
+            viewModel.getAudioRecord().release()
+            viewModel.setIsRecording(false)
+
+            binding.apply {
+                val alphaOutAnim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.alpha_out)
+
+                mainWaveLayout.startAnimation(alphaOutAnim)
+                mainWaveCenter.startAnimation(alphaOutAnim)
+                mainDurationHolder.startAnimation(alphaOutAnim)
+
+                mainWaveLayout.animation.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(p0: Animation?) {}
+                    override fun onAnimationEnd(p0: Animation?) {
+                        mainWaveLayout.visibility = View.GONE
+                        mainWaveCenter.visibility = View.GONE
+                        mainDurationHolder.visibility = View.GONE
+                        mainWaveReplacement.visibility = View.VISIBLE
+                    }
+                    override fun onAnimationRepeat(p0: Animation?) {}
+                })
+            }
+        }
+    }
+
+    private fun checkPermissions() : Boolean {
+        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
+            return false
+        }
+        return true
+    }
+
+    private fun showLoadingUtils() {
+        binding.apply {
+            mainProgressHolder.visibility = View.VISIBLE
+            chatHelper.loadDotsAnim(this@MainActivity, binding, scope)
+
+            mainRecordButton.isClickable = false
+            mainKeyboardButton.isClickable = false
         }
     }
 
