@@ -6,6 +6,7 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
@@ -27,7 +28,7 @@ object MessageClient {
         val mediaType = "application/json".toMediaType()
         val body = "{\"text\":\"$message\",\"voice_type\":\"$speaker\",\"role\":\"$role\"}".toRequestBody(mediaType)
         val request = Request.Builder()
-            .url("https://ml1.ssrlab.by/api/mobile/text")
+            .url("https://ml1.ssrlab.by/api/android/text")
             .post(body)
             .addHeader("Content-Type", "application/json")
             .build()
@@ -38,15 +39,21 @@ object MessageClient {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.message == "OK") {
-                    val responseBody = response.body?.string()
+                val responseBody = response.body?.string()
+
+                try {
                     val jsonObject = responseBody?.let { JSONObject(it) }
 
                     val audio = jsonObject?.getString("audio")
                     val text = jsonObject?.getString("text")
 
                     if (audio != null && text != null) onResponse(audio, text)
-                } else Log.e("response_error", response.message)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    if (responseBody != null) {
+                        Log.e("JSON Exception", responseBody)
+                    }
+                }
             }
         })
     }
@@ -66,7 +73,7 @@ object MessageClient {
             .addFormDataPart("role", role)
             .build()
         val request = Request.Builder()
-            .url("https://ml1.ssrlab.by/api/mobile/voice")
+            .url("https://ml1.ssrlab.by/api/android/voice")
             .post(body)
             .build()
 
@@ -78,13 +85,24 @@ object MessageClient {
             override fun onResponse(call: Call, response: Response) {
                 val responseBody = response.body?.string()
 
-                val jsonObject = responseBody?.let { JSONObject(it) }
+                try {
+                    val jsonObject = responseBody?.let { JSONObject(it) }
 
-                val audio = jsonObject?.getString("audio")
-                val text = jsonObject?.getString("text")
+                    val audio = jsonObject?.getString("audio")
+                    val text = jsonObject?.getString("text")
 
-                if (audio != null && text != null) onResponse(audio, text)
+                    if (audio != null && text != null) onResponse(audio, text)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    if (responseBody != null) {
+                        Log.e("JSON Exception", responseBody)
+                    }
+                }
             }
         })
+    }
+
+    fun getAudio(link: String, file: File) {
+
     }
 }

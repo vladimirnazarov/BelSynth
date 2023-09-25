@@ -49,5 +49,6 @@
     <color name="chat_voice_button_background">#FFFFFF</color>
 
     <color name="record_wave">#FFFFFF</color>
+    <color name="loudness_wave">#0981C2</color>
 
 </resources>

@@ -6,17 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.db.*
+import com.ssrlab.assistant.ui.chat.MainActivity
+import com.ssrlab.assistant.utils.helpers.MediaPlayer.initializeMediaPlayer
+import com.ssrlab.assistant.utils.helpers.MediaPlayer.pauseAudio
+import com.ssrlab.assistant.utils.helpers.MediaPlayer.playAudio
 
 @Suppress("KotlinConstantConditions")
 class ChatAdapter(
     private val messageI: ArrayList<MessageInfoObject>,
     private val botMessage: ArrayList<BotMessage>,
     private val userMessage: ArrayList<UserMessage>,
-    private val userVoiceMessage: ArrayList<UserVoiceMessage>
+    private val userVoiceMessage: ArrayList<UserVoiceMessage>,
+    private val mainActivity: MainActivity
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+
+    private val arrayOfButtons = ArrayList<ImageButton>()
+    private val playingArray = ArrayList<Boolean>()
 
     inner class ChatViewHolder(item: View) : RecyclerView.ViewHolder(item)
 
@@ -56,8 +65,18 @@ class ChatAdapter(
                 }
                 3 -> {
                     val playButton = view.findViewById<ImageButton>(R.id.rv_user_voice_button)
+                    val duration = view.findViewById<TextView>(R.id.rv_user_voice_duration)
+                    val audio = userVoiceMessage.find { it.id == messageI[position].id }?.audio?.toUri()!!
 
-                    playButton.setOnClickListener { Log.d("play", "${userVoiceMessage.find { it.id == messageI[position].id }?.audio?.path}") }
+                    arrayOfButtons.add(playButton)
+
+                    initializeMediaPlayer(mainActivity, audio, duration)
+
+                    playButton.setOnClickListener {
+                        pauseAudio()
+                        initializeMediaPlayer(mainActivity, audio, duration)
+                        playAudio()
+                    }
                 }
             }
         }

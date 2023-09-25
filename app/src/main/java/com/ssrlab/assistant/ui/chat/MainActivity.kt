@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         chatHelper.loadRecordAnim(this@MainActivity, binding)
 
         binding.apply {
-            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages)
+            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@MainActivity)
 
             mainChatRv.layoutManager = LinearLayoutManager(this@MainActivity)
             mainChatRv.adapter = adapter
@@ -126,9 +126,9 @@ class MainActivity : AppCompatActivity() {
                     loadUserMessage(mainChatMsgInput.text!!.toString())
 
                     currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
-                    mainChatMsgInput.text?.clear()
-
                     sendTextMessage(mainChatMsgInput.text!!.toString())
+
+                    mainChatMsgInput.text?.clear()
                 }
             }
         }
@@ -188,7 +188,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAdapter() {
-        println(id)
         adapter.notifyItemInserted(messagesI.size - 1)
 
         scope.launch {
@@ -255,4 +254,5 @@ class MainActivity : AppCompatActivity() {
 
     fun getChatHelper() = chatHelper
     fun getVisualizerView() = visualizerView
+    fun getChatViewModel() = viewModel
 }

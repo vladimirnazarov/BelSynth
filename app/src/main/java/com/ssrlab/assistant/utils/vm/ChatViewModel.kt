@@ -17,6 +17,8 @@ import com.ssrlab.assistant.ui.chat.*
 import com.ssrlab.assistant.utils.AUDIO_FORMAT
 import com.ssrlab.assistant.utils.CHANNEL_CONFIG
 import com.ssrlab.assistant.utils.SAMPLE_RATE
+import com.ssrlab.assistant.utils.helpers.MediaPlayer.initializeMediaPlayer
+import com.ssrlab.assistant.utils.helpers.MediaPlayer.pauseAudio
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.*
 import java.io.File
@@ -38,12 +40,12 @@ class ChatViewModel : ViewModel() {
     fun stopRecording(binding: ActivityMainBinding) {
         if (isRecording()) {
             this.apply {
-                getAudioRecord().stop()
-                getMediaRecorder().stop()
+                audioRecord.stop()
+                mediaRecorder.stop()
 
-                getAudioRecord().release()
-                getMediaRecorder().release()
-                setIsRecording(false)
+                audioRecord.release()
+                mediaRecorder.release()
+                isRecording = false
             }
 
             binding.apply {
@@ -119,6 +121,10 @@ class ChatViewModel : ViewModel() {
         botText.observe(mainActivity) {
             mainActivity.apply {
                 loadBotMessage(it, botAudio)
+
+                pauseAudio()
+                initializeMediaPlayer(botAudio)
+
                 hideLoadingUtils()
             }
         }
@@ -160,24 +166,13 @@ class ChatViewModel : ViewModel() {
         mediaRecorder.start()
         isRecording = true
 
-        binding.apply {
-            val alphaInAnim = AnimationUtils.loadAnimation(mainActivity, R.anim.alpha_in)
-
-            mainWaveLayout.startAnimation(alphaInAnim)
-            mainWaveCenter.startAnimation(alphaInAnim)
-            mainDurationHolder.startAnimation(alphaInAnim)
-
-            mainWaveLayout.visibility = View.VISIBLE
-            mainWaveCenter.visibility = View.VISIBLE
-            mainDurationHolder.visibility = View.VISIBLE
-            mainWaveReplacement.visibility = View.GONE
-        }
+        showWave(binding, mainActivity)
 
         scope.launch {
             var currentTime = 0
 
             while (isRecording) {
-                mainActivity.runOnUiThread { binding.mainDurationText.text = mainActivity.getChatHelper().convertToTimeMillis(currentTime) }
+                mainActivity.runOnUiThread { binding.mainDurationText.text = mainActivity.getChatHelper().convertToTimerMode(currentTime) }
 
                 delay(1000)
                 currentTime += 1000
@@ -202,8 +197,20 @@ class ChatViewModel : ViewModel() {
         }.start()
     }
 
+    private fun showWave(binding: ActivityMainBinding, mainActivity: MainActivity) {
+        binding.apply {
+            val alphaInAnim = AnimationUtils.loadAnimation(mainActivity, R.anim.alpha_in)
+
+            mainWaveLayout.startAnimation(alphaInAnim)
+            mainWaveCenter.startAnimation(alphaInAnim)
+            mainDurationHolder.startAnimation(alphaInAnim)
+
+            mainWaveLayout.visibility = View.VISIBLE
+            mainWaveCenter.visibility = View.VISIBLE
+            mainDurationHolder.visibility = View.VISIBLE
+            mainWaveReplacement.visibility = View.GONE
+        }
+    }
+
     fun isRecording() = isRecording
-    fun setIsRecording(value: Boolean) { isRecording = value }
-    fun getAudioRecord() = audioRecord
-    fun getMediaRecorder() = mediaRecorder
 }

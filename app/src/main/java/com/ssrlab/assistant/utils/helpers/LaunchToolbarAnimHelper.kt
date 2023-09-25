@@ -36,17 +36,17 @@ class LaunchToolbarAnimHelper {
                 launchToolbarBack.visibility = View.INVISIBLE
             }
 
-            if (isAdditionalButtonsVisible) {
-                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_in))
-                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_in))
-                launchToolbarContacts.visibility = View.VISIBLE
-                launchToolbarSettings.visibility = View.VISIBLE
-            } else {
-                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_out))
-                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_out))
-                launchToolbarContacts.visibility = View.GONE
-                launchToolbarSettings.visibility = View.INVISIBLE
-            }
+//            if (isAdditionalButtonsVisible) {
+//                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_in))
+//                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_in))
+//                launchToolbarContacts.visibility = View.VISIBLE
+//                launchToolbarSettings.visibility = View.VISIBLE
+//            } else {
+//                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_out))
+//                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.alpha_out))
+//                launchToolbarContacts.visibility = View.GONE
+//                launchToolbarSettings.visibility = View.INVISIBLE
+//            }
         }
     }
 }
