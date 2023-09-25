@@ -43,6 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rv_bot_msg_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -52,59 +53,71 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageButton
-                android:id="@+id/rv_bot_clipboard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_clipboard"
-                android:background="@drawable/ripple_rounded"
-
-                android:padding="4dp"
-
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
-
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <ImageButton
-                android:id="@+id/rv_bot_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_share"
-                android:background="@drawable/ripple_rounded"
-
-                android:padding="4dp"
-
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-
-                app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
-            <TextView
-                android:id="@+id/rv_bot_msg"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rv_bot_msg_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
-                android:textStyle="normal"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:fontFamily="@font/roboto"
+                android:background="@drawable/ripple_bot_message"
 
-                android:gravity="start"
+                android:clickable="true"
+                android:focusable="true">
 
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginHorizontal="16dp"
+                <TextView
+                    android:id="@+id/rv_bot_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/rv_bot_share"/>
+                    android:textStyle="normal"
+                    android:textColor="@color/primary_text"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto"
 
+                    android:gravity="start"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/rv_bot_share"/>
+
+                <ImageButton
+                    android:id="@+id/rv_bot_clipboard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/ic_clipboard"
+                    android:background="@drawable/ripple_rounded"
+
+                    android:padding="4dp"
+
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageButton
+                    android:id="@+id/rv_bot_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/ic_share"
+                    android:background="@drawable/ripple_rounded"
+
+                    android:padding="4dp"
+
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+
+                    app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

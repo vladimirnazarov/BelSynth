@@ -52,7 +52,7 @@
             android:background="@drawable/background_chat_voice_button"
 
             android:layout_marginStart="8dp"
-            android:layout_marginVertical="8dp"
+            android:layout_marginVertical="12dp"
 
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,6 +96,8 @@
             android:id="@+id/rv_user_voice_graph"
             android:layout_width="0dp"
             android:layout_height="0dp"
+
+            android:background="@drawable/ic_voice_wave"
 
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="8dp"

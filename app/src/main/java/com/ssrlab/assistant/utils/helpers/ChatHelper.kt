@@ -34,7 +34,7 @@ class ChatHelper {
         binding.mainDurationIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.record_animation))
     }
 
-    fun convertToTimeMillis(duration: Int) : String {
+    fun convertToTimerMode(duration: Int) : String {
         val minute = duration % (1000 * 60 * 60) / (1000 * 60)
         val seconds = duration % (1000 * 60 * 60) % (1000 * 60) / 1000
 

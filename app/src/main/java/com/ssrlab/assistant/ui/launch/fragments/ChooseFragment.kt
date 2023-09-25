@@ -37,7 +37,7 @@ class ChooseFragment: BaseFragment() {
             chooseSpeaker3Ripple.setOnClickListener { launchActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString()) }
             chooseSpeaker4Ripple.setOnClickListener { launchActivity.intentToChat("boris", binding.chooseSpeaker4Name.text.toString()) }
             chooseSpeaker5Ripple.setOnClickListener { launchActivity.intentToChat("kiryl", binding.chooseSpeaker5Name.text.toString()) }
-            chooseSpeaker6Ripple.setOnClickListener { launchActivity.intentToChat("vasil", binding.chooseSpeaker5Name.text.toString()) }
+            chooseSpeaker6Ripple.setOnClickListener { launchActivity.intentToChat("vasil", binding.chooseSpeaker6Name.text.toString()) }
         }
     }
 }
