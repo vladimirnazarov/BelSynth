@@ -39,4 +39,8 @@
     <!--  Chat  -->
     <string name="chat_record_plug">00:00</string>
     <string name="enter_message">Увядзіце запыт…</string>
+    <string name="text_copied">Тэкст скапіраваны!</string>
+    <string name="share_text_1">Паглядзі, які цікавы адказ мне даў бот</string>
+    <string name="share_text_2">праз прыладу</string>
+    <string name="share_using">Падзяліцца праз…</string>
 </resources>

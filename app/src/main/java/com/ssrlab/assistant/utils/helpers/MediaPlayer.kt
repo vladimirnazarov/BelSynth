@@ -10,7 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-object MediaPlayer : MediaPlayer.OnPreparedListener {
+object MediaPlayer {
 
     private var mediaPlayer: MediaPlayer? = null
     private var playerStatus = ""
@@ -18,7 +18,7 @@ object MediaPlayer : MediaPlayer.OnPreparedListener {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun initializeMediaPlayer(mainActivity: MainActivity, uri: Uri, view: TextView) {
+    fun initializeMediaPlayer(mainActivity: MainActivity, uri: Uri, view: TextView? = null) {
         val chatHelper = ChatHelper()
 
         playerStatus = "play"
@@ -28,21 +28,7 @@ object MediaPlayer : MediaPlayer.OnPreparedListener {
             mediaPlayer!!.setDataSource(mainActivity, uri)
             mediaPlayer!!.prepare()
 
-            view.text = chatHelper.convertToTimerMode(mediaPlayer!!.duration)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun initializeMediaPlayer(link: String) {
-        playerStatus = "play"
-        mediaPlayer = MediaPlayer()
-
-        try {
-            mediaPlayer!!.setDataSource(link)
-            mediaPlayer!!.setOnPreparedListener(this)
-            mediaPlayer!!.prepareAsync()
-
+            view?.text = chatHelper.convertToTimerMode(mediaPlayer!!.duration)
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -73,9 +59,5 @@ object MediaPlayer : MediaPlayer.OnPreparedListener {
 
             mediaPlayer!!.pause()
         }
-    }
-
-    override fun onPrepared(p0: MediaPlayer?) {
-        playAudio()
     }
 }

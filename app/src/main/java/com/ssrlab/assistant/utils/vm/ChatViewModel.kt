@@ -8,6 +8,7 @@ import android.os.Build
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
@@ -85,15 +86,20 @@ class ChatViewModel : ViewModel() {
 
     fun sendMessage(text: String? = null, audio: File? = null, speaker: String, role: String = "assistant", mainActivity: MainActivity) {
 
-        val botText = MutableLiveData<String>()
-        var botAudio = ""
+        val botAudio = MutableLiveData<File>()
+        var botText = ""
 
         if (text != null && audio == null) {
             scope.launch {
-                MessageClient.sendMessage(text, speaker, role, { responseAudio, responseText ->
+                MessageClient.sendMessage(text, speaker, role, { responseAudioLink, responseText ->
                     mainActivity.runOnUiThread {
-                        botAudio = responseAudio
-                        botText.value = responseText
+                        botText = responseText
+
+                        loadAudioFile(responseAudioLink, mainActivity) {
+                            mainActivity.runOnUiThread {
+                                botAudio.value = it
+                            }
+                        }
                     }
                 }) {
                     mainActivity.runOnUiThread {
@@ -104,10 +110,15 @@ class ChatViewModel : ViewModel() {
             }
         } else if (text == null && audio != null) {
             scope.launch {
-                MessageClient.sendMessage(audio, speaker, role, { responseAudio, responseText ->
+                MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
                     mainActivity.runOnUiThread {
-                        botAudio = responseAudio
-                        botText.value = responseText
+                        botText = responseText
+
+                        loadAudioFile(responseAudioLink, mainActivity) {
+                            mainActivity.runOnUiThread {
+                                botAudio.value = it
+                            }
+                        }
                     }
                 }) {
                     mainActivity.runOnUiThread {
@@ -118,14 +129,30 @@ class ChatViewModel : ViewModel() {
             }
         }
 
-        botText.observe(mainActivity) {
+        botAudio.observe(mainActivity) {
             mainActivity.apply {
-                loadBotMessage(it, botAudio)
+                loadBotMessage(botText, it)
 
                 pauseAudio()
-                initializeMediaPlayer(botAudio)
+                initializeMediaPlayer(mainActivity, it.toUri())
+
+                /**
+                playAudio()
+                **/
 
                 hideLoadingUtils()
+            }
+        }
+    }
+
+    private fun loadAudioFile(link: String, mainActivity: MainActivity, onSuccess: (File) -> Unit) {
+        val file = File(mainActivity.getExternalFilesDir(null), "bv_msg_${mainActivity.getId()}_${mainActivity.getSpeaker()}.mp3")
+        MessageClient.getAudio(link, file, {
+            onSuccess(file)
+        }) {
+            mainActivity.runOnUiThread {
+                Toast.makeText(mainActivity, "$it, error", Toast.LENGTH_SHORT).show()
+                onSuccess(file)
             }
         }
     }

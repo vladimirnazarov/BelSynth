@@ -1,11 +1,15 @@
 package com.ssrlab.assistant.rv
 
-import android.util.Log
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.ssrlab.assistant.R
@@ -25,7 +29,7 @@ class ChatAdapter(
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     private val arrayOfButtons = ArrayList<ImageButton>()
-    private val playingArray = ArrayList<Boolean>()
+//    private val playingArray = ArrayList<Boolean>()
 
     inner class ChatViewHolder(item: View) : RecyclerView.ViewHolder(item)
 
@@ -55,8 +59,29 @@ class ChatAdapter(
                     val clipboard = view.findViewById<ImageButton>(R.id.rv_bot_clipboard)
 
                     textMsg.text = botMessage.find { it.id == messageI[position].id }?.text
-                    share.setOnClickListener { Log.d("share", "${messageI[position].id} share") }
-                    clipboard.setOnClickListener { Log.d("clipboard", "${messageI[position].id} clipboard") }
+                    share.setOnClickListener {
+                        (textMsg.text as String?)?.let { it1 -> mainActivity.shareIntent(it1) }
+                    }
+                    clipboard.setOnClickListener {
+                        val clipboardManager = mainActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("id_${messageI[position].id}_bot", textMsg.text)
+                        clipboardManager.setPrimaryClip(clip)
+
+                        Toast.makeText(mainActivity, mainActivity.resources.getText(R.string.text_copied), Toast.LENGTH_SHORT).show()
+                        mainActivity.currentFocus?.clearFocus()
+                    }
+
+                    val playButton = view.findViewById<ConstraintLayout>(R.id.rv_bot_msg_content)
+
+                    if (position > 0) {
+                        val audio = botMessage.find { it.id == messageI[position].id }?.audio?.toUri()!!
+
+                        playButton.setOnClickListener {
+                            pauseAudio()
+                            initializeMediaPlayer(mainActivity, audio)
+                            playAudio()
+                        }
+                    } else playButton.isClickable = false
                 }
                 2 -> {
                     val textMsg = view.findViewById<TextView>(R.id.rv_user_msg)

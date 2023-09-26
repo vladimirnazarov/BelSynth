@@ -9,6 +9,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -102,7 +103,34 @@ object MessageClient {
         })
     }
 
-    fun getAudio(link: String, file: File) {
+    fun getAudio(link: String, file: File, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        if (client == null) {
+            client = OkHttpClient.Builder()
+                .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+                .writeTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+                .build()
+        }
 
+        val request = Request.Builder()
+            .url(link)
+            .build()
+
+        client?.newCall(request)?.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onFailure(e.message!!)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) Log.e("File response", "Response error")
+                else {
+                    val fos = FileOutputStream(file)
+                    fos.write(response.body?.bytes())
+                    fos.close()
+
+                    onSuccess()
+                }
+            }
+        })
     }
 }

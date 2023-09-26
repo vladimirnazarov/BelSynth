@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             if (!viewModel.isRecording()) {
                 if (checkPermissions()) {
                     id += 1
-                    audioFile = File(getExternalFilesDir(null), "voice_message_$id.mp3")
+                    audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
                     outputStream = FileOutputStream(audioFile)
 
                     viewModel.startRecording(binding, this@MainActivity, audioFile)
@@ -164,9 +165,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun loadBotMessage(text: String, audioLink: String) {
-        id += 1
-        botMessages.add(BotMessage(id, text, audioLink))
+    fun loadBotMessage(text: String, audioFile: File) {
+        botMessages.add(BotMessage(id, text, audioFile))
         messagesI.add(MessageInfoObject(id, 1))
 
         updateAdapter()
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 id += 1
-                audioFile = File(getExternalFilesDir(null), "voice_message_$id.wav")
+                audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
 
                 viewModel.startRecording(binding, this@MainActivity, audioFile)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
@@ -252,7 +252,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun shareIntent(text: String) {
+        val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n$text"
+
+        ShareCompat.IntentBuilder(this@MainActivity)
+            .setChooserTitle(resources.getText(R.string.share_using))
+            .setType("text/plain")
+            .setText(finalText)
+            .startChooser()
+    }
+
     fun getChatHelper() = chatHelper
     fun getVisualizerView() = visualizerView
-    fun getChatViewModel() = viewModel
+    fun getId(): Int {
+        id += 1
+        return id - 1
+    }
+    fun getSpeaker() = speaker
 }
