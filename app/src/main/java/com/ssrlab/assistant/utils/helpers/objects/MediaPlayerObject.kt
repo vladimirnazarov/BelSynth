@@ -1,8 +1,7 @@
-package com.ssrlab.assistant.utils.helpers
+package com.ssrlab.assistant.utils.helpers.objects
 
 import android.media.MediaPlayer
 import android.net.Uri
-import android.widget.TextView
 import com.ssrlab.assistant.ui.chat.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-object MediaPlayer {
+object MediaPlayerObject {
 
     private var mediaPlayer: MediaPlayer? = null
     private var playerStatus = ""
@@ -18,17 +17,13 @@ object MediaPlayer {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun initializeMediaPlayer(mainActivity: MainActivity, uri: Uri, view: TextView? = null) {
-        val chatHelper = ChatHelper()
-
+    fun initializeMediaPlayer(mainActivity: MainActivity, uri: Uri) {
         playerStatus = "play"
         mediaPlayer = MediaPlayer()
 
         try {
             mediaPlayer!!.setDataSource(mainActivity, uri)
             mediaPlayer!!.prepare()
-
-            view?.text = chatHelper.convertToTimerMode(mediaPlayer!!.duration)
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -54,6 +54,8 @@ object MessageClient {
                     if (responseBody != null) {
                         Log.e("JSON Exception", responseBody)
                     }
+
+                    onFailure(e.message!!)
                 }
             }
         })
@@ -98,6 +100,8 @@ object MessageClient {
                     if (responseBody != null) {
                         Log.e("JSON Exception", responseBody)
                     }
+
+                    onFailure(e.message!!)
                 }
             }
         })

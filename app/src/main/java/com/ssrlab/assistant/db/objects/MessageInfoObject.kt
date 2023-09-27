@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.db
+package com.ssrlab.assistant.db.objects
 
 data class MessageInfoObject(
     val id: Int = 0,

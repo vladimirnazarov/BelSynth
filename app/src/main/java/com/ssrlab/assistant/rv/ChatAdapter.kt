@@ -3,6 +3,7 @@ package com.ssrlab.assistant.rv
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +15,15 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.db.*
+import com.ssrlab.assistant.db.objects.BotMessage
+import com.ssrlab.assistant.db.objects.MessageInfoObject
+import com.ssrlab.assistant.db.objects.UserMessage
+import com.ssrlab.assistant.db.objects.UserVoiceMessage
 import com.ssrlab.assistant.ui.chat.MainActivity
-import com.ssrlab.assistant.utils.helpers.MediaPlayer.initializeMediaPlayer
-import com.ssrlab.assistant.utils.helpers.MediaPlayer.pauseAudio
-import com.ssrlab.assistant.utils.helpers.MediaPlayer.playAudio
+import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.initializeMediaPlayer
+import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.pauseAudio
+import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.playAudio
 
 @Suppress("KotlinConstantConditions")
 class ChatAdapter(
@@ -91,15 +97,24 @@ class ChatAdapter(
                 3 -> {
                     val playButton = view.findViewById<ImageButton>(R.id.rv_user_voice_button)
                     val duration = view.findViewById<TextView>(R.id.rv_user_voice_duration)
-                    val audio = userVoiceMessage.find { it.id == messageI[position].id }?.audio?.toUri()!!
+                    val audioFile = userVoiceMessage.find { it.id == messageI[position].id }?.audio
 
                     arrayOfButtons.add(playButton)
 
-                    initializeMediaPlayer(mainActivity, audio, duration)
+                    val retriever = MediaMetadataRetriever()
+                    try {
+                        retriever.setDataSource(audioFile?.path)
+                        val durationValue = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
+                        duration.text = ChatHelper().convertToTimerMode(durationValue)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        retriever.release()
+                    }
 
                     playButton.setOnClickListener {
                         pauseAudio()
-                        initializeMediaPlayer(mainActivity, audio, duration)
+                        initializeMediaPlayer(mainActivity, audioFile?.toUri()!!)
                         playAudio()
                     }
                 }
