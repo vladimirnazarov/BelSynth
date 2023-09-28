@@ -4,28 +4,28 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityMainBinding
-import com.ssrlab.assistant.db.BotMessage
-import com.ssrlab.assistant.db.MessageInfoObject
-import com.ssrlab.assistant.db.UserMessage
-import com.ssrlab.assistant.db.UserVoiceMessage
+import com.ssrlab.assistant.db.objects.BotMessage
+import com.ssrlab.assistant.db.objects.MessageInfoObject
+import com.ssrlab.assistant.db.objects.UserMessage
+import com.ssrlab.assistant.db.objects.UserVoiceMessage
 import com.ssrlab.assistant.rv.ChatAdapter
 import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
 import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
 import kotlinx.coroutines.*
 import java.io.File
-import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
 
     private var id = 1
     private lateinit var audioFile: File
-    private lateinit var outputStream: FileOutputStream
 
     private val messagesI = arrayListOf(MessageInfoObject(id, 1))
     private val botMessages = arrayListOf(BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?"))
@@ -59,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel.playable.value = true
+        setUpAudioButton()
+
         speaker = intent.getStringExtra("chat_id").toString()
 
         chatHelper = ChatHelper()
@@ -67,12 +69,6 @@ class MainActivity : AppCompatActivity() {
         setUpFFTLayout()
         setUpKeyBoardAction()
         setUpRecordButton()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        chatHelper.loadRecordAnim(this@MainActivity, binding)
 
         binding.apply {
             adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@MainActivity)
@@ -81,8 +77,33 @@ class MainActivity : AppCompatActivity() {
             mainChatRv.adapter = adapter
             mainChatRv.smoothScrollToPosition(adapter.itemCount)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        chatHelper.loadRecordAnim(this@MainActivity, binding)
         setUpMessageSendButton()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        MediaPlayerObject.pauseAudio()
+    }
+
+    private fun setUpAudioButton() {
+        viewModel.playable.observe(this@MainActivity) {
+            if (!it) {
+                binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_off)
+                MediaPlayerObject.pauseAudio()
+            }
+            else binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_on)
+        }
+
+        binding.mainToolbarAudio.setOnClickListener {
+            viewModel.playable.value = !viewModel.playable.value!!
+        }
     }
 
     private fun setUpFFTLayout() {
@@ -105,12 +126,12 @@ class MainActivity : AppCompatActivity() {
                 val screenHeight = mainView.height
 
                 if (originalScreenHeight != screenHeight) {
-                    viewModel.controlBottomVisibility(this@MainActivity, binding)
+                    viewModel.controlBottomVisibility(this@MainActivity)
                     mainChatRv.smoothScrollToPosition(adapter.itemCount - 1)
                 }
                 else {
                     viewModel.apply {
-                        controlBottomVisibility( this@MainActivity, binding, false)
+                        controlBottomVisibility( this@MainActivity, false)
                     }
                 }
             }
@@ -135,8 +156,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendTextMessage(text: String) {
-        viewModel.sendMessage(text = text, speaker = speaker, mainActivity = this@MainActivity)
-        showLoadingUtils()
+        viewModel.sendMessage(text, speaker, mainActivity = this@MainActivity)
+        chatHelper.showLoadingUtils(binding, this@MainActivity, scope)
     }
 
     private fun setUpRecordButton() {
@@ -144,10 +165,11 @@ class MainActivity : AppCompatActivity() {
             if (!viewModel.isRecording()) {
                 if (checkPermissions()) {
                     id += 1
-                    audioFile = File(getExternalFilesDir(null), "voice_message_$id.mp3")
-                    outputStream = FileOutputStream(audioFile)
+                    audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
 
-                    viewModel.startRecording(binding, this@MainActivity, audioFile)
+                    MediaPlayerObject.pauseAudio()
+
+                    viewModel.startRecording(this@MainActivity, audioFile)
                     binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
                     binding.mainKeyboardButton.isClickable = false
                 }
@@ -158,15 +180,14 @@ class MainActivity : AppCompatActivity() {
                 binding.mainKeyboardButton.isClickable = true
 
                 loadUserVoiceMessage(audioFile)
-                viewModel.sendMessage(audio = userVoiceMessages.last().audio, speaker = speaker, mainActivity = this@MainActivity)
-                showLoadingUtils()
+                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, mainActivity = this@MainActivity) }
+                chatHelper.showLoadingUtils(binding, this@MainActivity, scope)
             }
         }
     }
 
-    fun loadBotMessage(text: String, audioLink: String) {
-        id += 1
-        botMessages.add(BotMessage(id, text, audioLink))
+    fun loadBotMessage(text: String, audioFile: File) {
+        botMessages.add(BotMessage(id, text, audioFile))
         messagesI.add(MessageInfoObject(id, 1))
 
         updateAdapter()
@@ -198,6 +219,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun goBack() { onBackPressedDispatcher.onBackPressed() }
+
+    fun shareIntent(text: String) {
+        val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n$text"
+
+        ShareCompat.IntentBuilder(this@MainActivity)
+            .setChooserTitle(resources.getText(R.string.share_using))
+            .setType("text/plain")
+            .setText(finalText)
+            .startChooser()
+    }
+
+    fun getChatHelper() = chatHelper
+    fun getVisualizerView() = visualizerView
+    fun getId(): Int {
+        id += 1
+        return id - 1
+    }
+    fun getSpeaker() = speaker
+    fun getBinding() = binding
+
     private fun checkPermissions() : Boolean {
         if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
@@ -215,9 +257,11 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 id += 1
-                audioFile = File(getExternalFilesDir(null), "voice_message_$id.wav")
+                audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
 
-                viewModel.startRecording(binding, this@MainActivity, audioFile)
+                MediaPlayerObject.pauseAudio()
+
+                viewModel.startRecording(this@MainActivity, audioFile)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
                 binding.mainKeyboardButton.isClickable = false
             }
@@ -230,29 +274,4 @@ class MainActivity : AppCompatActivity() {
             mainToolbarTitle.text = intent.getStringExtra("chat_name")
         }
     }
-
-    private fun goBack() { onBackPressedDispatcher.onBackPressed() }
-
-    fun hideLoadingUtils() {
-        binding.apply {
-            mainProgressHolder.visibility = View.GONE
-
-            mainRecordRipple.isClickable = true
-            mainKeyboardButton.isClickable = true
-        }
-    }
-
-    private fun showLoadingUtils() {
-        binding.apply {
-            mainProgressHolder.visibility = View.VISIBLE
-            chatHelper.loadDotsAnim(this@MainActivity, binding, scope)
-
-            mainRecordRipple.isClickable = false
-            mainKeyboardButton.isClickable = false
-        }
-    }
-
-    fun getChatHelper() = chatHelper
-    fun getVisualizerView() = visualizerView
-    fun getChatViewModel() = viewModel
 }

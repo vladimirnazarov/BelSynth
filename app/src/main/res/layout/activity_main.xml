@@ -38,11 +38,9 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ImageButton
-            android:id="@+id/main_toolbar_settings"
+            android:id="@+id/main_toolbar_audio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:visibility="invisible"
 
             android:src="@drawable/ic_volume_on"
             android:background="@drawable/ripple_rounded"
@@ -62,7 +60,7 @@
             android:layout_height="wrap_content"
 
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/main_toolbar_settings"
+            app:layout_constraintEnd_toStartOf="@id/main_toolbar_audio"
             app:layout_constraintStart_toEndOf="@id/main_toolbar_back"
             app:layout_constraintTop_toTopOf="parent">
 
