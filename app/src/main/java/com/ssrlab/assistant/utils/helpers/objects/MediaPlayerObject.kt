@@ -2,6 +2,9 @@ package com.ssrlab.assistant.utils.helpers.objects
 
 import android.media.MediaPlayer
 import android.net.Uri
+import android.widget.ImageButton
+import com.ssrlab.assistant.R
+import com.ssrlab.assistant.rv.ChatAdapter
 import com.ssrlab.assistant.ui.chat.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,18 +32,34 @@ object MediaPlayerObject {
         }
     }
 
-    fun playAudio() {
+    fun playAudio(playButton: ImageButton? = null, adapter: ChatAdapter? = null) {
         scope.launch {
             when (playerStatus) {
 
                 "pause" -> {
                     mediaPlayer!!.pause()
                     playerStatus = "play"
+
+                    playButton?.setImageResource(R.drawable.ic_msg_voice_play)
+
                 } "play" -> {
                 try {
                     mediaPlayer!!.start()
                     playerStatus = "pause"
-                } catch (e: Exception){
+
+                    playButton?.setImageResource(R.drawable.ic_msg_voice_stop)
+
+                    if (playButton != null) mediaPlayer!!.setOnCompletionListener {
+                        playButton.setImageResource(R.drawable.ic_msg_voice_play)
+                        for (i in adapter!!.getPlayingArray().indices) {
+                            if (adapter.getPlayingArray()[i]) {
+                                adapter.setAdapterValue(i, false)
+                                adapter.setButtonValue(i, R.drawable.ic_msg_voice_play)
+                            }
+                        }
+                    }
+
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
@@ -48,11 +67,20 @@ object MediaPlayerObject {
         }
     }
 
-    fun pauseAudio() {
+    fun pauseAudio(adapter: ChatAdapter? = null) {
         if (playerStatus == "pause") {
+            mediaPlayer!!.pause()
+
             playerStatus = "play"
 
-            mediaPlayer!!.pause()
+            if (adapter != null) {
+                for (i in adapter.getPlayingArray().indices) {
+                    if (adapter.getPlayingArray()[i]) {
+                        adapter.setAdapterValue(i, false)
+                        adapter.setButtonValue(i, R.drawable.ic_msg_voice_play)
+                    }
+                }
+            }
         }
     }
 }

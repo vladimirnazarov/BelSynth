@@ -35,7 +35,7 @@ class ChatAdapter(
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     private val arrayOfButtons = ArrayList<ImageButton>()
-//    private val playingArray = ArrayList<Boolean>()
+    private val playingArray = ArrayList<Boolean>()
 
     inner class ChatViewHolder(item: View) : RecyclerView.ViewHolder(item)
 
@@ -83,6 +83,13 @@ class ChatAdapter(
                         val audio = botMessage.find { it.id == messageI[position].id }?.audio?.toUri()!!
 
                         playButton.setOnClickListener {
+                            for (i in 0 until playingArray.size) {
+                                if (playingArray[i]) {
+                                    arrayOfButtons[i].setImageResource(R.drawable.ic_msg_voice_play)
+                                    playingArray[i] = false
+                                }
+                            }
+
                             pauseAudio()
                             initializeMediaPlayer(mainActivity, audio)
                             playAudio()
@@ -100,6 +107,7 @@ class ChatAdapter(
                     val audioFile = userVoiceMessage.find { it.id == messageI[position].id }?.audio
 
                     arrayOfButtons.add(playButton)
+                    playingArray.add(false)
 
                     val retriever = MediaMetadataRetriever()
                     try {
@@ -113,9 +121,15 @@ class ChatAdapter(
                     }
 
                     playButton.setOnClickListener {
-                        pauseAudio()
-                        initializeMediaPlayer(mainActivity, audioFile?.toUri()!!)
-                        playAudio()
+                        if (playingArray[arrayOfButtons.indexOf(playButton)]) {
+                            pauseAudio(this@ChatAdapter)
+                        } else {
+                            pauseAudio(this@ChatAdapter)
+                            initializeMediaPlayer(mainActivity, audioFile?.toUri()!!)
+                            playAudio(playButton, this@ChatAdapter)
+
+                            playingArray[arrayOfButtons.indexOf(playButton)] = true
+                        }
                     }
                 }
             }
@@ -132,4 +146,8 @@ class ChatAdapter(
             }
         } else 0
     }
+
+    fun getPlayingArray() = playingArray
+    fun setAdapterValue(atPos: Int, value: Boolean) { playingArray[atPos] = value }
+    fun setButtonValue(atPos: Int, value: Int) { arrayOfButtons[atPos].setImageResource(value) }
 }

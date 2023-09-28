@@ -89,14 +89,20 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        MediaPlayerObject.pauseAudio()
+        MediaPlayerObject.pauseAudio(adapter = adapter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        getExternalFilesDir(null)
     }
 
     private fun setUpAudioButton() {
         viewModel.playable.observe(this@MainActivity) {
             if (!it) {
                 binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_off)
-                MediaPlayerObject.pauseAudio()
+                MediaPlayerObject.pauseAudio(adapter = adapter)
             }
             else binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_on)
         }
@@ -167,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                     id += 1
                     audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
 
-                    MediaPlayerObject.pauseAudio()
+                    MediaPlayerObject.pauseAudio(adapter = adapter)
 
                     viewModel.startRecording(this@MainActivity, audioFile)
                     binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
@@ -222,7 +228,7 @@ class MainActivity : AppCompatActivity() {
     private fun goBack() { onBackPressedDispatcher.onBackPressed() }
 
     fun shareIntent(text: String) {
-        val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n$text"
+        val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n\n$text"
 
         ShareCompat.IntentBuilder(this@MainActivity)
             .setChooserTitle(resources.getText(R.string.share_using))
@@ -259,7 +265,7 @@ class MainActivity : AppCompatActivity() {
                 id += 1
                 audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
 
-                MediaPlayerObject.pauseAudio()
+                MediaPlayerObject.pauseAudio(adapter = adapter)
 
                 viewModel.startRecording(this@MainActivity, audioFile)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
