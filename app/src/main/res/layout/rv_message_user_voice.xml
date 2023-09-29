@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
 
             android:text="@string/chat_record_plug"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/msg_text"
             android:textSize="12sp"
             android:fontFamily="@font/roboto"
 

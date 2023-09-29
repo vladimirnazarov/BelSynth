@@ -27,5 +27,11 @@ class ContactsFragment: BaseFragment() {
         super.onResume()
 
         launchActivity.setUpToolbar(resources.getString(R.string.contacts_title), isBackButtonVisible = true)
+
+        binding.apply {
+            contactsEmail.setOnClickListener { launchActivity.intentToMail() }
+            contactsPhone1.setOnClickListener { launchActivity.intentToPhone("+375173792126") }
+            contactsPhone2.setOnClickListener { launchActivity.intentToPhone("+375173792522") }
+        }
     }
 }

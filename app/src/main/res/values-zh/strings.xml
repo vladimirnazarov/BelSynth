@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Asistent</string>
+
+    <!--  Choose  -->
+    <string name="choose_title">選擇一個與之交談的人</string>
+    <string name="speaker_1">阿列西</string>
+    <string name="speaker_2">阿列西娅</string>
+    <string name="speaker_3">阿廖娜</string>
+    <string name="speaker_4">鲍里斯</string>
+    <string name="speaker_5">基里尔</string>
+    <string name="speaker_6">瓦西里</string>
+    <string name="speaker_7">瓦西里娜</string>
+    <string name="voice_ready">声音稳定</string>
+    <string name="voice_in_progress">正在开发中</string>
+
+    <!--  Settings  -->
+    <string name="settings_title">设置</string>
+    <string name="dark_theme">暗色主题</string>
+    <string name="language">语言</string>
+    <string name="be">Беларуская</string>
+    <string name="en">English</string>
+    <string name="ru">Русский</string>
+    <string name="zh">中文</string>
+
+    <!--  Contacts  -->
+    <string name="contacts_title">联系方式</string>
+    <string name="if_you_have_questions">如果您有任何疑问或建议，请通过以下联系方式与我们联系</string>
+    <string name="email_title">E-mail:</string>
+    <string name="email">hello@asistent.by</string>
+    <string name="address_title">地址:</string>
+    <string name="address">明斯克市苏尔加诺娃路6号422、430、432室</string>
+    <string name="phone_numbers_title">电话:</string>
+    <string name="phone_number_1">+375 (17) 379–21–26</string>
+    <string name="phone_number_2">+375 (17) 379–25–22</string>
+    <string name="phone_room_1">(430室)</string>
+    <string name="phone_room_2">(432室)</string>
+
+    <!--  Chat  -->
+    <string name="chat_record_plug">00:00</string>
+    <string name="enter_message">请输入请求…</string>
+    <string name="text_copied">复制的!</string>
+    <string name="share_text_1">看看机器人给我的有趣回答</string>
+    <string name="share_text_2">通过设备</string>
+    <string name="share_using">通过分享…</string>
+</resources>

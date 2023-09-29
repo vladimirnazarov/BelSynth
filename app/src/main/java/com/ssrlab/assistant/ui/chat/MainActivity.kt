@@ -13,6 +13,7 @@ import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityMainBinding
 import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.db.objects.MessageInfoObject
@@ -28,6 +29,8 @@ import kotlinx.coroutines.*
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
+
+    private val mainApp = MainApplication()
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var chatHelper: ChatHelper
@@ -57,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        mainApp.setContext(this@MainActivity)
 
         viewModel.playable.value = true
         setUpAudioButton()
