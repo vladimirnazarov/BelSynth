@@ -19,7 +19,7 @@ import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.db.objects.MessageInfoObject
 import com.ssrlab.assistant.db.objects.UserMessage
 import com.ssrlab.assistant.db.objects.UserVoiceMessage
-import com.ssrlab.assistant.ui.chat.MainActivity
+import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.initializeMediaPlayer
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.pauseAudio
@@ -31,7 +31,7 @@ class ChatAdapter(
     private val botMessage: ArrayList<BotMessage>,
     private val userMessage: ArrayList<UserMessage>,
     private val userVoiceMessage: ArrayList<UserVoiceMessage>,
-    private val mainActivity: MainActivity
+    private val chatActivity: ChatActivity
 ) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     private val arrayOfButtons = ArrayList<ImageButton>()
@@ -66,15 +66,15 @@ class ChatAdapter(
 
                     textMsg.text = botMessage.find { it.id == messageI[position].id }?.text
                     share.setOnClickListener {
-                        (textMsg.text as String?)?.let { it1 -> mainActivity.shareIntent(it1) }
+                        (textMsg.text as String?)?.let { it1 -> chatActivity.shareIntent(it1) }
                     }
                     clipboard.setOnClickListener {
-                        val clipboardManager = mainActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clipboardManager = chatActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("id_${messageI[position].id}_bot", textMsg.text)
                         clipboardManager.setPrimaryClip(clip)
 
-                        Toast.makeText(mainActivity, mainActivity.resources.getText(R.string.text_copied), Toast.LENGTH_SHORT).show()
-                        mainActivity.currentFocus?.clearFocus()
+                        Toast.makeText(chatActivity, chatActivity.resources.getText(R.string.text_copied), Toast.LENGTH_SHORT).show()
+                        chatActivity.currentFocus?.clearFocus()
                     }
 
                     val playButton = view.findViewById<ConstraintLayout>(R.id.rv_bot_msg_content)
@@ -91,7 +91,7 @@ class ChatAdapter(
                             }
 
                             pauseAudio()
-                            initializeMediaPlayer(mainActivity, audio)
+                            initializeMediaPlayer(chatActivity, audio)
                             playAudio()
                         }
                     } else playButton.isClickable = false
@@ -125,7 +125,7 @@ class ChatAdapter(
                             pauseAudio(this@ChatAdapter)
                         } else {
                             pauseAudio(this@ChatAdapter)
-                            initializeMediaPlayer(mainActivity, audioFile?.toUri()!!)
+                            initializeMediaPlayer(chatActivity, audioFile?.toUri()!!)
                             playAudio(playButton, this@ChatAdapter)
 
                             playingArray[arrayOfButtons.indexOf(playButton)] = true

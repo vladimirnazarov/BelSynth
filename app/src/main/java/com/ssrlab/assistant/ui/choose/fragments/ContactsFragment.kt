@@ -26,12 +26,12 @@ class ContactsFragment: BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        launchActivity.setUpToolbar(resources.getString(R.string.contacts_title), isBackButtonVisible = true)
+        chooseActivity.setUpToolbar(resources.getString(R.string.contacts_title), isBackButtonVisible = true)
 
         binding.apply {
-            contactsEmail.setOnClickListener { launchActivity.intentToMail() }
-            contactsPhone1.setOnClickListener { launchActivity.intentToPhone("+375173792126") }
-            contactsPhone2.setOnClickListener { launchActivity.intentToPhone("+375173792522") }
+            contactsEmail.setOnClickListener { chooseActivity.intentToMail() }
+            contactsPhone1.setOnClickListener { chooseActivity.intentToPhone("+375173792126") }
+            contactsPhone2.setOnClickListener { chooseActivity.intentToPhone("+375173792522") }
         }
     }
 }

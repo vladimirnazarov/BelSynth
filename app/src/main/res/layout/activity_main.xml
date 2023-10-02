@@ -7,7 +7,7 @@
     android:background="@color/background_color"
 
     tools:ignore="ContentDescription"
-    tools:context=".ui.chat.MainActivity"
+    tools:context=".ui.chat.ChatActivity"
 
     android:id="@+id/main_view"
     android:layout_width="match_parent"

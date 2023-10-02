@@ -1,6 +1,5 @@
 package com.ssrlab.assistant.ui.choose
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,15 +8,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
-import com.ssrlab.assistant.ui.chat.MainActivity
+import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.LOCALE
 import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.THEME
 import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
 import java.util.*
 
-@SuppressLint("CustomSplashScreen")
-class LaunchActivity : AppCompatActivity() {
+class ChooseActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLaunchBinding
     private lateinit var animHelper: LaunchToolbarAnimHelper
@@ -30,7 +28,7 @@ class LaunchActivity : AppCompatActivity() {
         binding = ActivityLaunchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainApp.setContext(this@LaunchActivity)
+        mainApp.setContext(this@ChooseActivity)
 
         loadPreferences()
 
@@ -40,7 +38,7 @@ class LaunchActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     private fun loadPreferences() {
         val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(LOCALE, "en")
+        val locale = sharedPreferences.getString(LOCALE, "be")
         val nightMode = sharedPreferences.getBoolean(THEME, false)
 
         locale?.let { Locale(it) }?.let { mainApp.setLocale(it) }
@@ -77,11 +75,11 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     fun setUpToolbar(title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
-        animHelper.setUpToolbar(this@LaunchActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
+        animHelper.setUpToolbar(this@ChooseActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
     fun intentToChat(chatId: String, title: String) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("chat_id", chatId)
         intent.putExtra("chat_name", title)
         startActivity(intent)

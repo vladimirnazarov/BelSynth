@@ -27,7 +27,7 @@ class SettingsFragment: BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        launchActivity.setUpToolbar(resources.getString(R.string.settings_title), isBackButtonVisible = true)
+        chooseActivity.setUpToolbar(resources.getString(R.string.settings_title), isBackButtonVisible = true)
         setUpThemeSwitch()
         setUpRadioGroup()
     }
@@ -40,7 +40,7 @@ class SettingsFragment: BaseFragment() {
             if (checked) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-            launchActivity.saveTheme(checked)
+            chooseActivity.saveTheme(checked)
         }
     }
 
@@ -58,11 +58,11 @@ class SettingsFragment: BaseFragment() {
 
             setOnCheckedChangeListener { _, i ->
                 when (i) {
-                    R.id.settings_language_be -> launchActivity.savePreferences("be")
-                    R.id.settings_language_en -> launchActivity.savePreferences("en")
-                    R.id.settings_language_ru -> launchActivity.savePreferences("ru")
-                    R.id.settings_language_zh -> launchActivity.savePreferences("zh")
-                    else -> launchActivity.savePreferences("en")
+                    R.id.settings_language_be -> chooseActivity.savePreferences("be")
+                    R.id.settings_language_en -> chooseActivity.savePreferences("en")
+                    R.id.settings_language_ru -> chooseActivity.savePreferences("ru")
+                    R.id.settings_language_zh -> chooseActivity.savePreferences("zh")
+                    else -> chooseActivity.savePreferences("en")
                 }
             }
         }

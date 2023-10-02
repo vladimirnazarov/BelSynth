@@ -19,7 +19,7 @@
         tools:targetApi="34" >
 
         <activity
-            android:name=".ui.LogoActivity"
+            android:name=".ui.LaunchActivity"
             android:theme="@style/LogoTheme"
             android:exported="true">
             <intent-filter>
@@ -29,17 +29,17 @@
         </activity>
 
         <activity
-            android:name=".ui.choose.LaunchActivity"
+            android:name=".ui.choose.ChooseActivity"
             android:exported="false"
             android:theme="@style/LaunchTheme" >
             <intent-filter>
-                <action android:name=".LaunchActivity"/>
+                <action android:name=".ChooseActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".ui.chat.MainActivity"
+            android:name=".ui.chat.ChatActivity"
             android:exported="false"
             android:theme="@style/MainTheme"
             android:windowSoftInputMode="adjustResize" >

@@ -30,7 +30,7 @@ import kotlinx.coroutines.*
 import java.io.File
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity() {
 
     private val mainApp = MainApplication()
 
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainApp.setContext(this@MainActivity)
+        mainApp.setContext(this@ChatActivity)
 
         viewModel.playable.value = true
         setUpAudioButton()
@@ -80,9 +80,9 @@ class MainActivity : AppCompatActivity() {
         setUpRecordButton()
 
         binding.apply {
-            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@MainActivity)
+            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@ChatActivity)
 
-            mainChatRv.layoutManager = LinearLayoutManager(this@MainActivity)
+            mainChatRv.layoutManager = LinearLayoutManager(this@ChatActivity)
             mainChatRv.adapter = adapter
             mainChatRv.smoothScrollToPosition(adapter.itemCount)
         }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        chatHelper.loadRecordAnim(this@MainActivity, binding)
+        chatHelper.loadRecordAnim(this@ChatActivity, binding)
         setUpMessageSendButton()
     }
 
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     private fun loadPreferences() {
         val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(LOCALE, "en")
+        val locale = sharedPreferences.getString(LOCALE, "be")
         val isSoundEnabled = sharedPreferences.getBoolean(CHAT_SOUND, true)
 
         locale?.let { Locale(it) }?.let { mainApp.setLocale(it) }
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpAudioButton() {
-        viewModel.playable.observe(this@MainActivity) {
+        viewModel.playable.observe(this@ChatActivity) {
             if (!it) {
                 binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_off)
                 MediaPlayerObject.pauseAudio(adapter = adapter)
@@ -172,12 +172,12 @@ class MainActivity : AppCompatActivity() {
                 val screenHeight = mainView.height
 
                 if (originalScreenHeight != screenHeight) {
-                    viewModel.controlBottomVisibility(this@MainActivity)
+                    viewModel.controlBottomVisibility(this@ChatActivity)
                     mainChatRv.smoothScrollToPosition(adapter.itemCount - 1)
                 }
                 else {
                     viewModel.apply {
-                        controlBottomVisibility( this@MainActivity, false)
+                        controlBottomVisibility( this@ChatActivity, false)
                     }
                 }
             }
@@ -193,8 +193,8 @@ class MainActivity : AppCompatActivity() {
                     loadUserMessage(mainChatMsgInput.text!!.toString())
 
                     currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
-                    sendTextMessage(mainChatMsgInput.text!!.toString())
 
+                    mainChatMsgInput.text?.toString()?.replace("\n", ". ")?.let { it1 -> sendTextMessage(it1) }
                     mainChatMsgInput.text?.clear()
                 }
             }
@@ -202,8 +202,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendTextMessage(text: String) {
-        viewModel.sendMessage(text, speaker, mainActivity = this@MainActivity)
-        chatHelper.showLoadingUtils(binding, this@MainActivity, scope)
+        viewModel.sendMessage(text, speaker, chatActivity = this@ChatActivity)
+        chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
     }
 
     private fun setUpRecordButton() {
@@ -215,7 +215,7 @@ class MainActivity : AppCompatActivity() {
 
                     MediaPlayerObject.pauseAudio(adapter = adapter)
 
-                    viewModel.startRecording(this@MainActivity, audioFile)
+                    viewModel.startRecording(this@ChatActivity, audioFile)
                     binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
                     binding.mainKeyboardButton.isClickable = false
                 }
@@ -226,8 +226,8 @@ class MainActivity : AppCompatActivity() {
                 binding.mainKeyboardButton.isClickable = true
 
                 loadUserVoiceMessage(audioFile)
-                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, mainActivity = this@MainActivity) }
-                chatHelper.showLoadingUtils(binding, this@MainActivity, scope)
+                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, chatActivity = this@ChatActivity) }
+                chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
             }
         }
     }
@@ -270,7 +270,7 @@ class MainActivity : AppCompatActivity() {
     fun shareIntent(text: String) {
         val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n\n$text"
 
-        ShareCompat.IntentBuilder(this@MainActivity)
+        ShareCompat.IntentBuilder(this@ChatActivity)
             .setChooserTitle(resources.getText(R.string.share_using))
             .setType("text/plain")
             .setText(finalText)
@@ -287,8 +287,8 @@ class MainActivity : AppCompatActivity() {
     fun getBinding() = binding
 
     private fun checkPermissions() : Boolean {
-        if (ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
+        if (ContextCompat.checkSelfPermission(this@ChatActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@ChatActivity, arrayOf(Manifest.permission.RECORD_AUDIO), PERMISSIONS_REQUEST_CODE)
             return false
         }
         return true
@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity() {
 
                 MediaPlayerObject.pauseAudio(adapter = adapter)
 
-                viewModel.startRecording(this@MainActivity, audioFile)
+                viewModel.startRecording(this@ChatActivity, audioFile)
                 binding.mainRecordImage.setImageResource(R.drawable.ic_mic_off)
                 binding.mainKeyboardButton.isClickable = false
             }

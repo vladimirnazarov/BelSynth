@@ -26,18 +26,18 @@ class ChooseFragment: BaseFragment() {
     override fun onResume() {
         super.onResume()
 
-        launchActivity.setUpToolbar("", isBackButtonVisible = false, isAdditionalButtonsVisible = true, findNavController())
+        chooseActivity.setUpToolbar("", isBackButtonVisible = false, isAdditionalButtonsVisible = true, findNavController())
         setUpChats()
     }
 
     private fun setUpChats() {
         binding.apply {
-            chooseSpeaker1Ripple.setOnClickListener { launchActivity.intentToChat("ales", binding.chooseSpeaker1Name.text.toString()) }
-            chooseSpeaker2Ripple.setOnClickListener { launchActivity.intentToChat("alesia", binding.chooseSpeaker2Name.text.toString()) }
-            chooseSpeaker3Ripple.setOnClickListener { launchActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString()) }
-            chooseSpeaker4Ripple.setOnClickListener { launchActivity.intentToChat("boris", binding.chooseSpeaker4Name.text.toString()) }
-            chooseSpeaker5Ripple.setOnClickListener { launchActivity.intentToChat("kiryl", binding.chooseSpeaker5Name.text.toString()) }
-            chooseSpeaker6Ripple.setOnClickListener { launchActivity.intentToChat("vasil", binding.chooseSpeaker6Name.text.toString()) }
+            chooseSpeaker1Ripple.setOnClickListener { chooseActivity.intentToChat("ales", binding.chooseSpeaker1Name.text.toString()) }
+            chooseSpeaker2Ripple.setOnClickListener { chooseActivity.intentToChat("alesia", binding.chooseSpeaker2Name.text.toString()) }
+            chooseSpeaker3Ripple.setOnClickListener { chooseActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString()) }
+            chooseSpeaker4Ripple.setOnClickListener { chooseActivity.intentToChat("boris", binding.chooseSpeaker4Name.text.toString()) }
+            chooseSpeaker5Ripple.setOnClickListener { chooseActivity.intentToChat("kiryl", binding.chooseSpeaker5Name.text.toString()) }
+            chooseSpeaker6Ripple.setOnClickListener { chooseActivity.intentToChat("vasil", binding.chooseSpeaker6Name.text.toString()) }
         }
     }
 }

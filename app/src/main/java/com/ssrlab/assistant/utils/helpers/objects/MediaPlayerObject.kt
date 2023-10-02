@@ -5,7 +5,7 @@ import android.net.Uri
 import android.widget.ImageButton
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.rv.ChatAdapter
-import com.ssrlab.assistant.ui.chat.MainActivity
+import com.ssrlab.assistant.ui.chat.ChatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,12 +20,12 @@ object MediaPlayerObject {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun initializeMediaPlayer(mainActivity: MainActivity, uri: Uri) {
+    fun initializeMediaPlayer(chatActivity: ChatActivity, uri: Uri) {
         playerStatus = "play"
         mediaPlayer = MediaPlayer()
 
         try {
-            mediaPlayer!!.setDataSource(mainActivity, uri)
+            mediaPlayer!!.setDataSource(chatActivity, uri)
             mediaPlayer!!.prepare()
         } catch (e: IOException) {
             e.printStackTrace()
