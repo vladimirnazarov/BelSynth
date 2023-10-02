@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication
@@ -20,13 +21,14 @@ import com.ssrlab.assistant.db.objects.MessageInfoObject
 import com.ssrlab.assistant.db.objects.UserMessage
 import com.ssrlab.assistant.db.objects.UserVoiceMessage
 import com.ssrlab.assistant.rv.ChatAdapter
-import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.*
 import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
 import kotlinx.coroutines.*
 import java.io.File
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,6 +68,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.playable.value = true
         setUpAudioButton()
 
+        loadPreferences()
+
         speaker = intent.getStringExtra("chat_id").toString()
 
         chatHelper = ChatHelper()
@@ -103,13 +107,44 @@ class MainActivity : AppCompatActivity() {
         getExternalFilesDir(null)
     }
 
+    @Suppress("DEPRECATION")
+    private fun loadPreferences() {
+        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+        val locale = sharedPreferences.getString(LOCALE, "en")
+        val isSoundEnabled = sharedPreferences.getBoolean(CHAT_SOUND, true)
+
+        locale?.let { Locale(it) }?.let { mainApp.setLocale(it) }
+        viewModel.playable.value = isSoundEnabled
+
+        val config = mainApp.getContext().resources.configuration
+        config.setLocale(locale?.let { Locale(it) })
+        locale?.let { Locale(it) }?.let { Locale.setDefault(it) }
+
+        mainApp.getContext().resources.updateConfiguration(config, resources.displayMetrics)
+        mainApp.setLocale(locale!!)
+    }
+
+    private fun savePreferences(value: Boolean) {
+        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+        sharedPreferences.edit {
+            putBoolean(CHAT_SOUND, value)
+            apply()
+        }
+    }
+
     private fun setUpAudioButton() {
         viewModel.playable.observe(this@MainActivity) {
             if (!it) {
                 binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_off)
                 MediaPlayerObject.pauseAudio(adapter = adapter)
+
+                savePreferences(false)
             }
-            else binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_on)
+            else {
+                binding.mainToolbarAudio.setImageResource(R.drawable.ic_volume_on)
+
+                savePreferences(true)
+            }
         }
 
         binding.mainToolbarAudio.setOnClickListener {

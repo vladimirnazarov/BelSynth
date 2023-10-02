@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    tools:context=".ui.launch.LaunchActivity"
+    tools:context=".ui.choose.LaunchActivity"
     tools:ignore="ContentDescription"
 
     android:background="@color/background_color"
@@ -100,6 +100,7 @@
         android:layout_height="wrap_content"
 
         android:background="@drawable/img_background_launch"
+        android:scaleType="fitCenter"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

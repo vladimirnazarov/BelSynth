@@ -11,7 +11,7 @@ import kotlinx.coroutines.*
 
 class ChatHelper {
 
-    fun loadDotsAnim(context: Context, binding: ActivityMainBinding, scope: CoroutineScope) {
+    private fun loadDotsAnim(context: Context, binding: ActivityMainBinding, scope: CoroutineScope) {
         val viewArray = arrayListOf<ImageView>()
         binding.apply {
                 viewArray.add(mainProgressDot1)

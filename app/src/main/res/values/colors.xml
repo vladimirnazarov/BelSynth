@@ -8,7 +8,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
-    
+    <color name="semi_transparent">#80000000</color>
+
     <color name="icon_color">#065986</color>
     <color name="switch_inactive">#959595</color>
     <color name="switch_active">#36B6FB</color>

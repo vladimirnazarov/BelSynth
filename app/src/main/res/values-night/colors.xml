@@ -26,6 +26,7 @@
     <color name="speaker_text">#FFFFFF</color>
     <color name="clickable_text">#36B6FB</color>
     <color name="ripple_text">#2392CD</color>
+    <color name="semi_transparent">#80000000</color>
 
     <color name="status_bar_color">#010411</color>
     <color name="launch_navigation_bar_color">#010411</color>

@@ -6,7 +6,7 @@ import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
-import com.ssrlab.assistant.ui.launch.LaunchActivity
+import com.ssrlab.assistant.ui.choose.LaunchActivity
 
 class LaunchToolbarAnimHelper {
 

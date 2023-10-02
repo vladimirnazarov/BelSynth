@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Asistent</string>
+    <string name="launch_name">语音人工智能助理</string>
 
     <!--  Choose  -->
     <string name="choose_title">選擇一個與之交談的人</string>
