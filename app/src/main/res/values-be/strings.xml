@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Assistant</string>
+    <string name="app_name">Asistent</string>
+    <string name="launch_name">Галасавы AI асістэнт</string>
 
     <!--  Choose  -->
     <string name="choose_title">Абярыце суразмоўцу</string>

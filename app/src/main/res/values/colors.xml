@@ -8,7 +8,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
-    
+    <color name="semi_transparent">#80000000</color>
+
     <color name="icon_color">#065986</color>
     <color name="switch_inactive">#959595</color>
     <color name="switch_active">#36B6FB</color>
@@ -21,6 +22,7 @@
     <color name="radio_primary">#0981C2</color>
 
     <color name="primary_text">#010411</color>
+    <color name="msg_text">#010411</color>
     <color name="secondary_text">#73747A</color>
     <color name="speaker_text">#FFFFFF</color>
     <color name="clickable_text">#0981C2</color>
@@ -43,10 +45,13 @@
     <color name="chat_bot_background">#F6F6F6</color>
     <color name="chat_user_background">#B1E2FF</color>
     <color name="chat_input_background">#F6F6F6</color>
+    <color name="chat_input_holder_background">#FFFFFF</color>
     <color name="chat_input_hint">#939393</color>
     <color name="chat_icon_color">#0981C2</color>
+    <color name="chat_send_color">#065986</color>
     <color name="chat_highlight_color">#660981C2</color>
     <color name="chat_voice_button_background">#FFFFFF</color>
+    <color name="chat_loader_background">#FFFFFF</color>
 
     <color name="record_wave">#FFFFFF</color>
     <color name="loudness_wave">#0981C2</color>

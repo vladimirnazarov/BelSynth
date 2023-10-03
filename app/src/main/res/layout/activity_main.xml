@@ -4,8 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
+    android:background="@color/background_color"
+
     tools:ignore="ContentDescription"
-    tools:context=".ui.chat.MainActivity"
+    tools:context=".ui.chat.ChatActivity"
 
     android:id="@+id/main_view"
     android:layout_width="match_parent"
@@ -113,7 +115,7 @@
         android:layout_height="wrap_content"
 
         android:visibility="gone"
-        android:background="@color/white"
+        android:background="@color/chat_input_holder_background"
 
         android:elevation="4dp"
 
@@ -147,7 +149,7 @@
             android:textColorLink="@color/chat_icon_color"
             android:textColorHighlight="@color/chat_highlight_color"
 
-            android:textColor="@color/primary_text"
+            android:textColor="@color/msg_text"
             android:textSize="16sp"
             android:fontFamily="@font/roboto"
 
@@ -447,7 +449,6 @@
         android:layout_height="wrap_content"
 
         android:background="@drawable/background_main_record_1"
-
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

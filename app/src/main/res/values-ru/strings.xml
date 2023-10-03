@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Assistant</string>
+    <string name="app_name">Asistent</string>
+    <string name="launch_name">Голосовой AI ассистент</string>
 
     <!--  Choose  -->
-    <string name="choose_title">Абярыце суразмоўцу</string>
+    <string name="choose_title">Выберите собеседника</string>
     <string name="speaker_1">Алесь</string>
     <string name="speaker_2">Алеся</string>
-    <string name="speaker_3">Алена</string>
-    <string name="speaker_4">Барыс</string>
-    <string name="speaker_5">Кірыл</string>
-    <string name="speaker_6">Васіль</string>
-    <string name="speaker_7">Васіліна</string>
-    <string name="voice_ready">(голас стабілізуецца)</string>
-    <string name="voice_in_progress">(у прапрацоўцы)</string>
+    <string name="speaker_3">Елена</string>
+    <string name="speaker_4">Борис</string>
+    <string name="speaker_5">Кирилл</string>
+    <string name="speaker_6">Василь</string>
+    <string name="speaker_7">Василина</string>
+    <string name="voice_ready">(голос стабилизируется)</string>
+    <string name="voice_in_progress">(в проработке)</string>
 
     <!--  Settings  -->
-    <string name="settings_title">Наладкі</string>
-    <string name="dark_theme">Цёмная тэма</string>
-    <string name="language">Мова</string>
+    <string name="settings_title">Настройки</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="language">Язык</string>
     <string name="be">Беларуская</string>
     <string name="en">English</string>
     <string name="ru">Русский</string>
     <string name="zh">中文</string>
 
     <!--  Contacts  -->
-    <string name="contacts_title">Кантакты</string>
-    <string name="if_you_have_questions">Калі ў вас есць пытанні або прапановы, звяжыцеся з намі</string>
+    <string name="contacts_title">Контакты</string>
+    <string name="if_you_have_questions">Если у вас есть вопросы или предложения, свяжитесь с нами</string>
     <string name="email_title">E-mail:</string>
     <string name="email">hello@asistent.by</string>
-    <string name="address_title">Адрас:</string>
-    <string name="address">220012, г.Мінск, вул.Сурганава, 6, пакоі 422, 430 і 432</string>
-    <string name="phone_numbers_title">Тэлефоны:</string>
+    <string name="address_title">Адрес:</string>
+    <string name="address">220012, г. Минск, ул. Сурганова, 6, каб. 422, 430 и 432</string>
+    <string name="phone_numbers_title">Телефоны:</string>
     <string name="phone_number_1">+375 (17) 379–21–26</string>
     <string name="phone_number_2">+375 (17) 379–25–22</string>
-    <string name="phone_room_1">(пакой 430)</string>
-    <string name="phone_room_2">(пакой 432)</string>
+    <string name="phone_room_1">(каб. 430)</string>
+    <string name="phone_room_2">(каб. 432)</string>
 
     <!--  Chat  -->
     <string name="chat_record_plug">00:00</string>
-    <string name="enter_message">Увядзіце запыт…</string>
-    <string name="text_copied">Тэкст скапіраваны!</string>
-    <string name="share_text_1">Паглядзі, які цікавы адказ мне даў бот</string>
-    <string name="share_text_2">праз прыладу</string>
-    <string name="share_using">Падзяліцца праз…</string>
+    <string name="enter_message">Введите запрос…</string>
+    <string name="text_copied">Текст скопирован!</string>
+    <string name="share_text_1">Посмотри, какой интересный ответ мне дал бот</string>
+    <string name="share_text_2">через приложение</string>
+    <string name="share_using">Поделиться через…</string>
 </resources>

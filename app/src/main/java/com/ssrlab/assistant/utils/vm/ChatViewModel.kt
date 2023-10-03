@@ -38,8 +38,8 @@ class ChatViewModel : ViewModel() {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun startRecording(mainActivity: MainActivity, outputFile: File) {
-        startRecordingFunctionality(mainActivity, outputFile)
+    fun startRecording(chatActivity: ChatActivity, outputFile: File) {
+        startRecordingFunctionality(chatActivity, outputFile)
     }
 
     fun stopRecording(binding: ActivityMainBinding) {
@@ -62,82 +62,82 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun sendMessage(text: String, speaker: String, role: String = "assistant", mainActivity: MainActivity) {
+    fun sendMessage(text: String, speaker: String, role: String = "assistant", chatActivity: ChatActivity) {
         val botAudio = MutableLiveData<File>()
         var botText = ""
 
         scope.launch {
             MessageClient.sendMessage(text, speaker, role, { responseAudioLink, responseText ->
-                mainActivity.runOnUiThread {
+                chatActivity.runOnUiThread {
                     botText = responseText
-                    loadAudioFile(responseAudioLink, mainActivity) {
-                        mainActivity.runOnUiThread { botAudio.value = it }
+                    loadAudioFile(responseAudioLink, chatActivity) {
+                        chatActivity.runOnUiThread { botAudio.value = it }
                     }
                 }
-            }) { showErrorMessage(it, mainActivity) }
+            }) { showErrorMessage(it, chatActivity) }
         }
 
-        botAudio.observe(mainActivity) {
-            mainActivity.apply {
+        botAudio.observe(chatActivity) {
+            chatActivity.apply {
                 loadBotMessage(botText, it)
 
                 if (playable.value!!) {
                     pauseAudio()
-                    initializeMediaPlayer(mainActivity, it.toUri())
+                    initializeMediaPlayer(chatActivity, it.toUri())
                     playAudio()
                 }
 
-                ChatHelper().hideLoadingUtils(mainActivity.getBinding())
+                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
             }
         }
     }
 
-    fun sendMessage(audio: File, speaker: String, role: String = "assistant", mainActivity: MainActivity) {
+    fun sendMessage(audio: File, speaker: String, role: String = "assistant", chatActivity: ChatActivity) {
         val botAudio = MutableLiveData<File>()
         var botText = ""
 
         scope.launch {
             MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
-                mainActivity.runOnUiThread {
+                chatActivity.runOnUiThread {
                     botText = responseText
-                    loadAudioFile(responseAudioLink, mainActivity) {
-                        mainActivity.runOnUiThread { botAudio.value = it }
+                    loadAudioFile(responseAudioLink, chatActivity) {
+                        chatActivity.runOnUiThread { botAudio.value = it }
                     }
                 }
-            }) { showErrorMessage(it, mainActivity) }
+            }) { showErrorMessage(it, chatActivity) }
         }
 
-        botAudio.observe(mainActivity) {
-            mainActivity.apply {
+        botAudio.observe(chatActivity) {
+            chatActivity.apply {
                 loadBotMessage(botText, it)
 
                 if (playable.value!!) {
                     pauseAudio()
-                    initializeMediaPlayer(mainActivity, it.toUri())
+                    initializeMediaPlayer(chatActivity, it.toUri())
                     playAudio()
                 }
 
-                ChatHelper().hideLoadingUtils(mainActivity.getBinding())
+                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
             }
         }
     }
 
-    private fun loadAudioFile(link: String, mainActivity: MainActivity, onSuccess: (File) -> Unit) {
-        val file = File(mainActivity.getExternalFilesDir(null), "bv_msg_${mainActivity.getId()}_${mainActivity.getSpeaker()}.mp3")
+    private fun loadAudioFile(link: String, chatActivity: ChatActivity, onSuccess: (File) -> Unit) {
+        val file = File(chatActivity.getExternalFilesDir(null), "bv_msg_${chatActivity.getId()}_${chatActivity.getSpeaker()}.mp3")
         MessageClient.getAudio(link, file, {
             onSuccess(file)
         }) {
-            mainActivity.runOnUiThread {
-                Toast.makeText(mainActivity, "$it, error", Toast.LENGTH_SHORT).show()
+            chatActivity.runOnUiThread {
+                Toast.makeText(chatActivity, "$it, error", Toast.LENGTH_SHORT).show()
                 onSuccess(file)
             }
         }
     }
 
-    private fun showErrorMessage(msg: String, mainActivity: MainActivity) {
-        mainActivity.runOnUiThread {
-            Toast.makeText(mainActivity, "$msg, try again", Toast.LENGTH_SHORT).show()
-            ChatHelper().hideLoadingUtils(mainActivity.getBinding())
+    private fun showErrorMessage(msg: String, chatActivity: ChatActivity) {
+        chatActivity.runOnUiThread {
+            Toast.makeText(chatActivity, "$msg, try again", Toast.LENGTH_SHORT).show()
+            ChatHelper().hideLoadingUtils(chatActivity.getBinding())
         }
     }
 
@@ -149,7 +149,7 @@ class ChatViewModel : ViewModel() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun startRecordingFunctionality(mainActivity: MainActivity, outputFile: File) {
+    private fun startRecordingFunctionality(chatActivity: ChatActivity, outputFile: File) {
 
         val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
         audioRecord = AudioRecord(
@@ -160,7 +160,7 @@ class ChatViewModel : ViewModel() {
             minBufferSize
         )
 
-        createMediaRecorder(mainActivity).apply {
+        createMediaRecorder(chatActivity).apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setAudioSamplingRate(44100)
             setAudioChannels(1)
@@ -178,17 +178,17 @@ class ChatViewModel : ViewModel() {
         mediaRecorder.start()
         isRecording = true
 
-        showWave(mainActivity)
-        startTimer(mainActivity)
-        startWaveThread(mainActivity)
+        showWave(chatActivity)
+        startTimer(chatActivity)
+        startWaveThread(chatActivity)
     }
 
-    private fun startTimer(mainActivity: MainActivity) {
+    private fun startTimer(chatActivity: ChatActivity) {
         scope.launch {
             var currentTime = 0
 
             while (isRecording) {
-                mainActivity.runOnUiThread { mainActivity.getBinding().mainDurationText.text = mainActivity.getChatHelper().convertToTimerMode(currentTime) }
+                chatActivity.runOnUiThread { chatActivity.getBinding().mainDurationText.text = chatActivity.getChatHelper().convertToTimerMode(currentTime) }
 
                 delay(1000)
                 currentTime += 1000
@@ -196,7 +196,7 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private fun startWaveThread(mainActivity: MainActivity) {
+    private fun startWaveThread(chatActivity: ChatActivity) {
         Thread {
             val bufferSize = 1024
             val buffer = ShortArray(bufferSize)
@@ -210,7 +210,7 @@ class ChatViewModel : ViewModel() {
                 val fft = FloatFFT_1D(bufferSize)
                 fft.realForward(fftData)
 
-                mainActivity.apply {
+                chatActivity.apply {
                     runOnUiThread {
                         getVisualizerView().updateFFTData(fftData)
                     }
@@ -219,11 +219,11 @@ class ChatViewModel : ViewModel() {
         }.start()
     }
 
-    fun controlBottomVisibility(mainActivity: MainActivity, hideBottom: Boolean = true) {
+    fun controlBottomVisibility(chatActivity: ChatActivity, hideBottom: Boolean = true) {
         if (!isRecording) {
             if (hideBottom) {
-                mainActivity.getBinding().apply {
-                    mainActivity.runOnUiThread {
+                chatActivity.getBinding().apply {
+                    chatActivity.runOnUiThread {
                         mainChatMsgHolder.visibility = View.VISIBLE
                         mainBottomBar.visibility = View.GONE
                         mainRecordButton.visibility = View.GONE
@@ -233,8 +233,8 @@ class ChatViewModel : ViewModel() {
                 scope.launch {
                     delay(50)
 
-                    mainActivity.runOnUiThread {
-                        mainActivity.getBinding().apply {
+                    chatActivity.runOnUiThread {
+                        chatActivity.getBinding().apply {
                             mainChatMsgHolder.visibility = View.GONE
                             mainBottomBar.visibility = View.VISIBLE
                             mainRecordButton.visibility = View.VISIBLE
@@ -245,9 +245,9 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private fun showWave(mainActivity: MainActivity) {
-        mainActivity.getBinding().apply {
-            val alphaInAnim = AnimationUtils.loadAnimation(mainActivity, R.anim.alpha_in)
+    private fun showWave(chatActivity: ChatActivity) {
+        chatActivity.getBinding().apply {
+            val alphaInAnim = AnimationUtils.loadAnimation(chatActivity, R.anim.alpha_in)
 
             mainWaveLayout.startAnimation(alphaInAnim)
             mainWaveCenter.startAnimation(alphaInAnim)
