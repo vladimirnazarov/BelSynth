@@ -71,6 +71,7 @@ class ChatActivity : AppCompatActivity() {
         loadPreferences()
 
         speaker = intent.getStringExtra("chat_id").toString()
+        binding.mainToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
 
         chatHelper = ChatHelper()
         setUpToolbar()
