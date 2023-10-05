@@ -14,6 +14,8 @@
     <string name="speaker_7">Василина</string>
     <string name="voice_ready">(голос стабилизируется)</string>
     <string name="voice_in_progress">(в проработке)</string>
+    <string name="assistant_with_role">Ассистенты с выбором роли</string>
+    <string name="assistant_common">Общие ассистенты</string>
 
     <!--  Settings  -->
     <string name="settings_title">Настройки</string>

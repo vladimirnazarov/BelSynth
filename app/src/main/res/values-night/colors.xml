@@ -30,17 +30,17 @@
 
     <color name="status_bar_color">#010411</color>
     <color name="launch_navigation_bar_color">#010411</color>
-    <color name="main_navigation_bar_color">#065986</color>
+    <color name="chat_navigation_bar_color">#065986</color>
 
     <color name="background_color">#010411</color>
     <color name="icon_button_ripple">#95959599</color>
 
-    <color name="main_bottom_bar_color">#0981C2</color>
-    <color name="main_bottom_bar_icon_color">#FFFFFF</color>
-    <color name="main_bottom_bar_icon_ripple">#096DA3</color>
+    <color name="chat_bottom_bar_color">#0981C2</color>
+    <color name="chat_bottom_bar_icon_color">#FFFFFF</color>
+    <color name="chat_bottom_bar_icon_ripple">#096DA3</color>
 
-    <color name="main_loader_color">#959595</color>
-    <color name="main_record_beep_color">#EB5757</color>
+    <color name="chat_loader_color">#959595</color>
+    <color name="chat_record_beep_color">#EB5757</color>
 
     <color name="chat_bot_background">#F6F6F6</color>
     <color name="chat_user_background">#B1E2FF</color>

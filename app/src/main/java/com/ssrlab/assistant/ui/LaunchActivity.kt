@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication
-import com.ssrlab.assistant.databinding.ActivityLogoBinding
+import com.ssrlab.assistant.databinding.ActivityLaunchBinding
 import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.utils.FIRST_LAUNCH
 import com.ssrlab.assistant.utils.LOCALE
@@ -25,7 +25,7 @@ class LaunchActivity : AppCompatActivity() {
 
     private val mainApp = MainApplication()
 
-    private lateinit var binding: ActivityLogoBinding
+    private lateinit var binding: ActivityLaunchBinding
     private lateinit var controller: WindowInsetsControllerCompat
 
     private var isFirstLaunch = true
@@ -36,7 +36,7 @@ class LaunchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLogoBinding.inflate(layoutInflater)
+        binding = ActivityLaunchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         mainApp.setContext(this@LaunchActivity)
@@ -99,46 +99,46 @@ class LaunchActivity : AppCompatActivity() {
 
                 scope.launch {
                     runOnUiThread {
-                        logoIc.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
-                        logoIc.visibility = View.VISIBLE
+                        launchIc.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
+                        launchIc.visibility = View.VISIBLE
                     }
 
                     delay(750)
 
                     runOnUiThread {
-                        logoTitle.text = resources.getText(R.string.launch_name)
-                        logoTitle.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
-                        logoTitle.visibility = View.VISIBLE
+                        launchTitle.text = resources.getText(R.string.launch_name)
+                        launchTitle.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
+                        launchTitle.visibility = View.VISIBLE
                     }
                 }
 
                 val videoPath = "android.resource://$packageName/${R.raw.back}"
                 val uri = Uri.parse(videoPath)
 
-                logoVideo.visibility = View.VISIBLE
-                logoVideo.setVideoURI(uri)
-                logoVideo.setOnPreparedListener {
+                launchVideo.visibility = View.VISIBLE
+                launchVideo.setVideoURI(uri)
+                launchVideo.setOnPreparedListener {
                     it.playbackParams = it.playbackParams.setSpeed(2.0f)
-                    logoVideo.start()
+                    launchVideo.start()
                 }
-                logoVideo.setOnCompletionListener { intentNext() }
+                launchVideo.setOnCompletionListener { intentNext() }
             }
         } else {
             binding.apply {
-                logoBg.visibility = View.VISIBLE
+                launchBg.visibility = View.VISIBLE
 
                 scope.launch {
                     runOnUiThread {
-                        logoIc.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
-                        logoIc.visibility = View.VISIBLE
+                        launchIc.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
+                        launchIc.visibility = View.VISIBLE
                     }
 
                     delay(750)
 
                     runOnUiThread {
-                        logoTitle.text = resources.getText(R.string.launch_name)
-                        logoTitle.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
-                        logoTitle.visibility = View.VISIBLE
+                        launchTitle.text = resources.getText(R.string.launch_name)
+                        launchTitle.startAnimation(AnimationUtils.loadAnimation(this@LaunchActivity, R.anim.long_alpha_in))
+                        launchTitle.visibility = View.VISIBLE
                     }
                 }
 

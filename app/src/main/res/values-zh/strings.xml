@@ -14,6 +14,8 @@
     <string name="speaker_7">瓦西里娜</string>
     <string name="voice_ready">声音稳定</string>
     <string name="voice_in_progress">正在开发中</string>
+    <string name="assistant_with_role">可选择角色的助理</string>
+    <string name="assistant_common">普通助理</string>
 
     <!--  Settings  -->
     <string name="settings_title">设置</string>

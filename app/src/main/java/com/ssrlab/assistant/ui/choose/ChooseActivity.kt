@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import com.ssrlab.assistant.app.MainApplication
-import com.ssrlab.assistant.databinding.ActivityLaunchBinding
+import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.LOCALE
 import com.ssrlab.assistant.utils.PREFERENCES
@@ -17,7 +17,7 @@ import java.util.*
 
 class ChooseActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLaunchBinding
+    private lateinit var binding: ActivityChooseBinding
     private lateinit var animHelper: LaunchToolbarAnimHelper
 
     private val mainApp = MainApplication()
@@ -25,7 +25,7 @@ class ChooseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLaunchBinding.inflate(layoutInflater)
+        binding = ActivityChooseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         mainApp.setContext(this@ChooseActivity)

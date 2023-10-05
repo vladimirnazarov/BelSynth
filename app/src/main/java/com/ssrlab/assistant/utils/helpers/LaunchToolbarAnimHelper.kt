@@ -5,47 +5,47 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.databinding.ActivityLaunchBinding
+import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.choose.ChooseActivity
 
 class LaunchToolbarAnimHelper {
 
-    fun setUpToolbar(chooseActivity: ChooseActivity, binding: ActivityLaunchBinding, title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
+    fun setUpToolbar(chooseActivity: ChooseActivity, binding: ActivityChooseBinding, title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
         binding.apply {
-            if (title == "") launchToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-            else launchToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+            if (title == "") chooseToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+            else chooseToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
 
-            launchToolbarTitle.animation.setAnimationListener(object : Animation.AnimationListener {
+            chooseToolbarTitle.animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationEnd(p0: Animation?) { launchToolbarTitle.text = title }
+                override fun onAnimationEnd(p0: Animation?) { chooseToolbarTitle.text = title }
                 override fun onAnimationRepeat(p0: Animation?) {}
             })
 
-            launchToolbarBack.setOnClickListener { chooseActivity.onBackPressedDispatcher.onBackPressed() }
+            chooseToolbarBack.setOnClickListener { chooseActivity.onBackPressedDispatcher.onBackPressed() }
 
             if (navController != null) {
-                launchToolbarSettings.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_settingsFragment) }
-                launchToolbarContacts.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_contactsFragment) }
+                chooseToolbarSettings.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_settingsFragment) }
+                chooseToolbarContacts.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_contactsFragment) }
             }
 
             if (isBackButtonVisible) {
-                launchToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                launchToolbarBack.visibility = View.VISIBLE
+                chooseToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseToolbarBack.visibility = View.VISIBLE
             } else {
-                launchToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                launchToolbarBack.visibility = View.INVISIBLE
+                chooseToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseToolbarBack.visibility = View.INVISIBLE
             }
 
             if (isAdditionalButtonsVisible) {
-                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                launchToolbarContacts.visibility = View.VISIBLE
-                launchToolbarSettings.visibility = View.VISIBLE
+                chooseToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseToolbarContacts.visibility = View.VISIBLE
+                chooseToolbarSettings.visibility = View.VISIBLE
             } else {
-                launchToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                launchToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                launchToolbarContacts.visibility = View.GONE
-                launchToolbarSettings.visibility = View.INVISIBLE
+                chooseToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseToolbarContacts.visibility = View.GONE
+                chooseToolbarSettings.visibility = View.INVISIBLE
             }
         }
     }

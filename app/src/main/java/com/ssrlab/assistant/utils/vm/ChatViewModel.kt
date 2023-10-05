@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.MessageClient
-import com.ssrlab.assistant.databinding.ActivityMainBinding
+import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.ui.chat.*
 import com.ssrlab.assistant.utils.AUDIO_FORMAT
 import com.ssrlab.assistant.utils.CHANNEL_CONFIG
@@ -42,7 +42,7 @@ class ChatViewModel : ViewModel() {
         startRecordingFunctionality(chatActivity, outputFile)
     }
 
-    fun stopRecording(binding: ActivityMainBinding) {
+    fun stopRecording(binding: ActivityChatBinding) {
         if (isRecording()) {
             this.apply {
                 audioRecord.stop()
@@ -54,10 +54,10 @@ class ChatViewModel : ViewModel() {
             }
 
             binding.apply {
-                mainWaveLayout.visibility = View.GONE
-                mainWaveCenter.visibility = View.GONE
-                mainDurationHolder.visibility = View.GONE
-                mainWaveReplacement.visibility = View.VISIBLE
+                chatWaveLayout.visibility = View.GONE
+                chatWaveCenter.visibility = View.GONE
+                chatDurationHolder.visibility = View.GONE
+                chatWaveReplacement.visibility = View.VISIBLE
             }
         }
     }
@@ -188,7 +188,7 @@ class ChatViewModel : ViewModel() {
             var currentTime = 0
 
             while (isRecording) {
-                chatActivity.runOnUiThread { chatActivity.getBinding().mainDurationText.text = chatActivity.getChatHelper().convertToTimerMode(currentTime) }
+                chatActivity.runOnUiThread { chatActivity.getBinding().chatDurationText.text = chatActivity.getChatHelper().convertToTimerMode(currentTime) }
 
                 delay(1000)
                 currentTime += 1000
@@ -224,9 +224,9 @@ class ChatViewModel : ViewModel() {
             if (hideBottom) {
                 chatActivity.getBinding().apply {
                     chatActivity.runOnUiThread {
-                        mainChatMsgHolder.visibility = View.VISIBLE
-                        mainBottomBar.visibility = View.GONE
-                        mainRecordButton.visibility = View.GONE
+                        chatChatMsgHolder.visibility = View.VISIBLE
+                        chatBottomBar.visibility = View.GONE
+                        chatRecordButton.visibility = View.GONE
                     }
                 }
             } else {
@@ -235,9 +235,9 @@ class ChatViewModel : ViewModel() {
 
                     chatActivity.runOnUiThread {
                         chatActivity.getBinding().apply {
-                            mainChatMsgHolder.visibility = View.GONE
-                            mainBottomBar.visibility = View.VISIBLE
-                            mainRecordButton.visibility = View.VISIBLE
+                            chatChatMsgHolder.visibility = View.GONE
+                            chatBottomBar.visibility = View.VISIBLE
+                            chatRecordButton.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -249,14 +249,14 @@ class ChatViewModel : ViewModel() {
         chatActivity.getBinding().apply {
             val alphaInAnim = AnimationUtils.loadAnimation(chatActivity, R.anim.alpha_in)
 
-            mainWaveLayout.startAnimation(alphaInAnim)
-            mainWaveCenter.startAnimation(alphaInAnim)
-            mainDurationHolder.startAnimation(alphaInAnim)
+            chatWaveLayout.startAnimation(alphaInAnim)
+            chatWaveCenter.startAnimation(alphaInAnim)
+            chatDurationHolder.startAnimation(alphaInAnim)
 
-            mainWaveLayout.visibility = View.VISIBLE
-            mainWaveCenter.visibility = View.VISIBLE
-            mainDurationHolder.visibility = View.VISIBLE
-            mainWaveReplacement.visibility = View.GONE
+            chatWaveLayout.visibility = View.VISIBLE
+            chatWaveCenter.visibility = View.VISIBLE
+            chatDurationHolder.visibility = View.VISIBLE
+            chatWaveReplacement.visibility = View.GONE
         }
     }
 

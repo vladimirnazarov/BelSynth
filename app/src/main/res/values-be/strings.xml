@@ -14,6 +14,8 @@
     <string name="speaker_7">Васіліна</string>
     <string name="voice_ready">(голас стабілізуецца)</string>
     <string name="voice_in_progress">(у прапрацоўцы)</string>
+    <string name="assistant_with_role">Асістэнты з выбарам ролі</string>
+    <string name="assistant_common">Асістэнты агульнага накірунку</string>
 
     <!--  Settings  -->
     <string name="settings_title">Наладкі</string>

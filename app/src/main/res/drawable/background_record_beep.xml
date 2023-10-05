@@ -3,6 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <solid android:color="@color/main_record_beep_color"/>
+    <solid android:color="@color/chat_record_beep_color"/>
 
 </shape>
