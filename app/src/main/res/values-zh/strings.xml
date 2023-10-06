@@ -17,6 +17,35 @@
     <string name="assistant_with_role">可选择角色的助理</string>
     <string name="assistant_common">普通助理</string>
 
+    <!--  Role  -->
+    <string name="role_title">选择角色</string>
+    <string name="role_1">普通助理</string>
+    <string name="role_2">建筑师</string>
+    <string name="role_3">业务分析师</string>
+    <string name="role_4">财务顾问</string>
+    <string name="role_5">招聘人员</string>
+    <string name="role_6">项目经理</string>
+    <string name="role_7">法律顾问</string>
+    <string name="role_8">营销专家</string>
+    <string name="role_9">房地产经纪人</string>
+    <string name="role_10">工程师</string>
+    <string name="role_11">程序员</string>
+    <string name="role_12">教师</string>
+    <string name="role_13">作家</string>
+    <string name="role_additional_1">Прывітанне, я <b>Агульны асістэнт</b>. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_2">Прывітанне, я <b>Архітэктар</b>. Гатовы дапамагчы вам з вашымі архітэктурнымі пытаннямі і прадметамі.</string>
+    <string name="role_additional_3">Прывітанне, я <b>Бізнэс-аналітык</b>. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_4">Прывітанне, я <b>Фінансавы кансультант</b>. Маю глыбокі разуменне ў галіне фінансаў і гатовы дапамагчы вам з планаванне і інвестыцыямі.</string>
+    <string name="role_additional_5">Прывітанне, я <b>Рэкруцер</b>. Я - ваш надзейны супрацоўнік у працы па пошуку і адбору найлепшых кандыдатаў. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_6">Прывітанне, я <b>Проджэкт-мэнаджар</b>. Я магу дапамагчы над планаваннем, арганізацыяй і кіраваннем вашых праектаў, забяспечваючы паспяховыя вынікі.</string>
+    <string name="role_additional_7">Прывітанне, я <b>Юрыдычны кансультант </b>. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_8">Прывітанне, я <b>Маркетолаг</b>. Я - ваш надзейны партнёр у стварэнні і выкананні эфектыўных маркетынгавых кампаній. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_9">Прывітанне, я <b>Рыелтар</b>. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_10">Прывітанне, я <b>Інжынер</b>. Гатовы падтрымаць вас у рашэнні тэхнічных задач і супрацоўнічаць у стварэнні новых тэхналагічных рашэнняў.</string>
+    <string name="role_additional_11">Прывітанне, я <b>Праграміст</b>. Я гатовы стаць вашым супрацоўнікам і супольна адкрываць новыя горы ў сферы тэхналогій.</string>
+    <string name="role_additional_12">Прывітанне, я <b>Настаўнік</b>. Як я магу дапамагчы вам?</string>
+    <string name="role_additional_13">Прывітанне, я <b>Пісьменнік</b>. Я гатовы дапамагчы вам з ідэямі, развіццём сюжэтаў і стварэннем непаўторных літаратурных шэдэўраў.</string>
+
     <!--  Settings  -->
     <string name="settings_title">设置</string>
     <string name="dark_theme">暗色主题</string>

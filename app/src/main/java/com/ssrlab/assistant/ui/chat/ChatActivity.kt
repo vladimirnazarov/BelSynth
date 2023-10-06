@@ -40,6 +40,8 @@ class ChatActivity : AppCompatActivity() {
 
     private val viewModel: ChatViewModel by viewModels()
     private var speaker = ""
+    private var role = ""
+    private var roleInt = 0
 
     private lateinit var imm: InputMethodManager
     private var originalScreenHeight = 0
@@ -47,8 +49,8 @@ class ChatActivity : AppCompatActivity() {
     private var id = 1
     private lateinit var audioFile: File
 
-    private val messagesI = arrayListOf(MessageInfoObject(id, 1))
-    private val botMessages = arrayListOf(BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?"))
+    private val messagesI = arrayListOf<MessageInfoObject>()
+    private val botMessages = arrayListOf<BotMessage>()
     private val userMessages = arrayListOf<UserMessage>()
     private val userVoiceMessages = arrayListOf<UserVoiceMessage>()
 
@@ -71,6 +73,8 @@ class ChatActivity : AppCompatActivity() {
         loadPreferences()
 
         speaker = intent.getStringExtra("chat_id").toString()
+        role = intent.getStringExtra("chat_role").toString()
+        roleInt = intent.getIntExtra("chat_role_int", 0)
         binding.chatToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
 
         chatHelper = ChatHelper()
@@ -81,6 +85,9 @@ class ChatActivity : AppCompatActivity() {
         setUpRecordButton()
 
         binding.apply {
+            val botMessage = generateFirstMessage()
+            botMessages.add(botMessage)
+            messagesI.add(MessageInfoObject(id, 1))
             adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@ChatActivity)
 
             chatChatRv.layoutManager = LinearLayoutManager(this@ChatActivity)
@@ -131,6 +138,27 @@ class ChatActivity : AppCompatActivity() {
             putBoolean(CHAT_SOUND, value)
             apply()
         }
+    }
+
+    private fun generateFirstMessage() : BotMessage {
+        var botMessage = BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?")
+        when (roleInt) {
+            1 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_1)) }
+            2 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_2)) }
+            3 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_3)) }
+            4 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_4)) }
+            5 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_5)) }
+            6 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_6)) }
+            7 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_7)) }
+            8 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_8)) }
+            9 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_9)) }
+            10 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_10)) }
+            11 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_11)) }
+            12 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_12)) }
+            13 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_13)) }
+        }
+
+        return botMessage
     }
 
     private fun setUpAudioButton() {
@@ -203,7 +231,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendTextMessage(text: String) {
-        viewModel.sendMessage(text, speaker, chatActivity = this@ChatActivity)
+        viewModel.sendMessage(text, speaker, role = role, chatActivity = this@ChatActivity)
         chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
     }
 
@@ -227,7 +255,7 @@ class ChatActivity : AppCompatActivity() {
                 binding.chatKeyboardButton.isClickable = true
 
                 loadUserVoiceMessage(audioFile)
-                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, chatActivity = this@ChatActivity) }
+                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, role = role, chatActivity = this@ChatActivity) }
                 chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
             }
         }

@@ -12,40 +12,40 @@ class LaunchToolbarAnimHelper {
 
     fun setUpToolbar(chooseActivity: ChooseActivity, binding: ActivityChooseBinding, title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
         binding.apply {
-            if (title == "") chooseToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-            else chooseToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+            if (title == "") chooseActivityToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+            else chooseActivityToolbarTitle.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
 
-            chooseToolbarTitle.animation.setAnimationListener(object : Animation.AnimationListener {
+            chooseActivityToolbarTitle.animation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationEnd(p0: Animation?) { chooseToolbarTitle.text = title }
+                override fun onAnimationEnd(p0: Animation?) { chooseActivityToolbarTitle.text = title }
                 override fun onAnimationRepeat(p0: Animation?) {}
             })
 
-            chooseToolbarBack.setOnClickListener { chooseActivity.onBackPressedDispatcher.onBackPressed() }
+            chooseActivityToolbarBack.setOnClickListener { chooseActivity.onBackPressedDispatcher.onBackPressed() }
 
             if (navController != null) {
-                chooseToolbarSettings.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_settingsFragment) }
-                chooseToolbarContacts.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_contactsFragment) }
+                chooseActivityToolbarSettings.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_settingsFragment) }
+                chooseActivityToolbarContacts.setOnClickListener { navController.navigate(R.id.action_chooseFragment_to_contactsFragment) }
             }
 
             if (isBackButtonVisible) {
-                chooseToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                chooseToolbarBack.visibility = View.VISIBLE
+                chooseActivityToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseActivityToolbarBack.visibility = View.VISIBLE
             } else {
-                chooseToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                chooseToolbarBack.visibility = View.INVISIBLE
+                chooseActivityToolbarBack.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseActivityToolbarBack.visibility = View.INVISIBLE
             }
 
             if (isAdditionalButtonsVisible) {
-                chooseToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                chooseToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
-                chooseToolbarContacts.visibility = View.VISIBLE
-                chooseToolbarSettings.visibility = View.VISIBLE
+                chooseActivityToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseActivityToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_in))
+                chooseActivityToolbarContacts.visibility = View.VISIBLE
+                chooseActivityToolbarSettings.visibility = View.VISIBLE
             } else {
-                chooseToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                chooseToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
-                chooseToolbarContacts.visibility = View.GONE
-                chooseToolbarSettings.visibility = View.INVISIBLE
+                chooseActivityToolbarContacts.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseActivityToolbarSettings.startAnimation(AnimationUtils.loadAnimation(chooseActivity, R.anim.alpha_out))
+                chooseActivityToolbarContacts.visibility = View.GONE
+                chooseActivityToolbarSettings.visibility = View.INVISIBLE
             }
         }
     }
