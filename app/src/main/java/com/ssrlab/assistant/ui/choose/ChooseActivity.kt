@@ -78,10 +78,11 @@ class ChooseActivity : AppCompatActivity() {
         animHelper.setUpToolbar(this@ChooseActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
-    fun intentToChat(chatId: String, title: String) {
+    fun intentToChat(chatId: String, title: String, img: Int) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("chat_id", chatId)
         intent.putExtra("chat_name", title)
+        intent.putExtra("chat_img", img)
         startActivity(intent)
     }
 
