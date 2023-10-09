@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import com.ssrlab.assistant.app.MainApplication
-import com.ssrlab.assistant.databinding.ActivityLaunchBinding
+import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.LOCALE
 import com.ssrlab.assistant.utils.PREFERENCES
@@ -17,7 +17,7 @@ import java.util.*
 
 class ChooseActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLaunchBinding
+    private lateinit var binding: ActivityChooseBinding
     private lateinit var animHelper: LaunchToolbarAnimHelper
 
     private val mainApp = MainApplication()
@@ -25,7 +25,7 @@ class ChooseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityLaunchBinding.inflate(layoutInflater)
+        binding = ActivityChooseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         mainApp.setContext(this@ChooseActivity)
@@ -78,11 +78,13 @@ class ChooseActivity : AppCompatActivity() {
         animHelper.setUpToolbar(this@ChooseActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
-    fun intentToChat(chatId: String, title: String, img: Int) {
+    fun intentToChat(chatId: String, title: String, img: Int, role: String = "", roleInt: Int = 0) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("chat_id", chatId)
         intent.putExtra("chat_name", title)
         intent.putExtra("chat_img", img)
+        intent.putExtra("chat_role", role)
+        intent.putExtra("chat_role_int", roleInt)
         startActivity(intent)
     }
 

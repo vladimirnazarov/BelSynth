@@ -5,6 +5,6 @@
     android:viewportHeight="24">
   <path
       android:pathData="M4,4.889C4,4.398 4.398,4 4.889,4H19.111C19.602,4 20,4.398 20,4.889V19.111C20,19.602 19.602,20 19.111,20H4.889C4.398,20 4,19.602 4,19.111V4.889ZM5.778,5.778V18.222H18.222V5.778H5.778Z"
-      android:fillColor="@color/main_bottom_bar_icon_color"
+      android:fillColor="@color/chat_bottom_bar_icon_color"
       android:fillType="evenOdd"/>
 </vector>

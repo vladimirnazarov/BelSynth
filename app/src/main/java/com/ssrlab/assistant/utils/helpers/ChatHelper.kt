@@ -5,23 +5,23 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.databinding.ActivityMainBinding
+import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import kotlinx.coroutines.*
 
 class ChatHelper {
 
-    private fun loadDotsAnim(context: Context, binding: ActivityMainBinding, scope: CoroutineScope) {
+    private fun loadDotsAnim(context: Context, binding: ActivityChatBinding, scope: CoroutineScope) {
         val viewArray = arrayListOf<ImageView>()
         binding.apply {
-                viewArray.add(mainProgressDot1)
-                viewArray.add(mainProgressDot2)
-                viewArray.add(mainProgressDot3)
-                viewArray.add(mainProgressDot4)
-                viewArray.add(mainProgressDot5)
-                viewArray.add(mainProgressDot6)
-                viewArray.add(mainProgressDot7)
-                viewArray.add(mainProgressDot8)
+                viewArray.add(chatProgressDot1)
+                viewArray.add(chatProgressDot2)
+                viewArray.add(chatProgressDot3)
+                viewArray.add(chatProgressDot4)
+                viewArray.add(chatProgressDot5)
+                viewArray.add(chatProgressDot6)
+                viewArray.add(chatProgressDot7)
+                viewArray.add(chatProgressDot8)
         }
 
         scope.launch {
@@ -32,26 +32,26 @@ class ChatHelper {
         }
     }
 
-    fun loadRecordAnim(context: Context, binding: ActivityMainBinding) {
-        binding.mainDurationIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.record_animation))
+    fun loadRecordAnim(context: Context, binding: ActivityChatBinding) {
+        binding.chatDurationIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.record_animation))
     }
 
-    fun showLoadingUtils(binding: ActivityMainBinding, chatActivity: ChatActivity, scope: CoroutineScope) {
+    fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivity, scope: CoroutineScope) {
         binding.apply {
-            mainProgressHolder.visibility = View.VISIBLE
+            chatProgressHolder.visibility = View.VISIBLE
             loadDotsAnim(chatActivity, binding, scope)
 
-            mainRecordRipple.isClickable = false
-            mainKeyboardButton.isClickable = false
+            chatRecordRipple.isClickable = false
+            chatKeyboardButton.isClickable = false
         }
     }
 
-    fun hideLoadingUtils(binding: ActivityMainBinding) {
+    fun hideLoadingUtils(binding: ActivityChatBinding) {
         binding.apply {
-            mainProgressHolder.visibility = View.GONE
+            chatProgressHolder.visibility = View.GONE
 
-            mainRecordRipple.isClickable = true
-            mainKeyboardButton.isClickable = true
+            chatRecordRipple.isClickable = true
+            chatKeyboardButton.isClickable = true
         }
     }
 

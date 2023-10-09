@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentChooseBinding
@@ -38,7 +39,16 @@ class ChooseFragment: BaseFragment() {
             chooseSpeaker3Ripple.setOnClickListener { chooseActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString(), R.drawable.img_speaker_3) }
             chooseSpeaker4Ripple.setOnClickListener { chooseActivity.intentToChat("boris", binding.chooseSpeaker4Name.text.toString(), R.drawable.img_speaker_4) }
             chooseSpeaker5Ripple.setOnClickListener { chooseActivity.intentToChat("kiryl", binding.chooseSpeaker5Name.text.toString(), R.drawable.img_speaker_5) }
-            chooseSpeaker6Ripple.setOnClickListener { chooseActivity.intentToChat("vasil", binding.chooseSpeaker6Name.text.toString(), R.drawable.img_speaker_6) }
+            chooseSpeaker6Ripple.setOnClickListener {
+                findNavController().navigate(
+                    R.id.action_chooseFragment_to_roleFragment,
+                    bundleOf(
+                        Pair("chat_id", "vasil"),
+                        Pair("chat_title", binding.chooseSpeaker6Name.text.toString()),
+                        Pair("chat_img", R.drawable.img_speaker_6)
+                    )
+                )
+            }
         }
     }
 }
