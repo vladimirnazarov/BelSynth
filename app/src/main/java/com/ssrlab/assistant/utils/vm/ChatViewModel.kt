@@ -62,7 +62,7 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun sendMessage(text: String, speaker: String, role: String = "assistant", chatActivity: ChatActivity) {
+    fun sendMessage(text: String, speaker: String, role: String, chatActivity: ChatActivity) {
         val botAudio = MutableLiveData<File>()
         var botText = ""
 
@@ -92,7 +92,7 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun sendMessage(audio: File, speaker: String, role: String = "assistant", chatActivity: ChatActivity) {
+    fun sendMessage(audio: File, speaker: String, role: String, chatActivity: ChatActivity) {
         val botAudio = MutableLiveData<File>()
         var botText = ""
 

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -39,8 +40,10 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var visualizerView: FFTVisualizerView
 
     private val viewModel: ChatViewModel by viewModels()
+
     private var speaker = ""
     private var role = ""
+    private var roleCode = ""
     private var roleInt = 0
 
     private lateinit var imm: InputMethodManager
@@ -74,6 +77,7 @@ class ChatActivity : AppCompatActivity() {
 
         speaker = intent.getStringExtra("chat_id").toString()
         role = intent.getStringExtra("chat_role").toString()
+        roleCode = intent.getStringExtra("chat_role_code").toString()
         roleInt = intent.getIntExtra("chat_role_int", 0)
         binding.chatToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
 
@@ -231,7 +235,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendTextMessage(text: String) {
-        viewModel.sendMessage(text, speaker, role = role, chatActivity = this@ChatActivity)
+        viewModel.sendMessage(text, speaker, role = roleCode, chatActivity = this@ChatActivity)
         chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
     }
 
@@ -255,7 +259,7 @@ class ChatActivity : AppCompatActivity() {
                 binding.chatKeyboardButton.isClickable = true
 
                 loadUserVoiceMessage(audioFile)
-                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, role = role, chatActivity = this@ChatActivity) }
+                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, role = roleCode, chatActivity = this@ChatActivity) }
                 chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
             }
         }
@@ -346,7 +350,19 @@ class ChatActivity : AppCompatActivity() {
     private fun setUpToolbar() {
         binding.apply {
             chatToolbarBack.setOnClickListener { goBack() }
-            chatToolbarTitle.text = intent.getStringExtra("chat_name")
+
+            if (speaker == "vasil") {
+                chatToolbarTitle.visibility = View.GONE
+                chatToolbarTextBlockFull.visibility = View.VISIBLE
+
+                chatToolbarTitleFull.text = intent.getStringExtra("chat_name")
+                chatToolbarSubTitleFull.text = role
+            } else {
+                chatToolbarTitle.text = intent.getStringExtra("chat_name")
+
+                chatToolbarTitle.visibility = View.VISIBLE
+                chatToolbarTextBlockFull.visibility = View.GONE
+            }
         }
     }
 }
