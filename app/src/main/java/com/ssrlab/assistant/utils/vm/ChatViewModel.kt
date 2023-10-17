@@ -104,7 +104,18 @@ class ChatViewModel : ViewModel() {
                         chatActivity.runOnUiThread { botAudio.value = it }
                     }
                 }
-            }) { showErrorMessage(it, chatActivity) }
+            }) {
+                MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
+                    chatActivity.runOnUiThread {
+                        botText = responseText
+                        loadAudioFile(responseAudioLink, chatActivity) {
+                            chatActivity.runOnUiThread { botAudio.value = it }
+                        }
+                    }
+                }) {
+                    showErrorMessage(it, chatActivity)
+                }
+            }
         }
 
         botAudio.observe(chatActivity) {
@@ -161,7 +172,7 @@ class ChatViewModel : ViewModel() {
         )
 
         createMediaRecorder(chatActivity).apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
             setAudioSamplingRate(44100)
             setAudioChannels(1)
             setAudioEncodingBitRate(128000)
@@ -178,12 +189,22 @@ class ChatViewModel : ViewModel() {
         mediaRecorder.start()
         isRecording = true
 
-        showWave(chatActivity)
+        val runtime = Runtime.getRuntime()
+        val availableProcessors = runtime.availableProcessors()
+        if (availableProcessors >= 3) {
+            showWave(chatActivity)
+            startWaveThread(chatActivity)
+        }
         startTimer(chatActivity)
-        startWaveThread(chatActivity)
     }
 
     private fun startTimer(chatActivity: ChatActivity) {
+        chatActivity.getBinding().apply {
+            val alphaInAnim = AnimationUtils.loadAnimation(chatActivity, R.anim.alpha_in)
+            chatDurationHolder.startAnimation(alphaInAnim)
+            chatDurationHolder.visibility = View.VISIBLE
+        }
+
         scope.launch {
             var currentTime = 0
 
@@ -251,11 +272,9 @@ class ChatViewModel : ViewModel() {
 
             chatWaveLayout.startAnimation(alphaInAnim)
             chatWaveCenter.startAnimation(alphaInAnim)
-            chatDurationHolder.startAnimation(alphaInAnim)
 
             chatWaveLayout.visibility = View.VISIBLE
             chatWaveCenter.visibility = View.VISIBLE
-            chatDurationHolder.visibility = View.VISIBLE
             chatWaveReplacement.visibility = View.GONE
         }
     }
