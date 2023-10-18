@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,24 +78,18 @@ class ChatAdapter(
                         chatActivity.currentFocus?.clearFocus()
                     }
 
-                    val playButton = view.findViewById<ConstraintLayout>(R.id.rv_bot_msg_content)
+                    val playView = view.findViewById<ConstraintLayout>(R.id.rv_bot_msg_content)
+                    val playButton = view.findViewById<ImageButton>(R.id.rv_bot_play)
 
                     if (position > 0) {
                         val audio = botMessage.find { it.id == messageI[position].id }?.audio?.toUri()!!
 
-                        playButton.setOnClickListener {
-                            for (i in 0 until playingArray.size) {
-                                if (playingArray[i]) {
-                                    arrayOfButtons[i].setImageResource(R.drawable.ic_msg_voice_play)
-                                    playingArray[i] = false
-                                }
-                            }
-
-                            pauseAudio()
-                            initializeMediaPlayer(chatActivity, audio)
-                            playAudio()
-                        }
-                    } else playButton.isClickable = false
+                        playView.setOnClickListener { playBotAudio(chatActivity, audio) }
+                        playButton.setOnClickListener { playBotAudio(chatActivity, audio) }
+                    } else {
+                        playView.isClickable = false
+                        playButton.visibility = View.GONE
+                    }
                 }
                 2 -> {
                     val textMsg = view.findViewById<TextView>(R.id.rv_user_msg)
@@ -145,6 +140,19 @@ class ChatAdapter(
                 else -> 0
             }
         } else 0
+    }
+
+    private fun playBotAudio(chatActivity: ChatActivity, audio: Uri) {
+        for (i in 0 until playingArray.size) {
+            if (playingArray[i]) {
+                arrayOfButtons[i].setImageResource(R.drawable.ic_msg_voice_play)
+                playingArray[i] = false
+            }
+        }
+
+        pauseAudio()
+        initializeMediaPlayer(chatActivity, audio)
+        playAudio()
     }
 
     fun getPlayingArray() = playingArray
