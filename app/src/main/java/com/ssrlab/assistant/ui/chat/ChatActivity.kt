@@ -244,7 +244,7 @@ class ChatActivity : AppCompatActivity() {
             if (!viewModel.isRecording()) {
                 if (checkPermissions()) {
                     id += 1
-                    audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
+                    audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp4")
 
                     MediaPlayerObject.pauseAudio(adapter = adapter)
 
@@ -336,7 +336,7 @@ class ChatActivity : AppCompatActivity() {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 id += 1
-                audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp3")
+                audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp4")
 
                 MediaPlayerObject.pauseAudio(adapter = adapter)
 

@@ -116,6 +116,21 @@
                     app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
+                <ImageButton
+                    android:id="@+id/rv_bot_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/ic_volume_small"
+                    android:background="@drawable/ripple_rounded"
+
+                    android:padding="4dp"
+
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+
+                    app:layout_constraintEnd_toStartOf="@id/rv_bot_share"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,8 @@
 package com.ssrlab.assistant.client
 
 import android.util.Log
+import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
+import com.arthenica.mobileffmpeg.FFmpeg
 import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -53,10 +55,11 @@ object MessageClient {
                     e.printStackTrace()
                     if (responseBody != null) {
                         Log.e("JSON Exception", responseBody)
+                        onFailure(responseBody)
                     }
-
-                    onFailure(e.message!!)
                 }
+
+                response.close()
             }
         })
     }
@@ -70,41 +73,53 @@ object MessageClient {
                 .build()
         }
 
-        val body = MultipartBody.Builder().setType(MultipartBody.FORM)
-            .addFormDataPart("audio_file", audioFile.name, audioFile.asRequestBody("application/octet-stream".toMediaType()))
-            .addFormDataPart("voice_type", speaker)
-            .addFormDataPart("role", role)
-            .build()
-        val request = Request.Builder()
-            .url("https://ml1.ssrlab.by/api/android/voice")
-            .post(body)
-            .build()
+        val inputPath = audioFile.path
+        val outputPath = "${audioFile.parent}/convertedAudio.mp3"
 
-        client?.newCall(request)?.enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onFailure(e.message!!)
-            }
+        convertToMp3(inputPath, outputPath) { success ->
+            if (success) {
+                val file = File(outputPath)
 
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
+                val body = MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("audio_file", file.name, file.asRequestBody("application/octet-stream".toMediaType()))
+                    .addFormDataPart("voice_type", speaker)
+                    .addFormDataPart("role", role)
+                    .build()
+                val request = Request.Builder()
+                    .url("https://ml1.ssrlab.by/api/android/voice")
+                    .post(body)
+                    .build()
 
-                try {
-                    val jsonObject = responseBody?.let { JSONObject(it) }
-
-                    val audio = jsonObject?.getString("audio")
-                    val text = jsonObject?.getString("text")
-
-                    if (audio != null && text != null) onResponse(audio, text)
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                    if (responseBody != null) {
-                        Log.e("JSON Exception", responseBody)
+                client?.newCall(request)?.enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        onFailure(e.message!!)
                     }
 
-                    onFailure(e.message!!)
-                }
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBody = response.body?.string()
+
+                        try {
+                            val jsonObject = responseBody?.let { JSONObject(it) }
+
+                            val audio = jsonObject?.getString("audio")
+                            val text = jsonObject?.getString("text")
+
+                            if (audio != null && text != null) onResponse(audio, text)
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            if (responseBody != null) {
+                                Log.e("JSON Exception", responseBody)
+                                onFailure(responseBody)
+                            }
+                        }
+
+                        response.close()
+                    }
+                })
+            } else {
+                onFailure("Unable to convert audio, try again")
             }
-        })
+        }
     }
 
     fun getAudio(link: String, file: File, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
@@ -126,7 +141,10 @@ object MessageClient {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) Log.e("File response", "Response error")
+                if (!response.isSuccessful) {
+                    Log.e("File response", "Response error")
+                    response.body?.string()?.let { onFailure(it) }
+                }
                 else {
                     val fos = FileOutputStream(file)
                     fos.write(response.body?.bytes())
@@ -134,7 +152,28 @@ object MessageClient {
 
                     onSuccess()
                 }
+
+                response.close()
             }
         })
+    }
+
+    private fun convertToMp3(inputPath: String, outputPath: String, callback: (Boolean) -> Unit) {
+        val command = arrayOf(
+            "-i", inputPath, "-y",
+            "-vn", //disable video
+            "-ar", "44100", //frequency
+            "-ac", "2", //channels
+            "-b:a", "32k", //bitrate
+            outputPath
+        )
+
+        FFmpeg.executeAsync(command) { _, returnCode ->
+            if (returnCode == RETURN_CODE_SUCCESS) {
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }
     }
 }
