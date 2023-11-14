@@ -20,7 +20,7 @@
         tools:targetApi="34" >
 
         <activity
-            android:name=".ui.LaunchActivity"
+            android:name=".ui.login.LaunchActivity"
             android:theme="@style/LogoTheme"
             android:screenOrientation="portrait"
             android:exported="true">
@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".ui.choose.ChooseActivity"
+            android:name=".ui.main.ChooseActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/LaunchTheme" >

@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.choose
+package com.ssrlab.assistant.ui.main
 
 import android.content.Intent
 import android.net.Uri

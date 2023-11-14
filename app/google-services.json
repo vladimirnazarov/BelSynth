@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "450308038671",
+    "project_id": "belsynth-c2aff",
+    "storage_bucket": "belsynth-c2aff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:450308038671:android:6e5e6a99335c0df8dc437a",
+        "android_client_info": {
+          "package_name": "com.ssrlab.assistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSDLEHHvbONBQpd7XN99ng_F2BLjo1ce4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
