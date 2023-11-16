@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.databinding.FragmentLoginBinding
-import com.ssrlab.assistant.ui.login.fragments.base.BaseFragment
+import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
 
-class LoginFragment: BaseFragment() {
+class LoginFragment: BaseLaunchFragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var fireAuth: FirebaseAuth
