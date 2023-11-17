@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.ui.login.LaunchActivity
 
-open class BaseFragment: Fragment() {
+open class BaseLaunchFragment: Fragment() {
 
     lateinit var launchActivity: LaunchActivity
     lateinit var mainApp: MainApplication
