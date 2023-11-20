@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseFragment
+import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
 
-class SettingsFragment: BaseFragment() {
+class SettingsFragment: BaseMainFragment() {
 
     private lateinit var binding: FragmentSettingsBinding
 

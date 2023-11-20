@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentContactsBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseFragment
+import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
 
-class ContactsFragment: BaseFragment() {
+class ContactsFragment: BaseMainFragment() {
 
     private lateinit var binding: FragmentContactsBinding
 

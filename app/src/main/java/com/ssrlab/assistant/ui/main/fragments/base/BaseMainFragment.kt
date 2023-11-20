@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.ui.main.ChooseActivity
 
-open class BaseFragment: Fragment() {
+open class BaseMainFragment: Fragment() {
 
     lateinit var chooseActivity: ChooseActivity
     lateinit var mainApp: MainApplication

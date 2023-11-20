@@ -8,9 +8,9 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentChooseBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseFragment
+import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
 
-class ChooseFragment: BaseFragment() {
+class ChooseFragment: BaseMainFragment() {
 
     private lateinit var binding: FragmentChooseBinding
 
