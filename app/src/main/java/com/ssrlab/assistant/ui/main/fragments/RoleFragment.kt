@@ -7,9 +7,9 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRoleChooseBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseFragment
+import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
 
-class RoleFragment: BaseFragment() {
+class RoleFragment: BaseMainFragment() {
 
     private lateinit var binding: FragmentRoleChooseBinding
 
