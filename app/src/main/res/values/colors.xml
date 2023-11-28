@@ -10,6 +10,10 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="semi_transparent">#80000000</color>
 
+    <color name="google_back">#FFFFFF</color>
+    <color name="google_stroke">#959595</color>
+    <color name="google_pressed">#959595</color>
+
     <color name="icon_color">#065986</color>
     <color name="switch_inactive">#959595</color>
     <color name="switch_active">#36B6FB</color>
