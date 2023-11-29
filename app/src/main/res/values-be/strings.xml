@@ -18,7 +18,10 @@
     <string name="sign_up">Рэгістрацыя</string>
     <string name="sign_up_button">Зарэгістравацца</string>
     <string name="sign_up_with_google">Зарэгістравацца праз Google</string>
-    <string name="sign_up_confirm_text">Рэгіструючыся, вы згаджаецеся з <a href="https://google.com">Умовамі выкарыстання</a> і <a href="https://google.com">Палітыкай канфідэнцыйнасці</a></string>
+    <string name="sign_up_confirm_start">Рэгіструючыся, вы згаджаецеся з</string>
+    <string name="sign_up_confirm_tu">Умовамі выкарыстання</string>
+    <string name="sign_up_confirm_and">і</string>
+    <string name="sign_up_confirm_pp">Палітыкай канфідэнцыйнасці</string>
     <string name="already_have_an_account">Ужо ёсць акаўнт?</string>
     <string name="to_sign_in">Увайсці</string>
 
