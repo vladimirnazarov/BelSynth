@@ -21,7 +21,7 @@
 
         <activity
             android:name=".ui.login.LaunchActivity"
-            android:theme="@style/LogoTheme"
+            android:theme="@style/LaunchTheme"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -34,7 +34,7 @@
             android:name=".ui.main.ChooseActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/LaunchTheme" >
+            android:theme="@style/LaunchTheme">
             <intent-filter>
                 <action android:name=".ChooseActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>

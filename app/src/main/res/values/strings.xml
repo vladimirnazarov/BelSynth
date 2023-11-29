@@ -13,14 +13,14 @@
     <string name="password">Password</string>
     <string name="password_additional">at least 8 symbols</string>
     <string name="dont_remember_password">Forgot your password?</string>
-    <string name="dont_have_an_account">Don\'t have an account? </string>
-    <string name="to_sign_up"><u>Sign up</u></string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="to_sign_up">Sign up</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_up_button">Sign up</string>
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="sign_up_confirm_text">Registration constitutes your agreement to the <a href="https://google.com">Terms of Use</a> and <a href="https://google.com">Privacy Policy</a></string>
-    <string name="already_have_an_account">Already have an account? </string>
-    <string name="to_sign_in"><u>Sign in</u></string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="to_sign_in">Sign in</string>
 
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>

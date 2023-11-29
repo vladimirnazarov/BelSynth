@@ -13,14 +13,14 @@
     <string name="password">Пароль</string>
     <string name="password_additional">не меньш за 8 сімвалаў</string>
     <string name="dont_remember_password">Забылі пароль?</string>
-    <string name="dont_have_an_account">Няма акаўнта? </string>
-    <string name="to_sign_up"><u>Зарэгістравацца</u></string>
+    <string name="dont_have_an_account">Няма акаўнта?</string>
+    <string name="to_sign_up">Зарэгістравацца</string>
     <string name="sign_up">Рэгістрацыя</string>
     <string name="sign_up_button">Зарэгістравацца</string>
     <string name="sign_up_with_google">Зарэгістравацца праз Google</string>
     <string name="sign_up_confirm_text">Рэгіструючыся, вы згаджаецеся з <a href="https://google.com">Умовамі выкарыстання</a> і <a href="https://google.com">Палітыкай канфідэнцыйнасці</a></string>
-    <string name="already_have_an_account">Ужо ёсць акаўнт? </string>
-    <string name="to_sign_in"><u>Увайсці</u></string>
+    <string name="already_have_an_account">Ужо ёсць акаўнт?</string>
+    <string name="to_sign_in">Увайсці</string>
 
     <!--  Choose  -->
     <string name="choose_title">Абярыце суразмоўцу</string>

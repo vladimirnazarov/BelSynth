@@ -9,10 +9,16 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
 
+    <!--  Sign In/Out  -->
     <color name="google_back">#4DFFFFFF</color>
     <color name="google_stroke">#959595</color>
     <color name="google_pressed">#6601C1FE</color>
+    <color name="sign_text">#73747A</color>
+    <color name="sign_et_contour">#D7D7D7</color>
+    <color name="sign_et_contour_activated">#010411</color>
+    <color name="sign_et_back">#F6F6F6</color>
 
+    <!--  Choose  -->
     <color name="icon_color">#FFFFFF</color>
     <color name="switch_inactive">#959595</color>
     <color name="switch_active">#36B6FB</color>
