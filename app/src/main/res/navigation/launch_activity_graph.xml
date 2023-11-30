@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/launch_activity_graph"
-    app:startDestination="@id/registerFragment">
+    app:startDestination="@id/videoFragment">
 
     <fragment
         android:id="@+id/videoFragment"
