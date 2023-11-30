@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/email"
-        android:textColor="@color/ripple_contacts_text"
+        android:textColor="@color/ripple_fragments_text"
         android:textSize="16sp"
         android:fontFamily="@font/roboto"
 
@@ -130,7 +130,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/phone_number_1"
-        android:textColor="@color/ripple_contacts_text"
+        android:textColor="@color/ripple_fragments_text"
         android:textSize="16sp"
         android:fontFamily="@font/roboto"
 
@@ -151,7 +151,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/phone_number_2"
-        android:textColor="@color/ripple_contacts_text"
+        android:textColor="@color/ripple_fragments_text"
         android:textSize="16sp"
         android:fontFamily="@font/roboto"
 

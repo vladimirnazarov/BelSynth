@@ -37,16 +37,15 @@ class LoginFragment: BaseLaunchFragment() {
             loginButton.setOnClickListener {
                 if (loginEmailInput.text.toString().isNotEmpty() && loginPasswordInput.text.toString().isNotEmpty()) {
                     fireAuth.signInWithEmailAndPassword(loginEmailInput.text.toString(), loginPasswordInput.text.toString())
-                        .addOnCompleteListener {
-                            loginDebugWindow.text = it.isSuccessful.toString()
-                        }
                         .addOnFailureListener {
-                            loginDebugWindow.text = it.message.toString()
+
                         }
                         .addOnSuccessListener {
-                            loginDebugWindow.text = "${it.user?.uid}\n${fireAuth.currentUser?.email}"
+
                         }
-                } else loginDebugWindow.text = "Email and password should not be empty"
+                } else {
+
+                }
             }
         }
     }
