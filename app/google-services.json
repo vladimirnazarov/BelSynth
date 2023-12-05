@@ -12,7 +12,20 @@
           "package_name": "com.ssrlab.assistant"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "450308038671-r3qh6gjj7b10soddp0dv3tkied9klk0t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssrlab.assistant",
+            "certificate_hash": "ea2107078cbdcde633a32b22612ee8d4fe6ef8c1"
+          }
+        },
+        {
+          "client_id": "450308038671-a48i1s1raku2ccl59gpcvhr1ilbrbukd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCSDLEHHvbONBQpd7XN99ng_F2BLjo1ce4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "450308038671-a48i1s1raku2ccl59gpcvhr1ilbrbukd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

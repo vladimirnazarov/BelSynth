@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Asistent</string>
     <string name="launch_name">Галасавы AI асістэнт</string>
+    <string name="google_web_client_id">450308038671-a48i1s1raku2ccl59gpcvhr1ilbrbukd.apps.googleusercontent.com</string>
 
     <!--  Login & registration  -->
     <string name="sign_in">Уваход</string>

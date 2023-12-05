@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Asistent</string>
     <string name="launch_name">语音人工智能助理</string>
+    <string name="google_web_client_id">450308038671-a48i1s1raku2ccl59gpcvhr1ilbrbukd.apps.googleusercontent.com</string>
 
     <!--  Login & registration  -->
     <string name="sign_in">入场</string>

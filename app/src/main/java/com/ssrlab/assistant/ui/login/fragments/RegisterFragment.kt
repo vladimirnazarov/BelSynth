@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
+import com.ssrlab.assistant.utils.helpers.AuthClient
 
 class RegisterFragment: BaseLaunchFragment() {
 
@@ -30,6 +32,15 @@ class RegisterFragment: BaseLaunchFragment() {
         super.onResume()
 
         setUpRegisterButton()
+
+        binding.registerGoogleRipple.setOnClickListener {
+            AuthClient().signIn(Identity.getSignInClient(mainApp.getContext()), {
+
+            }, { msg, type ->
+                println(msg)
+                println(type)
+            })
+        }
     }
 
     private fun setUpRegisterButton() {
