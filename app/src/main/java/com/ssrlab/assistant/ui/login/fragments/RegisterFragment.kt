@@ -37,16 +37,15 @@ class RegisterFragment: BaseLaunchFragment() {
             registerButton.setOnClickListener {
                 if (registerEmailInput.text.toString().isNotEmpty() && registerPasswordInput.text.toString().isNotEmpty()) {
                     fireAuth.createUserWithEmailAndPassword(registerEmailInput.text.toString(), registerPasswordInput.text.toString())
-                        .addOnCompleteListener {
-                            registerDebugWindow.text = it.isSuccessful.toString()
-                        }
                         .addOnFailureListener {
-                            registerDebugWindow.text = it.message.toString()
+
                         }
                         .addOnSuccessListener {
-                            registerDebugWindow.text = "${it.user?.uid}\n${fireAuth.currentUser?.email}"
+
                         }
-                } else registerDebugWindow.text = "Email and password should not be empty"
+                } else {
+
+                }
             }
         }
     }

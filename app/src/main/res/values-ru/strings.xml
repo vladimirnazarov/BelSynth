@@ -18,7 +18,10 @@
     <string name="sign_up">Регистрация</string>
     <string name="sign_up_button">Зарегистрироваться</string>
     <string name="sign_up_with_google">Зарегистрироваться при помощи Google</string>
-    <string name="sign_up_confirm_text">Регистрируясь, вы соглашаетесь с <a href="https://google.com">Правилами пользования</a> и <a href="https://google.com">Политикой конфиденциальности</a></string>
+    <string name="sign_up_confirm_start">Регистрируясь, вы соглашаетесь с</string>
+    <string name="sign_up_confirm_tu">Правилами пользования</string>
+    <string name="sign_up_confirm_and">и</string>
+    <string name="sign_up_confirm_pp">Политикой конфиденциальности</string>
     <string name="already_have_an_account">Уже есть аккаунт?</string>
     <string name="to_sign_in">Войти</string>
 
