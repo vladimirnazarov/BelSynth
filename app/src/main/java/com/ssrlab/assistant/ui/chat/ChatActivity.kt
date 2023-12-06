@@ -2,6 +2,7 @@ package com.ssrlab.assistant.ui.chat
 
 import android.Manifest
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication
@@ -22,14 +22,18 @@ import com.ssrlab.assistant.db.objects.MessageInfoObject
 import com.ssrlab.assistant.db.objects.UserMessage
 import com.ssrlab.assistant.db.objects.UserVoiceMessage
 import com.ssrlab.assistant.rv.ChatAdapter
-import com.ssrlab.assistant.utils.*
+import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
+import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
-import java.util.*
 
 class ChatActivity : AppCompatActivity() {
 
@@ -40,6 +44,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var visualizerView: FFTVisualizerView
 
     private val viewModel: ChatViewModel by viewModels()
+    private lateinit var sharedPreferences: SharedPreferences
 
     private var speaker = ""
     private var role = ""
@@ -63,23 +68,21 @@ class ChatActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+        mainApp.setContext(this@ChatActivity)
+        mainApp.loadPreferences(sharedPreferences)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainApp.setContext(this@ChatActivity)
-
         viewModel.playable.value = true
         setUpAudioButton()
 
-        loadPreferences()
+        viewModel.playable.value = mainApp.isSoundEnabled()
 
-        speaker = intent.getStringExtra("chat_id").toString()
-        role = intent.getStringExtra("chat_role").toString()
-        roleCode = intent.getStringExtra("chat_role_code").toString()
-        roleInt = intent.getIntExtra("chat_role_int", 0)
-        binding.chatToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
+        getIntentValues()
 
         chatHelper = ChatHelper()
         setUpToolbar()
@@ -89,7 +92,7 @@ class ChatActivity : AppCompatActivity() {
         setUpRecordButton()
 
         binding.apply {
-            val botMessage = generateFirstMessage()
+            val botMessage = viewModel.generateFirstMessage(id, roleInt, this@ChatActivity)
             botMessages.add(botMessage)
             messagesI.add(MessageInfoObject(id, 1))
             adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@ChatActivity)
@@ -119,64 +122,18 @@ class ChatActivity : AppCompatActivity() {
         getExternalFilesDir(null)
     }
 
-    @Suppress("DEPRECATION")
-    private fun loadPreferences() {
-        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(LOCALE, "be")
-        val isSoundEnabled = sharedPreferences.getBoolean(CHAT_SOUND, true)
-
-        locale?.let { Locale(it) }?.let { mainApp.setLocale(it) }
-        viewModel.playable.value = isSoundEnabled
-
-        val config = mainApp.getContext().resources.configuration
-        config.setLocale(locale?.let { Locale(it) })
-        locale?.let { Locale(it) }?.let { Locale.setDefault(it) }
-
-        mainApp.getContext().resources.updateConfiguration(config, resources.displayMetrics)
-        mainApp.setLocale(locale!!)
-    }
-
-    private fun savePreferences(value: Boolean) {
-        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        sharedPreferences.edit {
-            putBoolean(CHAT_SOUND, value)
-            apply()
-        }
-    }
-
-    private fun generateFirstMessage() : BotMessage {
-        var botMessage = BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?")
-        when (roleInt) {
-            1 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_1)) }
-            2 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_2)) }
-            3 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_3)) }
-            4 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_4)) }
-            5 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_5)) }
-            6 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_6)) }
-            7 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_7)) }
-            8 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_8)) }
-            9 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_9)) }
-            10 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_10)) }
-            11 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_11)) }
-            12 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_12)) }
-            13 -> { botMessage = BotMessage(id, resources.getString(R.string.role_additional_13)) }
-        }
-
-        return botMessage
-    }
-
     private fun setUpAudioButton() {
         viewModel.playable.observe(this@ChatActivity) {
             if (!it) {
                 binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_off)
                 MediaPlayerObject.pauseAudio(adapter = adapter)
 
-                savePreferences(false)
+                mainApp.savePreferences(sharedPreferences, this@ChatActivity, value = false)
             }
             else {
                 binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_on)
 
-                savePreferences(true)
+                mainApp.savePreferences(sharedPreferences, this@ChatActivity, value = true)
             }
         }
 
@@ -364,5 +321,13 @@ class ChatActivity : AppCompatActivity() {
                 chatToolbarTextBlockFull.visibility = View.GONE
             }
         }
+    }
+
+    private fun getIntentValues() {
+        speaker = intent.getStringExtra("chat_id").toString()
+        role = intent.getStringExtra("chat_role").toString()
+        roleCode = intent.getStringExtra("chat_role_code").toString()
+        roleInt = intent.getIntExtra("chat_role_int", 0)
+        binding.chatToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
     }
 }

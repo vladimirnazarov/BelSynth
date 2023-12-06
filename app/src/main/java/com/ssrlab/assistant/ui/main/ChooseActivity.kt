@@ -1,19 +1,17 @@
 package com.ssrlab.assistant.ui.main
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
-import com.ssrlab.assistant.utils.LOCALE
 import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.THEME
 import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
-import java.util.*
 
 class ChooseActivity : AppCompatActivity() {
 
@@ -21,47 +19,19 @@ class ChooseActivity : AppCompatActivity() {
     private lateinit var animHelper: LaunchToolbarAnimHelper
 
     private val mainApp = MainApplication()
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
+        mainApp.setContext(this@ChooseActivity)
+        mainApp.loadPreferences(sharedPreferences)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityChooseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mainApp.setContext(this@ChooseActivity)
-
-        loadPreferences()
-
         animHelper = LaunchToolbarAnimHelper()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun loadPreferences() {
-        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(LOCALE, "be")
-        val nightMode = sharedPreferences.getBoolean(THEME, false)
-
-        locale?.let { Locale(it) }?.let { mainApp.setLocale(it) }
-
-        if (nightMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        mainApp.setTheme(nightMode)
-
-        val config = mainApp.getContext().resources.configuration
-        config.setLocale(locale?.let { Locale(it) })
-        locale?.let { Locale(it) }?.let { Locale.setDefault(it) }
-
-        mainApp.getContext().resources.updateConfiguration(config, resources.displayMetrics)
-        mainApp.setLocale(locale!!)
-    }
-
-    fun savePreferences(locale: String) {
-        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putString(LOCALE, locale)
-            apply()
-        }
-
-        recreate()
     }
 
     fun saveTheme(theme: Boolean) {
@@ -102,4 +72,5 @@ class ChooseActivity : AppCompatActivity() {
     }
 
     fun getMainApp() = mainApp
+    fun getSharedPreferences() = sharedPreferences
 }

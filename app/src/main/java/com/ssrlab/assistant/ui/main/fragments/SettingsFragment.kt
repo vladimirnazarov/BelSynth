@@ -58,11 +58,11 @@ class SettingsFragment: BaseMainFragment() {
 
             setOnCheckedChangeListener { _, i ->
                 when (i) {
-                    R.id.settings_language_be -> chooseActivity.savePreferences("be")
-                    R.id.settings_language_en -> chooseActivity.savePreferences("en")
-                    R.id.settings_language_ru -> chooseActivity.savePreferences("ru")
-                    R.id.settings_language_zh -> chooseActivity.savePreferences("zh")
-                    else -> chooseActivity.savePreferences("en")
+                    R.id.settings_language_be -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "be")
+                    R.id.settings_language_en -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "en")
+                    R.id.settings_language_ru -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "ru")
+                    R.id.settings_language_zh -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "zh")
+                    else -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "en")
                 }
             }
         }

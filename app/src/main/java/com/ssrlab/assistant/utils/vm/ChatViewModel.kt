@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.databinding.ActivityChatBinding
+import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.ui.chat.*
 import com.ssrlab.assistant.utils.AUDIO_FORMAT
 import com.ssrlab.assistant.utils.CHANNEL_CONFIG
@@ -37,6 +38,27 @@ class ChatViewModel : ViewModel() {
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
+
+    fun generateFirstMessage(id: Int, roleInt: Int, activity: ChatActivity) : BotMessage {
+        var botMessage = BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?")
+        when (roleInt) {
+            1 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_1)) }
+            2 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_2)) }
+            3 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_3)) }
+            4 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_4)) }
+            5 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_5)) }
+            6 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_6)) }
+            7 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_7)) }
+            8 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_8)) }
+            9 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_9)) }
+            10 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_10)) }
+            11 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_11)) }
+            12 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_12)) }
+            13 -> { botMessage = BotMessage(id, activity.resources.getString(R.string.role_additional_13)) }
+        }
+
+        return botMessage
+    }
 
     fun startRecording(chatActivity: ChatActivity, outputFile: File) {
         startRecordingFunctionality(chatActivity, outputFile)
