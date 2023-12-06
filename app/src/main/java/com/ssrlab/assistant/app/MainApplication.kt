@@ -34,6 +34,7 @@ class MainApplication: Application() {
 
     private lateinit var context: Context
 
+    fun getContext() = context
     fun setContext(context: Context){
         this.context = context
     }
