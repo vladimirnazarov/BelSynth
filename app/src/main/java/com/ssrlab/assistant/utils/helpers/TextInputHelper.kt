@@ -24,35 +24,58 @@ class TextInputHelper(private val context: Context) {
         if (loginET.text!!.isNotEmpty() && passwordET.text!!.isNotEmpty()) onResult(1)
         else if (loginET.text!!.isEmpty() && passwordET.text!!.isNotEmpty()) onResult(2)
         else if (loginET.text!!.isNotEmpty() && passwordET.text!!.isEmpty()) onResult(3)
-        else onResult(4)
+        else if (loginET.text!!.isEmpty() && passwordET.text!!.isEmpty()) onResult(4)
     }
 
-    fun createEditTextListener(editText: AppCompatEditText) {
+    private fun createEditTextListener(editText: AppCompatEditText, binding: ViewBinding) {
         editText.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (editText.background == ContextCompat.getDrawable(context, R.drawable.background_sign_et_error))
-                    editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et)
+                when (binding) {
+
+                }
+                editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun setEditTextError(editText: AppCompatEditText?) {
-        if (editText != null)
+    private fun setEditTextError(editText: AppCompatEditText?, message: String, binding: ViewBinding) {
+        if (editText != null) {
+            when (binding) {
+                is FragmentRegisterBinding -> {
+
+                }
+                is FragmentLoginBinding -> {
+
+                }
+            }
+
             editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+            createEditTextListener(editText, binding)
+        }
+    }
+
+    private fun setEditTextError(editText1: AppCompatEditText?, editText2: AppCompatEditText?, message: String, binding: ViewBinding) {
+        if (editText1 != null && editText2 != null) {
+            editText1.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+            editText2.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+            createEditTextListener(editText1, binding)
+            createEditTextListener(editText2, binding)
+        }
     }
 
     /**
      * 0 - FireAuth error
      * 1 - Login error
      * 2 - Password error
+     * 3 - Both login & password error
      */
     fun handleErrorTypes(message: String, type: Int, binding: ViewBinding) {
         val login: AppCompatEditText?
         val password: AppCompatEditText?
 
-        when(binding) {
+        when (binding) {
             is FragmentRegisterBinding -> {
                 login = binding.registerEmailInput
                 password = binding.registerPasswordInput
@@ -67,14 +90,11 @@ class TextInputHelper(private val context: Context) {
             }
         }
 
-        when(type) {
+        when (type) {
             0 -> showErrorSnack(message, binding.root)
-            1 -> {
-                setEditTextError(login)
-            }
-            2 -> {
-                setEditTextError(password)
-            }
+            1 -> { setEditTextError(login, message, binding) }
+            2 -> { setEditTextError(password, message, binding) }
+            3 -> { setEditTextError(login, password, message, binding) }
         }
     }
 

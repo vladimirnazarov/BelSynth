@@ -16,16 +16,15 @@ import java.util.concurrent.CancellationException
 class AuthClient(private val context: Context) {
 
     private val fireAuth = Firebase.auth
-    private val emailRegex = Regex("^[a-zA-Z0-9]@[a-zA-Z0-9]+\\.[a-zA-Z0-9][a-zA-Z0-9]+")
+    private val emailRegex = Regex("^[a-zA-Z0-9][a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9][a-zA-Z0-9]+")
 
     /**
      * 0 - FireAuth error
      * 1 - Login error
      * 2 - Password error
      */
-
     fun signUp(login: String, password: String, onSuccess: (AuthResult) -> Unit,onFailure: (String, Int) -> Unit) {
-        if (!login.matches(emailRegex)) {
+        if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.createUserWithEmailAndPassword(login, password).addOnSuccessListener {
 //                    fireAuth.signInWithEmailAndPassword(login, password)

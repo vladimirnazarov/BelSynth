@@ -25,8 +25,11 @@
     <string name="sign_up_confirm_pp">Политикой конфиденциальности</string>
     <string name="already_have_an_account">Уже есть аккаунт?</string>
     <string name="to_sign_in">Войти</string>
+
     <string name="password_length_error">Длина пароля должна быть более 8 символов</string>
     <string name="email_type_error">Неправильный формат электронной почты</string>
+    <string name="empty_field_error">Это поле должно заполнено</string>
+
 
     <!--  Choose  -->
     <string name="choose_title">Выберите собеседника</string>
