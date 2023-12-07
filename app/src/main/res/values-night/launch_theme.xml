@@ -7,7 +7,7 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
 
-        <item name="colorSecondary">@color/msg_text</item>
+        <item name="colorSecondary">@color/speaker_active</item>
         <item name="colorSecondaryVariant">@color/msg_text</item>
         <item name="colorOnSecondary">@color/black</item>
 

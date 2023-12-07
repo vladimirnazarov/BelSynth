@@ -25,6 +25,8 @@
     <string name="sign_up_confirm_pp">Палітыкай канфідэнцыйнасці</string>
     <string name="already_have_an_account">Ужо ёсць акаўнт?</string>
     <string name="to_sign_in">Увайсці</string>
+    <string name="password_length_error">Даўжыня пароля павінна быць больш за 8 сімвалаў</string>
+    <string name="email_type_error">Няправільны тып электроннай пошты</string>
 
     <!--  Choose  -->
     <string name="choose_title">Абярыце суразмоўцу</string>

@@ -25,6 +25,8 @@
     <string name="sign_up_confirm_pp">Privacy Policy</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="to_sign_in">Sign in</string>
+    <string name="password_length_error">Password length should be more than 8 symbols</string>
+    <string name="email_type_error">Wrong email type</string>
 
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>
