@@ -26,6 +26,10 @@
     <string name="already_have_an_account">Уже есть аккаунт?</string>
     <string name="to_sign_in">Войти</string>
 
+    <string name="empty_field_error">Это поле должно заполнено</string>
+    <string name="password_length_error">Длина пароля должна быть более 8 символов</string>
+    <string name="email_type_error">Неправильный формат электронной почты</string>
+
     <!--  Choose  -->
     <string name="choose_title">Выберите собеседника</string>
     <string name="speaker_1">Алесь</string>

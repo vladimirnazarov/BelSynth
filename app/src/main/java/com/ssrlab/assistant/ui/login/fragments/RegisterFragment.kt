@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.gms.auth.api.identity.Identity
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
-import com.ssrlab.assistant.utils.helpers.AuthClient
 
 class RegisterFragment: BaseLaunchFragment() {
 
@@ -33,29 +33,73 @@ class RegisterFragment: BaseLaunchFragment() {
 
         setUpRegisterButton()
 
-        binding.registerGoogleRipple.setOnClickListener {
-            AuthClient().signIn(Identity.getSignInClient(mainApp.getContext()), {
-
-            }, { msg, type ->
-                println(msg)
-                println(type)
-            })
-        }
+//        binding.registerGoogleRipple.setOnClickListener {
+//            AuthClient().signIn(Identity.getSignInClient(mainApp.getContext()), {
+//
+//            }, { msg, type ->
+//                println(msg)
+//                println(type)
+//            })
+//        }
     }
 
+    /**
+     * 1 - OK
+     * 2 - Empty login
+     * 3 - Empty password
+     * 4 - Both empty
+     */
     private fun setUpRegisterButton() {
         binding.apply {
             registerButton.setOnClickListener {
-                if (registerEmailInput.text.toString().isNotEmpty() && registerPasswordInput.text.toString().isNotEmpty()) {
-                    fireAuth.createUserWithEmailAndPassword(registerEmailInput.text.toString(), registerPasswordInput.text.toString())
-                        .addOnFailureListener {
+                val login = registerEmailInput.text.toString()
+                val password = registerPasswordInput.text.toString()
 
-                        }
-                        .addOnSuccessListener {
+                handleEmptyInput(login, password)
+            }
+        }
+    }
 
-                        }
-                } else {
+    private fun handleEmptyInput(login: String, password: String) {
+        inputHelper.checkSignEmptiness(binding.registerEmailInput, binding.registerPasswordInput) {
+            when (it) {
+                1 -> {
+                    authClient.signUp(login, password, {
 
+                    }) { msg, type ->
+                        inputHelper.handleErrorTypes(
+                            message = msg,
+                            type = type,
+                            textView1 = binding.registerEmailErrorTitle,
+                            textView2 = binding.registerPasswordErrorTitle,
+                            binding = binding
+                        )
+                    }
+                }
+                2 -> {
+                    inputHelper.handleErrorTypes(
+                        message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
+                        type = 1,
+                        textView1 = binding.registerEmailErrorTitle,
+                        binding = binding
+                    )
+                }
+                3 -> {
+                    inputHelper.handleErrorTypes(
+                        message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
+                        type = 2,
+                        binding.registerPasswordErrorTitle,
+                        binding = binding
+                    )
+                }
+                4 -> {
+                    inputHelper.handleErrorTypes(
+                        message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
+                        type = 3,
+                        textView1 = binding.registerEmailErrorTitle,
+                        textView2 = binding.registerPasswordErrorTitle,
+                        binding = binding
+                    )
                 }
             }
         }

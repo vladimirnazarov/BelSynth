@@ -26,6 +26,10 @@
     <string name="already_have_an_account">已有帐户？</string>
     <string name="to_sign_in">登录</string>
 
+    <string name="empty_field_error">此字段必须填写</string>
+    <string name="password_length_error">密码长度应超过8个符号</string>
+    <string name="email_type_error">错误的电子邮件类型</string>
+
     <!--  Choose  -->
     <string name="choose_title">選擇一個與之交談的人</string>
     <string name="speaker_1">阿列西</string>
