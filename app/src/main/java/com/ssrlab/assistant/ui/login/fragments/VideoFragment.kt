@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentVideoBinding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
@@ -85,8 +86,8 @@ class VideoFragment: BaseLaunchFragment() {
                     video.start()
                 }
                 video.setOnCompletionListener {
-                    launchActivity.intentNext()
-//                    findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
+//                    launchActivity.intentNext()
+                    findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
                 }
             }
         } else {
@@ -111,8 +112,8 @@ class VideoFragment: BaseLaunchFragment() {
                 scope.launch {
                     delay(3000)
                     launchActivity.runOnUiThread {
-                        launchActivity.intentNext()
-//                        findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
+//                        launchActivity.intentNext()
+                        findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
                     }
                 }
             }
