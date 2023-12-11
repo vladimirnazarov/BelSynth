@@ -4,6 +4,8 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
@@ -15,9 +17,9 @@ import com.ssrlab.assistant.databinding.FragmentRegisterBinding
 class TextInputHelper(private val context: Context) {
 
     /**
-     * 1 - OK
-     * 2 - Empty login
-     * 3 - Empty password
+     * 1 - OK;
+     * 2 - Empty login;
+     * 3 - Empty password;
      * 4 - Both empty
      */
     fun checkSignEmptiness(loginET: AppCompatEditText, passwordET: AppCompatEditText, onResult: (Int) -> Unit) {
@@ -27,74 +29,92 @@ class TextInputHelper(private val context: Context) {
         else if (loginET.text!!.isEmpty() && passwordET.text!!.isEmpty()) onResult(4)
     }
 
-    private fun createEditTextListener(editText: AppCompatEditText, binding: ViewBinding) {
+    private fun createEditTextListener(editText: AppCompatEditText, errorView: View) {
         editText.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                when (binding) {
-
-                }
+                if (errorView.visibility == View.VISIBLE) fadeAnim(errorView, true)
                 editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun setEditTextError(editText: AppCompatEditText?, message: String, binding: ViewBinding) {
-        if (editText != null) {
-            when (binding) {
-                is FragmentRegisterBinding -> {
+    private fun setEditTextError(editText: AppCompatEditText, textView: TextView, errorHolder: View, message: String) {
+        fadeAnim(errorHolder)
+        textView.text = message
 
-                }
-                is FragmentLoginBinding -> {
+        editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+        createEditTextListener(editText, errorHolder)
+    }
 
-                }
-            }
+    private fun setEditTextError(editText1: AppCompatEditText, editText2: AppCompatEditText, textView1: TextView, textView2: TextView, errorHolder1: View, errorHolder2: View, message: String, binding: ViewBinding) {
+        defineBinding(binding, {
+            fadeAnim(errorHolder1)
+            fadeAnim(errorHolder2)
+        }, {
+//            fadeAnim(errorHolder1)
+//            fadeAnim(errorHolder2)
+        })
+        textView1.text = message
+        textView2.text = message
 
-            editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
-            createEditTextListener(editText, binding)
+        editText1.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+        editText2.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+        createEditTextListener(editText1, errorHolder1)
+        createEditTextListener(editText2, errorHolder2)
+    }
+
+    private fun defineBinding(binding: ViewBinding, onRegister: (FragmentRegisterBinding) -> Unit, onLogin: (FragmentLoginBinding) -> Unit) {
+        when (binding) {
+            is FragmentRegisterBinding -> onRegister(binding)
+            is FragmentLoginBinding -> onLogin(binding)
         }
     }
 
-    private fun setEditTextError(editText1: AppCompatEditText?, editText2: AppCompatEditText?, message: String, binding: ViewBinding) {
-        if (editText1 != null && editText2 != null) {
-            editText1.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
-            editText2.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
-            createEditTextListener(editText1, binding)
-            createEditTextListener(editText2, binding)
-        }
+    fun handleErrorTypes(message: String, type: Int, textView1: TextView? = null, textView2: TextView? = null, binding: ViewBinding) {
+        defineBinding(binding, {
+            val emailErrorHolder = it.registerEmailErrorHolder
+            val passwordErrorHolder = it.registerPasswordErrorHolder
+            handleErrorTypesByBinding(type, message, it.registerEmailInput, it.registerPasswordInput, textView1, textView2, emailErrorHolder, passwordErrorHolder, binding)
+        }, {
+//            val emailErrorHolder = it.registerEmailErrorHolder
+//            val passwordErrorHolder = it.registerPasswordErrorHolder
+//            handleErrorTypesByBinding(type, message, it.registerEmailInput, it.registerPasswordInput, textView1, textView2, emailErrorHolder, passwordErrorHolder, binding)
+        })
     }
 
     /**
-     * 0 - FireAuth error
-     * 1 - Login error
-     * 2 - Password error
+     * 0 - FireAuth error;
+     * 1 - Login error;
+     * 2 - Password error;
      * 3 - Both login & password error
      */
-    fun handleErrorTypes(message: String, type: Int, binding: ViewBinding) {
-        val login: AppCompatEditText?
-        val password: AppCompatEditText?
-
-        when (binding) {
-            is FragmentRegisterBinding -> {
-                login = binding.registerEmailInput
-                password = binding.registerPasswordInput
-            }
-            is FragmentLoginBinding -> {
-                login = binding.loginEmailInput
-                password = binding.loginPasswordInput
-            }
-            else -> {
-                login = null
-                password = null
-            }
-        }
-
+    private fun handleErrorTypesByBinding(
+        type: Int,
+        message: String,
+        login: AppCompatEditText,
+        password: AppCompatEditText,
+        textView1: TextView? = null,
+        textView2: TextView? = null,
+        emailErrorView: View,
+        passwordErrorView: View,
+        binding: ViewBinding
+    ) {
         when (type) {
             0 -> showErrorSnack(message, binding.root)
-            1 -> { setEditTextError(login, message, binding) }
-            2 -> { setEditTextError(password, message, binding) }
-            3 -> { setEditTextError(login, password, message, binding) }
+            1 -> {
+                if (textView1 != null)
+                    setEditTextError(login, textView1, emailErrorView, message)
+            }
+            2 -> {
+                if (textView2 != null)
+                    setEditTextError(password, textView2, passwordErrorView, message)
+            }
+            3 -> {
+                if (textView1 != null && textView2 != null)
+                    setEditTextError(login, password, textView1, textView2, emailErrorView, passwordErrorView, message, binding)
+            }
         }
     }
 
@@ -104,6 +124,18 @@ class TextInputHelper(private val context: Context) {
             setTextColor(ContextCompat.getColor(context, R.color.snack_text))
             setBackgroundTint(ContextCompat.getColor(context, R.color.error))
             show()
+        }
+    }
+
+    private fun fadeAnim(view: View, isOut: Boolean = false) {
+        val alphaInAnim = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_in)
+        val alphaOutAnim = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_out)
+        if (isOut) {
+            view.startAnimation(alphaOutAnim)
+            view.visibility = View.INVISIBLE
+        } else {
+            view.startAnimation(alphaInAnim)
+            view.visibility = View.VISIBLE
         }
     }
 }

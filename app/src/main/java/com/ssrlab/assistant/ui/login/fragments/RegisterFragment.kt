@@ -70,6 +70,8 @@ class RegisterFragment: BaseLaunchFragment() {
                         inputHelper.handleErrorTypes(
                             message = msg,
                             type = type,
+                            textView1 = binding.registerEmailErrorTitle,
+                            textView2 = binding.registerPasswordErrorTitle,
                             binding = binding
                         )
                     }
@@ -78,6 +80,7 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 1,
+                        textView1 = binding.registerEmailErrorTitle,
                         binding = binding
                     )
                 }
@@ -85,6 +88,7 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 2,
+                        binding.registerPasswordErrorTitle,
                         binding = binding
                     )
                 }
@@ -92,7 +96,10 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 3,
-                        binding = binding)
+                        textView1 = binding.registerEmailErrorTitle,
+                        textView2 = binding.registerPasswordErrorTitle,
+                        binding = binding
+                    )
                 }
             }
         }

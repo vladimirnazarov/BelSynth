@@ -18,8 +18,8 @@
     <color name="sign_et_contour_activated">#010411</color>
     <color name="sign_et_back">#F6F6F6</color>
 
-    <color name="error">#EB5757</color>
     <color name="snack_text">#FFFFFF</color>
+    <color name="error">#EB5757</color>
 
     <!--  Choose  -->
     <color name="icon_color">#FFFFFF</color>
