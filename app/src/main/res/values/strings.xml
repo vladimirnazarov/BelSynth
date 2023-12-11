@@ -26,6 +26,10 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="to_sign_in">Sign in</string>
 
+    <string name="password_length_error">Password length should be more than 8 symbols</string>
+    <string name="email_type_error">Wrong email type</string>
+    <string name="empty_field_error">This field must be not empty</string>
+
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>
     <string name="speaker_1">Ales</string>
