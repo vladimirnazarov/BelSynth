@@ -1,9 +1,13 @@
 package com.ssrlab.assistant.ui.login
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
@@ -19,6 +23,8 @@ class LaunchActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLaunchBinding
 
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var launcher: ActivityResultLauncher<Intent>
+    private var googleCallback: (ActivityResult) -> Unit = {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
@@ -29,6 +35,10 @@ class LaunchActivity : AppCompatActivity() {
 
         binding = ActivityLaunchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+       launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+           if (result.resultCode == Activity.RESULT_OK) googleCallback(result)
+       }
     }
 
     override fun onResume() {
@@ -43,6 +53,12 @@ class LaunchActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
+
+    fun googleIntent(callback: (ActivityResult) -> Unit) {
+        googleCallback = { callback(it) }
+    }
+
+    fun getLauncher() = launcher
 
     fun getMainApp() = mainApp
 }

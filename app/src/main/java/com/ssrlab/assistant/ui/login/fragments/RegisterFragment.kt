@@ -39,6 +39,7 @@ class RegisterFragment: BaseLaunchFragment() {
         setUpRegisterButton()
         setUpPasswordButton()
         setUpMovementButtons()
+        setUpGoogleButton()
     }
 
     private fun setUpPasswordButton() {
@@ -55,6 +56,20 @@ class RegisterFragment: BaseLaunchFragment() {
                 visibility = View.VISIBLE
                 setOnClickListener { navController.popBackStack() }
             }
+        }
+    }
+
+    private fun setUpGoogleButton() {
+        binding.registerGoogleRipple.setOnClickListener {
+            authClient.signIn(launchActivity, {
+                launchActivity.intentNext()
+            }, { msg, type ->
+                inputHelper.handleErrorTypes(
+                    message = msg,
+                    type = type,
+                    binding = binding
+                )
+            })
         }
     }
 
@@ -80,7 +95,7 @@ class RegisterFragment: BaseLaunchFragment() {
             when (it) {
                 1 -> {
                     authClient.signUp(login, password, {
-
+                        launchActivity.intentNext()
                     }) { msg, type ->
                         inputHelper.handleErrorTypes(
                             message = msg,

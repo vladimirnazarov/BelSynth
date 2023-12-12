@@ -1,8 +1,6 @@
 package com.ssrlab.assistant.client
 
-import android.app.Activity
 import android.content.Context
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -31,9 +29,10 @@ class AuthClient(private val context: Context) {
         if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.createUserWithEmailAndPassword(login, password).addOnSuccessListener {
-//                    fireAuth.signInWithEmailAndPassword(login, password)
-//                        .addOnSuccessListener { onSuccess(it) }
-//                        .addOnFailureListener { onFailure(it.message!!, 0) }
+                    fireAuth.signOut()
+                    fireAuth.signInWithEmailAndPassword(login, password)
+                        .addOnSuccessListener { onSuccess(it) }
+                        .addOnFailureListener { onFailure(it.message!!, 0) }
                 }.addOnFailureListener { onFailure(it.message!!, 0) }
             } else {
                 val errMsg = ContextCompat.getString(context, R.string.password_length_error)
@@ -63,16 +62,16 @@ class AuthClient(private val context: Context) {
 
     fun signIn(activity: LaunchActivity, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
         generateSignInClient(activity)
-
         val intent = googleSignInClient!!.signInIntent
-        val launcher = activity.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+
+        googleSignInClient!!.signOut().addOnCompleteListener {
+            activity.googleIntent { result ->
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 handleGoogleSignInResult(task, { onSuccess(it) }, { msg, type -> onFailure(msg, type) })
             }
-        }
 
-        launcher.launch(intent)
+            activity.getLauncher().launch(intent)
+        }
     }
 
     private fun generateSignInClient(activity: LaunchActivity) {
