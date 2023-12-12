@@ -31,8 +31,8 @@ class LaunchActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onResume() {
+        super.onResume()
 
         mainApp.savePreferences(sharedPreferences, this@LaunchActivity)
     }

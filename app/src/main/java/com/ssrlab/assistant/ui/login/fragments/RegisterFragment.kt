@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
@@ -38,20 +39,23 @@ class RegisterFragment: BaseLaunchFragment() {
     private fun setUpButtons() {
         setUpRegisterButton()
         setUpPasswordButton()
-        setUpLoginMovementButton()
+        setUpMovementButtons()
     }
 
     private fun setUpPasswordButton() {
         inputHelper.showPasswordAction(binding.registerPasswordInput, binding.registerPasswordShow)
     }
 
-    private fun setUpLoginMovementButton() {
+    private fun setUpMovementButtons() {
         val navController = findNavController()
 
-        binding.registerToLogin2.setOnClickListener {
-            if (navController.previousBackStackEntry == null)
-                navController.navigate(R.id.action_registerFragment_to_loginFragment)
-            else navController.popBackStack()
+        if (navController.previousBackStackEntry == null) binding.registerToLogin2.setOnClickListener { navController.navigate(R.id.action_registerFragment_to_loginFragment) }
+        else {
+            binding.registerToLogin2.setOnClickListener { navController.popBackStack() }
+            binding.registerBack.apply {
+                visibility = View.VISIBLE
+                setOnClickListener { navController.popBackStack() }
+            }
         }
     }
 

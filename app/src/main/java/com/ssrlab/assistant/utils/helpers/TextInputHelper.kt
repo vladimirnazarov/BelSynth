@@ -144,9 +144,14 @@ class TextInputHelper(private val context: Context) {
 
     fun showPasswordAction(editText: AppCompatEditText, button: ImageButton) {
         button.setOnClickListener {
-            if (editText.transformationMethod == PasswordTransformationMethod.getInstance())
+            if (editText.transformationMethod == PasswordTransformationMethod.getInstance()) {
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            else editText.transformationMethod = PasswordTransformationMethod.getInstance()
+                button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_hide_password))
+            }
+            else {
+                editText.transformationMethod = PasswordTransformationMethod.getInstance()
+                button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_show_password))
+            }
         }
     }
 }
