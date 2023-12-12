@@ -3,8 +3,11 @@ package com.ssrlab.assistant.utils.helpers
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
@@ -53,8 +56,8 @@ class TextInputHelper(private val context: Context) {
             fadeAnim(errorHolder1)
             fadeAnim(errorHolder2)
         }, {
-//            fadeAnim(errorHolder1)
-//            fadeAnim(errorHolder2)
+            fadeAnim(errorHolder1)
+            fadeAnim(errorHolder2)
         })
         textView1.text = message
         textView2.text = message
@@ -78,9 +81,9 @@ class TextInputHelper(private val context: Context) {
             val passwordErrorHolder = it.registerPasswordErrorHolder
             handleErrorTypesByBinding(type, message, it.registerEmailInput, it.registerPasswordInput, textView1, textView2, emailErrorHolder, passwordErrorHolder, binding)
         }, {
-//            val emailErrorHolder = it.registerEmailErrorHolder
-//            val passwordErrorHolder = it.registerPasswordErrorHolder
-//            handleErrorTypesByBinding(type, message, it.registerEmailInput, it.registerPasswordInput, textView1, textView2, emailErrorHolder, passwordErrorHolder, binding)
+            val emailErrorHolder = it.loginEmailErrorHolder
+            val passwordErrorHolder = it.loginPasswordErrorHolder
+            handleErrorTypesByBinding(type, message, it.loginEmailInput, it.loginPasswordInput, textView1, textView2, emailErrorHolder, passwordErrorHolder, binding)
         })
     }
 
@@ -136,6 +139,14 @@ class TextInputHelper(private val context: Context) {
         } else {
             view.startAnimation(alphaInAnim)
             view.visibility = View.VISIBLE
+        }
+    }
+
+    fun showPasswordAction(editText: AppCompatEditText, button: ImageButton) {
+        button.setOnClickListener {
+            if (editText.transformationMethod == PasswordTransformationMethod.getInstance())
+                editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            else editText.transformationMethod = PasswordTransformationMethod.getInstance()
         }
     }
 }

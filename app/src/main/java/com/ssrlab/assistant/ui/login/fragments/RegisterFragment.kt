@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
@@ -31,16 +32,27 @@ class RegisterFragment: BaseLaunchFragment() {
     override fun onResume() {
         super.onResume()
 
-        setUpRegisterButton()
+        setUpButtons()
+    }
 
-//        binding.registerGoogleRipple.setOnClickListener {
-//            AuthClient().signIn(Identity.getSignInClient(mainApp.getContext()), {
-//
-//            }, { msg, type ->
-//                println(msg)
-//                println(type)
-//            })
-//        }
+    private fun setUpButtons() {
+        setUpRegisterButton()
+        setUpPasswordButton()
+        setUpLoginMovementButton()
+    }
+
+    private fun setUpPasswordButton() {
+        inputHelper.showPasswordAction(binding.registerPasswordInput, binding.registerPasswordShow)
+    }
+
+    private fun setUpLoginMovementButton() {
+        val navController = findNavController()
+
+        binding.registerToLogin2.setOnClickListener {
+            if (navController.previousBackStackEntry == null)
+                navController.navigate(R.id.action_registerFragment_to_loginFragment)
+            else navController.popBackStack()
+        }
     }
 
     /**
@@ -88,7 +100,7 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 2,
-                        binding.registerPasswordErrorTitle,
+                        textView2 = binding.registerPasswordErrorTitle,
                         binding = binding
                     )
                 }
