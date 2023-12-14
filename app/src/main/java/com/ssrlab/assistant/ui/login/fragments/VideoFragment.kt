@@ -79,15 +79,15 @@ class VideoFragment: BaseLaunchFragment() {
                 val videoPath = "android.resource://${launchActivity.packageName}/${R.raw.back}"
                 val uri = Uri.parse(videoPath)
 
-                video.visibility = View.VISIBLE
-                video.setVideoURI(uri)
-                video.setOnPreparedListener {
-                    it.playbackParams = it.playbackParams.setSpeed(2.0f)
-                    video.start()
-                }
-                video.setOnCompletionListener {
-//                    launchActivity.intentNext()
-                    findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
+                video.apply {
+                    visibility = View.VISIBLE
+                    setVideoURI(uri)
+                    setOnPreparedListener {
+                        it.playbackParams = it.playbackParams.setSpeed(2.0f)
+                        this.start()
+                    }
+
+                    setOnCompletionListener { moveNext() }
                 }
             }
         } else {
@@ -103,20 +103,28 @@ class VideoFragment: BaseLaunchFragment() {
                     delay(750)
 
                     launchActivity.runOnUiThread {
-                        videoTitle.text = launchActivity.resources.getText(R.string.launch_name)
-                        videoTitle.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.long_alpha_in))
-                        videoTitle.visibility = View.VISIBLE
+                        videoTitle.apply {
+                            text = launchActivity.resources.getText(R.string.launch_name)
+                            startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.long_alpha_in))
+                            visibility = View.VISIBLE
+                        }
                     }
                 }
 
                 scope.launch {
                     delay(3000)
-                    launchActivity.runOnUiThread {
-//                        launchActivity.intentNext()
-                        findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
-                    }
+                    launchActivity.runOnUiThread { moveNext() }
                 }
             }
         }
+    }
+
+    private fun moveNext() {
+        val isFirstLaunch = mainApp.isFirstLaunch()
+
+        if (isFirstLaunch)
+            findNavController().navigate(R.id.action_videoFragment_to_registerFragment)
+        else
+            findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
     }
 }

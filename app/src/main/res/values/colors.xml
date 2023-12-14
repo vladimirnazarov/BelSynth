@@ -22,6 +22,8 @@
     <color name="snack_text">#FFFFFF</color>
     <color name="error">#EB5757</color>
 
+    <color name="sign_back">#065986</color>
+
     <!--  Choose  -->
     <color name="icon_color">#065986</color>
     <color name="switch_inactive">#959595</color>

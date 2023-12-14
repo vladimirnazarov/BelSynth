@@ -41,6 +41,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <ImageButton
+                android:id="@+id/register_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_sign_in_back"
+                android:background="@drawable/ripple_rounded"
+
+                android:padding="8dp"
+
+                android:visibility="invisible"
+
+                app:layout_constraintStart_toStartOf="@id/register_title"
+                app:layout_constraintTop_toTopOf="@id/register_title"
+                app:layout_constraintBottom_toBottomOf="@id/register_title"/>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/register_google_holder"
                 android:layout_width="match_parent"

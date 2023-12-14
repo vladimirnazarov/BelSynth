@@ -38,20 +38,23 @@ class LoginFragment: BaseLaunchFragment() {
     private fun setUpButtons() {
         setUpLoginButton()
         setUpPasswordButton()
-        setUpRegisterMovementButton()
+        setUpMovementButtons()
     }
 
     private fun setUpPasswordButton() {
         inputHelper.showPasswordAction(binding.loginPasswordInput, binding.loginPasswordShow)
     }
 
-    private fun setUpRegisterMovementButton() {
+    private fun setUpMovementButtons() {
         val navController = findNavController()
 
-        binding.loginToRegister2.setOnClickListener {
-            if (navController.previousBackStackEntry == null)
-                navController.navigate(R.id.action_loginFragment_to_registerFragment)
-            else navController.popBackStack()
+        if (navController.previousBackStackEntry == null) binding.loginToRegister2.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
+        else {
+            binding.loginToRegister2.setOnClickListener { navController.popBackStack() }
+            binding.loginBack.apply {
+                visibility = View.VISIBLE
+                setOnClickListener { navController.popBackStack() }
+            }
         }
     }
 

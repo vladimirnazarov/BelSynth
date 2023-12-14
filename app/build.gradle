@@ -81,8 +81,11 @@ dependencies {
 
     implementation "androidx.annotation:annotation:1.7.0"
 
+    //noinspection GradleDependency
     implementation 'androidx.room:room-runtime:2.5.2'
+    //noinspection GradleDependency
     implementation 'androidx.room:room-ktx:2.5.2'
+    //noinspection GradleDependency,KaptUsageInsteadOfKsp
     kapt 'androidx.room:room-compiler:2.5.2'
 
     implementation("net.sourceforge.jtransforms:jtransforms:2.4.0")
