@@ -25,6 +25,7 @@ import com.ssrlab.assistant.rv.ChatAdapter
 import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
 import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.helpers.TextHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
@@ -103,11 +104,15 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         chatHelper.loadRecordAnim(this@ChatActivity, binding)
         setUpMessageSendButton()
+
+        val inputHelper = TextHelper(this@ChatActivity)
+        binding.chatRvImm.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
+        binding.chatToolbar.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
     }
 
     override fun onStop() {

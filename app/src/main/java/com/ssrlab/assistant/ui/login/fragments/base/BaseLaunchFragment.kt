@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.client.AuthClient
 import com.ssrlab.assistant.ui.login.LaunchActivity
-import com.ssrlab.assistant.utils.helpers.TextInputHelper
+import com.ssrlab.assistant.utils.helpers.TextHelper
 
 open class BaseLaunchFragment: Fragment() {
 
@@ -13,7 +13,7 @@ open class BaseLaunchFragment: Fragment() {
     lateinit var mainApp: MainApplication
 
     lateinit var authClient: AuthClient
-    lateinit var inputHelper: TextInputHelper
+    lateinit var inputHelper: TextHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +22,6 @@ open class BaseLaunchFragment: Fragment() {
         mainApp = launchActivity.getMainApp()
 
         authClient = AuthClient(mainApp.getContext())
-        inputHelper = TextInputHelper(mainApp.getContext())
+        inputHelper = TextHelper(mainApp.getContext())
     }
 }

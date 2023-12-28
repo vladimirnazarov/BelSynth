@@ -36,9 +36,9 @@ class LaunchActivity : AppCompatActivity() {
         binding = ActivityLaunchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-           if (result.resultCode == Activity.RESULT_OK) googleCallback(result)
-       }
+        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) googleCallback(result)
+        }
     }
 
     override fun onResume() {

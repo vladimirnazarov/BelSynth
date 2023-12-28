@@ -29,10 +29,11 @@ class RegisterFragment: BaseLaunchFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         setUpButtons()
+        binding.registerMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
     }
 
     private fun setUpButtons() {
