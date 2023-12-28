@@ -7,6 +7,7 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
@@ -17,7 +18,7 @@ import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentLoginBinding
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
 
-class TextInputHelper(private val context: Context) {
+class TextHelper(private val context: Context) {
 
     /**
      * 1 - OK;
@@ -153,5 +154,10 @@ class TextInputHelper(private val context: Context) {
                 button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_show_password))
             }
         }
+    }
+
+    fun hideKeyboard(view: View) {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
