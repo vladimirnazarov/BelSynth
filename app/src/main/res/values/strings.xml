@@ -30,6 +30,16 @@
     <string name="password_length_error">Password length should be more than 8 symbols</string>
     <string name="email_type_error">Wrong email type</string>
 
+    <string name="confirm_email_title">Confirm your email</string>
+    <string name="confirm_email_body">To confirm your email address, click on the link in the email we sent you.</string>
+    <string name="confirm_email_bottom">Didn\'t receive the confirmation email?</string>
+    <string name="confirm_email_action">Resend Email</string>
+
+    <string name="pass_rec_2_title">Email has been sent</string>
+    <string name="pass_rec_2_body">Check your email and follow the link to reset your password</string>
+    <string name="pass_rec_2_bottom">Didn\'t receive the email to reset your password?</string>
+    <string name="pass_rec_2_action">Resend email</string>
+
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>
     <string name="speaker_1">Ales</string>

@@ -30,6 +30,16 @@
     <string name="password_length_error">Длина пароля должна быть более 8 символов</string>
     <string name="email_type_error">Неправильный формат электронной почты</string>
 
+    <string name="confirm_email_title">Подтвердите свой email</string>
+    <string name="confirm_email_body">Чтобы подтвердить свой email адрес, перейдите по ссылке в электронном письме, которое мы вам отправили.</string>
+    <string name="confirm_email_bottom">Не получили письмо с подтверждением?</string>
+    <string name="confirm_email_action">Повторно отправить email</string>
+
+    <string name="pass_rec_2_title">Email отправлен</string>
+    <string name="pass_rec_2_body">Проверьте свою электронную почту и перейдите по полученной ссылке, чтобы восстановить пароль</string>
+    <string name="pass_rec_2_bottom">Не получили email для восстановления пароля?</string>
+    <string name="pass_rec_2_action">Повторно отправить email</string>
+
     <!--  Choose  -->
     <string name="choose_title">Выберите собеседника</string>
     <string name="speaker_1">Алесь</string>

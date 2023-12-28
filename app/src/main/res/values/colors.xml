@@ -39,6 +39,7 @@
     <color name="primary_text">#010411</color>
     <color name="msg_text">#010411</color>
     <color name="secondary_text">#73747A</color>
+    <color name="secondary_text_lighter">#73747A</color>
     <color name="speaker_text">#FFFFFF</color>
     <color name="clickable_text">#0981C2</color>
     <color name="ripple_text">#096DA3</color>

@@ -30,6 +30,16 @@
     <string name="password_length_error">Даўжыня пароля павінна быць больш за 8 сімвалаў</string>
     <string name="email_type_error">Няправільны тып электроннай пошты</string>
 
+    <string name="confirm_email_title">Пацвердзіце свой email</string>
+    <string name="confirm_email_body">Каб пацвердзіць свой email адрас, перайдзіце па спасылцы ў электронным лісце, які мы вам адправілі</string>
+    <string name="confirm_email_bottom">Не атрымалі email з пацвярджэннем?</string>
+    <string name="confirm_email_action">Паўторна адправіць email</string>
+
+    <string name="pass_rec_2_title">Email быў адпраўлены</string>
+    <string name="pass_rec_2_body">Праверце сваю электронную пошту і перайдзіце па атрыманай спасылцы, каб аднавіць пароль</string>
+    <string name="pass_rec_2_bottom">Не атрымалі email для аднаўлення пароля?</string>
+    <string name="pass_rec_2_action">Паўторна адправіць email</string>
+
     <!--  Choose  -->
     <string name="choose_title">Абярыце суразмоўцу</string>
     <string name="speaker_1">Алесь</string>
