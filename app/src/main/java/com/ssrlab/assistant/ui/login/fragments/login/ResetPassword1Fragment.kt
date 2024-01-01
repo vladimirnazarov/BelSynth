@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentPassword1Binding
@@ -27,15 +28,32 @@ class ResetPassword1Fragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
+        setUpButtons()
+    }
+
+    private fun setUpButtons() {
         val navController = findNavController()
 
-        binding.password1Back.setOnClickListener {
-            navController.popBackStack()
-        }
+        binding.password1Back.setOnClickListener { navController.popBackStack() }
 
         //temp
         binding.password1Button.setOnClickListener {
             navController.navigate(R.id.action_resetPassword1Fragment_to_resetPassword2Fragment)
+        }
+
+        setUpApplyButton()
+    }
+
+    private fun setUpApplyButton() {
+        binding.password1Button.setOnClickListener { checkLogin() }
+    }
+
+    private fun checkLogin() {
+        binding.apply {
+            if (password1EmailInput.text?.isEmpty() == true) {
+                val msg = ContextCompat.getString(launchActivity, R.string.empty_field_error)
+                inputHelper.setEditTextError(password1EmailInput, password1EmailErrorTitle, password1EmailErrorHolder, msg)
+            }
         }
     }
 }
