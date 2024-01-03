@@ -30,6 +30,16 @@
     <string name="password_length_error">密码长度应超过8个符号</string>
     <string name="email_type_error">错误的电子邮件类型</string>
 
+    <string name="confirm_email_title">确认您的电子邮件</string>
+    <string name="confirm_email_body">要确认您的电子邮件地址，请点击我们发送给您的电子邮件中的链接。</string>
+    <string name="confirm_email_bottom">没有收到带有确认链接的电子邮件吗？</string>
+    <string name="confirm_email_action">重新发送确认邮件</string>
+
+    <string name="pass_rec_2_title">邮件已发送</string>
+    <string name="pass_rec_2_body">请检查您的电子邮件并按照链接进行操作以重设密码</string>
+    <string name="pass_rec_2_bottom">未收到用于重设密码的电子邮件？</string>
+    <string name="pass_rec_2_action">重新发送电子邮件</string>
+
     <!--  Choose  -->
     <string name="choose_title">選擇一個與之交談的人</string>
     <string name="speaker_1">阿列西</string>

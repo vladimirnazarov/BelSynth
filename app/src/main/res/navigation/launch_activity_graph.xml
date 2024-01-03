@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.ssrlab.assistant.ui.login.fragments.LoginFragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.login.LoginFragment"
         android:label="LoginFragment">
 
         <action
@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.ssrlab.assistant.ui.login.fragments.RegisterFragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.register.RegisterFragment"
         android:label="RegisterFragment">
 
         <action
@@ -61,6 +61,15 @@
             app:popExitAnim="@anim/nav_pop_exit_anim"
             app:destination="@id/loginFragment"/>
 
+        <action
+            android:id="@+id/action_registerFragment_to_confirmEmailFragment"
+            app:destination="@id/confirmEmailFragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/confirmEmailFragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.register.ConfirmEmailFragment"
+        android:label="ConfirmEmailFragment" />
 
 </navigation>

@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.login.fragments
+package com.ssrlab.assistant.ui.login.fragments.login
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,12 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.databinding.FragmentRegisterBinding
+import com.ssrlab.assistant.databinding.FragmentLoginBinding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
 
-class RegisterFragment: BaseLaunchFragment() {
+class LoginFragment: BaseLaunchFragment() {
 
-    private lateinit var binding: FragmentRegisterBinding
+    private lateinit var binding: FragmentLoginBinding
     private lateinit var fireAuth: FirebaseAuth
 
     override fun onCreateView(
@@ -22,7 +22,7 @@ class RegisterFragment: BaseLaunchFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentRegisterBinding.inflate(layoutInflater)
+        binding = FragmentLoginBinding.inflate(layoutInflater)
 
         fireAuth = FirebaseAuth.getInstance()
 
@@ -33,27 +33,27 @@ class RegisterFragment: BaseLaunchFragment() {
         super.onStart()
 
         setUpButtons()
-        binding.registerMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
+        binding.loginMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
     }
 
     private fun setUpButtons() {
-        setUpRegisterButton()
+        setUpLoginButton()
         setUpPasswordButton()
         setUpMovementButtons()
         setUpGoogleButton()
     }
 
     private fun setUpPasswordButton() {
-        inputHelper.showPasswordAction(binding.registerPasswordInput, binding.registerPasswordShow)
+        inputHelper.showPasswordAction(binding.loginPasswordInput, binding.loginPasswordShow)
     }
 
     private fun setUpMovementButtons() {
         val navController = findNavController()
 
-        if (navController.previousBackStackEntry == null) binding.registerToLogin2.setOnClickListener { navController.navigate(R.id.action_registerFragment_to_loginFragment) }
+        if (navController.previousBackStackEntry == null) binding.loginToRegister2.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_registerFragment) }
         else {
-            binding.registerToLogin2.setOnClickListener { navController.popBackStack() }
-            binding.registerBack.apply {
+            binding.loginToRegister2.setOnClickListener { navController.popBackStack() }
+            binding.loginBack.apply {
                 visibility = View.VISIBLE
                 setOnClickListener { navController.popBackStack() }
             }
@@ -61,7 +61,7 @@ class RegisterFragment: BaseLaunchFragment() {
     }
 
     private fun setUpGoogleButton() {
-        binding.registerGoogleRipple.setOnClickListener {
+        binding.loginGoogleRipple.setOnClickListener {
             authClient.signIn(launchActivity, {
                 launchActivity.intentNext()
             }, { msg, type ->
@@ -80,11 +80,11 @@ class RegisterFragment: BaseLaunchFragment() {
      * 3 - Empty password
      * 4 - Both empty
      */
-    private fun setUpRegisterButton() {
+    private fun setUpLoginButton() {
         binding.apply {
-            registerButton.setOnClickListener {
-                val login = registerEmailInput.text.toString()
-                val password = registerPasswordInput.text.toString()
+            loginButton.setOnClickListener {
+                val login = loginEmailInput.text.toString()
+                val password = loginPasswordInput.text.toString()
 
                 handleEmptyInput(login, password)
             }
@@ -92,17 +92,17 @@ class RegisterFragment: BaseLaunchFragment() {
     }
 
     private fun handleEmptyInput(login: String, password: String) {
-        inputHelper.checkSignEmptiness(binding.registerEmailInput, binding.registerPasswordInput) {
+        inputHelper.checkSignEmptiness(binding.loginEmailInput, binding.loginPasswordInput) {
             when (it) {
                 1 -> {
-                    authClient.signUp(login, password, {
+                    authClient.signIn(login, password, {
                         launchActivity.intentNext()
                     }) { msg, type ->
                         inputHelper.handleErrorTypes(
                             message = msg,
                             type = type,
-                            textView1 = binding.registerEmailErrorTitle,
-                            textView2 = binding.registerPasswordErrorTitle,
+                            textView1 = binding.loginEmailErrorTitle,
+                            textView2 = binding.loginPasswordErrorTitle,
                             binding = binding
                         )
                     }
@@ -111,7 +111,7 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 1,
-                        textView1 = binding.registerEmailErrorTitle,
+                        textView1 = binding.loginEmailErrorTitle,
                         binding = binding
                     )
                 }
@@ -119,7 +119,7 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 2,
-                        textView2 = binding.registerPasswordErrorTitle,
+                        textView2 = binding.loginPasswordErrorTitle,
                         binding = binding
                     )
                 }
@@ -127,8 +127,8 @@ class RegisterFragment: BaseLaunchFragment() {
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 3,
-                        textView1 = binding.registerEmailErrorTitle,
-                        textView2 = binding.registerPasswordErrorTitle,
+                        textView1 = binding.loginEmailErrorTitle,
+                        textView2 = binding.loginPasswordErrorTitle,
                         binding = binding
                     )
                 }
