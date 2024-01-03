@@ -41,6 +41,10 @@ class LoginFragment: BaseLaunchFragment() {
         setUpPasswordButton()
         setUpMovementButtons()
         setUpGoogleButton()
+
+        binding.loginForgotText.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetPassword1Fragment)
+        }
     }
 
     private fun setUpPasswordButton() {

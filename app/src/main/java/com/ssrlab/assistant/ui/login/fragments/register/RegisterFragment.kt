@@ -96,7 +96,7 @@ class RegisterFragment: BaseLaunchFragment() {
             when (it) {
                 1 -> {
                     authClient.signUp(login, password, {
-                        launchActivity.intentNext()
+                        findNavController().navigate(R.id.action_registerFragment_to_confirmEmailFragment)
                     }) { msg, type ->
                         inputHelper.handleErrorTypes(
                             message = msg,
