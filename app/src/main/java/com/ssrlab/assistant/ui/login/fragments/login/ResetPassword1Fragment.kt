@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentPassword1Binding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
 
@@ -30,6 +31,11 @@ class ResetPassword1Fragment: BaseLaunchFragment() {
 
         binding.password1Back.setOnClickListener {
             navController.popBackStack()
+        }
+
+        //temp
+        binding.password1Button.setOnClickListener {
+            navController.navigate(R.id.action_resetPassword1Fragment_to_resetPassword2Fragment)
         }
     }
 }

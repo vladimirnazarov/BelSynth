@@ -109,6 +109,21 @@
     <fragment
         android:id="@+id/resetPassword2Fragment"
         android:name="com.ssrlab.assistant.ui.login.fragments.login.ResetPassword2Fragment"
-        android:label="ResetPassword2Fragment" />
+        android:label="ResetPassword2Fragment" >
+
+        <action
+            android:id="@+id/action_resetPassword2Fragment_to_resetPassword3Fragment"
+            app:enterAnim="@anim/nav_enter_anim"
+            app:exitAnim="@anim/nav_exit_anim"
+            app:popEnterAnim="@anim/nav_pop_enter_anim"
+            app:popExitAnim="@anim/nav_pop_exit_anim"
+            app:destination="@id/resetPassword3Fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/resetPassword3Fragment"
+        android:name="com.ssrlab.assistant.ui.login.fragments.login.ResetPassword3Fragment"
+        android:label="ResetPassword3Fragment" />
 
 </navigation>
