@@ -101,7 +101,7 @@ class LoginFragment: BaseLaunchFragment() {
                 1 -> {
                     authClient.signIn(login, password, {
                         launchActivity.intentNext()
-                    }) { msg, type ->
+                    }, { msg, type ->
                         inputHelper.handleErrorTypes(
                             message = msg,
                             type = type,
@@ -109,7 +109,9 @@ class LoginFragment: BaseLaunchFragment() {
                             textView2 = binding.loginPasswordErrorTitle,
                             binding = binding
                         )
-                    }
+                    }, {
+                        findNavController().navigate(R.id.action_loginFragment_to_confirmEmailFragment)
+                    })
                 }
                 2 -> {
                     inputHelper.handleErrorTypes(

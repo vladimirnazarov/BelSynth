@@ -12,9 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentVideoBinding
 import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -22,9 +19,6 @@ class VideoFragment: BaseLaunchFragment() {
 
     private lateinit var binding: FragmentVideoBinding
     private lateinit var controller: WindowInsetsControllerCompat
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

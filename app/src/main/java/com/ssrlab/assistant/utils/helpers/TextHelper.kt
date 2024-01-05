@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
@@ -44,7 +45,7 @@ class TextHelper(private val context: Context) {
         })
     }
 
-    private fun setEditTextError(editText: AppCompatEditText, textView: TextView, errorHolder: View, message: String) {
+    fun setEditTextError(editText: AppCompatEditText, textView: TextView, errorHolder: View, message: String) {
         fadeAnim(errorHolder)
         textView.text = message
 
@@ -132,8 +133,8 @@ class TextHelper(private val context: Context) {
     }
 
     private fun fadeAnim(view: View, isOut: Boolean = false) {
-        val alphaInAnim = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_in)
-        val alphaOutAnim = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_out)
+        val alphaInAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_in)
+        val alphaOutAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_out)
         if (isOut) {
             view.startAnimation(alphaOutAnim)
             view.visibility = View.INVISIBLE

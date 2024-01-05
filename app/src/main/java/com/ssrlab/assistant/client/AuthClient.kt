@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.ui.login.LaunchActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AuthClient(private val context: Context) {
 
@@ -25,13 +28,18 @@ class AuthClient(private val context: Context) {
      * 1 - Login error;
      * 2 - Password error
      */
-    fun signUp(login: String, password: String, onSuccess: (AuthResult) -> Unit,onFailure: (String, Int) -> Unit) {
+    fun signUp(login: String, password: String, onSuccess: () -> Unit, onFailure: (String, Int) -> Unit) {
         if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.createUserWithEmailAndPassword(login, password).addOnSuccessListener {
                     fireAuth.signOut()
                     fireAuth.signInWithEmailAndPassword(login, password)
-                        .addOnSuccessListener { onSuccess(it) }
+                        .addOnSuccessListener {
+                            sendVerificationEmail(
+                                { onSuccess() },
+                                { onFailure(it, 0) }
+                            )
+                        }
                         .addOnFailureListener { onFailure(it.message!!, 0) }
                 }.addOnFailureListener { onFailure(it.message!!, 0) }
             } else {
@@ -44,11 +52,37 @@ class AuthClient(private val context: Context) {
         }
     }
 
-    fun signIn(login: String, password: String, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
+    fun sendVerificationEmail(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        fireAuth.currentUser?.sendEmailVerification()
+            ?.addOnSuccessListener { onSuccess() }
+            ?.addOnFailureListener { onFailure(it.message.toString()) }
+    }
+
+    fun awaitIfUserIsVerified(scope: CoroutineScope, onSuccess: () -> Unit) {
+        scope.launch {
+            while (fireAuth.currentUser?.isEmailVerified != true) {
+                delay(1000)
+                fireAuth.currentUser?.reload()
+            }
+
+            onSuccess()
+        }
+    }
+
+//    fun deleteUser(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+//        fireAuth.currentUser?.delete()
+//            ?.addOnSuccessListener { onSuccess() }
+//            ?.addOnFailureListener { onFailure(it.message.toString()) }
+//    }
+
+    fun signIn(login: String, password: String, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit, onVerification: () -> Unit) {
         if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.signInWithEmailAndPassword(login, password)
-                    .addOnSuccessListener { onSuccess(it) }
+                    .addOnSuccessListener {
+                        if (fireAuth.currentUser?.isEmailVerified == true) onSuccess(it)
+                        else onVerification()
+                    }
                     .addOnFailureListener { onFailure(it.message!!, 0) }
             } else {
                 val errMsg = ContextCompat.getString(context, R.string.password_length_error)
