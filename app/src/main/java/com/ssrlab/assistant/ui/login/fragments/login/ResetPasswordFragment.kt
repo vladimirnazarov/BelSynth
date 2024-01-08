@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
@@ -32,9 +33,7 @@ class ResetPasswordFragment: BaseLaunchFragment() {
     }
 
     private fun setUpButtons() {
-        val navController = findNavController()
-
-        binding.passwordBack.setOnClickListener { navController.popBackStack() }
+        binding.passwordBack.setOnClickListener { findNavController().popBackStack() }
 
         setUpApplyButton()
     }
@@ -48,6 +47,14 @@ class ResetPasswordFragment: BaseLaunchFragment() {
             if (passwordEmailInput.text?.isEmpty() == true) {
                 val msg = ContextCompat.getString(launchActivity, R.string.empty_field_error)
                 inputHelper.setEditTextError(passwordEmailInput, passwordEmailErrorTitle, passwordEmailErrorHolder, msg)
+            } else {
+                authClient.sendPasswordResetEmail(passwordEmailInput.text.toString(), {
+                    val msg = ContextCompat.getString(launchActivity, R.string.pass_rec_success)
+                    Toast.makeText(launchActivity, msg, Toast.LENGTH_SHORT).show()
+                    findNavController().popBackStack()
+                }, {
+                    inputHelper.showErrorSnack(it, binding.root)
+                })
             }
         }
     }

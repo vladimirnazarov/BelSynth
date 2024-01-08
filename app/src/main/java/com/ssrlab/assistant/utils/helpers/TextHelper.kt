@@ -123,7 +123,7 @@ class TextHelper(private val context: Context) {
         }
     }
 
-    private fun showErrorSnack(errorMessage: String, view: View) {
+    fun showErrorSnack(errorMessage: String, view: View) {
         val snack = Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT)
         snack.apply {
             setTextColor(ContextCompat.getColor(context, R.color.snack_text))
