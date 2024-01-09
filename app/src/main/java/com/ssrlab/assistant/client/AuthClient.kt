@@ -69,6 +69,12 @@ class AuthClient(private val context: Context) {
         }
     }
 
+    fun sendPasswordResetEmail(email: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        fireAuth.sendPasswordResetEmail(email)
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure(it.message.toString()) }
+    }
+
 //    fun deleteUser(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
 //        fireAuth.currentUser?.delete()
 //            ?.addOnSuccessListener { onSuccess() }

@@ -35,20 +35,11 @@
     <string name="confirm_email_bottom">Не получили письмо с подтверждением?</string>
     <string name="confirm_email_action">Повторно отправить email</string>
 
-    <string name="pass_rec_1_title">Забыли пароль?</string>
-    <string name="pass_rec_1_body">Не беспокойтесь, мы вышлем инструкции по восстановлению на вашу электронную почту</string>
-    <string name="pass_rec_1_btn">Отправить</string>
-    <string name="pass_rec_1_exist_err">Аккаунт с этим адресом электронной почты не зарегистрирован</string>
-
-    <string name="pass_rec_2_title">Email отправлен</string>
-    <string name="pass_rec_2_body">Проверьте свою электронную почту и перейдите по полученной ссылке, чтобы восстановить пароль</string>
-    <string name="pass_rec_2_bottom">Не получили email для восстановления пароля?</string>
-    <string name="pass_rec_2_action">Повторно отправить email</string>
-
-    <string name="pass_rec_3_title">Создать новый пароль</string>
-    <string name="pass_rec_3_et_1">Новый пароль</string>
-    <string name="pass_rec_3_et_2">Повторите пароль</string>
-    <string name="pass_rec_3_btn">Сбросить пароль</string>
+    <string name="pass_rec_title">Забыли пароль?</string>
+    <string name="pass_rec_body">Не беспокойтесь, мы вышлем инструкции по восстановлению на вашу электронную почту</string>
+    <string name="pass_rec_btn">Отправить</string>
+    <string name="pass_rec_exist_err">Аккаунт с этим адресом электронной почты не зарегистрирован</string>
+    <string name="pass_rec_success">Отправлено на почту</string>
 
     <!--  Choose  -->
     <string name="choose_title">Выберите собеседника</string>

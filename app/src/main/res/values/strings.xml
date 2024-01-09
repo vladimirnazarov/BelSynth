@@ -35,20 +35,11 @@
     <string name="confirm_email_bottom">Didn\'t receive the confirmation email?</string>
     <string name="confirm_email_action">Resend Email</string>
 
-    <string name="pass_rec_1_title">Forgot your password?</string>
-    <string name="pass_rec_1_body">Don\'t worry, we\'ll send password recovery instructions to your email</string>
-    <string name="pass_rec_1_btn">Send</string>
-    <string name="pass_rec_1_exist_err">Account with this email is not registered</string>
-
-    <string name="pass_rec_2_title">Email has been sent</string>
-    <string name="pass_rec_2_body">Check your email and follow the link to reset your password</string>
-    <string name="pass_rec_2_bottom">Didn\'t receive the email to reset your password?</string>
-    <string name="pass_rec_2_action">Resend email</string>
-
-    <string name="pass_rec_3_title">Create a new password</string>
-    <string name="pass_rec_3_et_1">New password</string>
-    <string name="pass_rec_3_et_2">Repeat password</string>
-    <string name="pass_rec_3_btn">Reset password</string>
+    <string name="pass_rec_title">Forgot your password?</string>
+    <string name="pass_rec_body">Don\'t worry, we\'ll send password recovery instructions to your email</string>
+    <string name="pass_rec_btn">Send</string>
+    <string name="pass_rec_exist_err">Account with this email is not registered</string>
+    <string name="pass_rec_success">Email sent</string>
 
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>
