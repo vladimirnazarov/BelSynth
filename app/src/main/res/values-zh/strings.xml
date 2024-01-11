@@ -87,11 +87,23 @@
     <!--  Settings  -->
     <string name="settings_title">设置</string>
     <string name="dark_theme">暗色主题</string>
+    <string name="log_out">请示</string>
+    <string name="delete_account">删除账户</string>
     <string name="language">语言</string>
     <string name="be">Беларуская</string>
     <string name="en">English</string>
     <string name="ru">Русский</string>
     <string name="zh">中文</string>
+
+    <string name="sign_out_title">您确定要退出吗？</string>
+    <string name="sign_out_body">所有您的数据，包括聊天记录，都将被保存</string>
+    <string name="sign_out_yes">退出</string>
+    <string name="sign_out_no">取消</string>
+
+    <string name="delete_title">您确定要删除您的帐户吗？</string>
+    <string name="delete_body">所有您的数据将被删除，聊天记录将不会保存</string>
+    <string name="delete_yes">删除</string>
+    <string name="delete_no">取消</string>
 
     <!--  Contacts  -->
     <string name="contacts_title">联系方式</string>

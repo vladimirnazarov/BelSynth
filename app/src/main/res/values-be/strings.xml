@@ -87,11 +87,23 @@
     <!--  Settings  -->
     <string name="settings_title">Наладкі</string>
     <string name="dark_theme">Цёмная тэма</string>
+    <string name="log_out">Выйсці з акаўнта</string>
+    <string name="delete_account">Выдаліць акаўнт</string>
     <string name="language">Мова</string>
     <string name="be">Беларуская</string>
     <string name="en">English</string>
     <string name="ru">Русский</string>
     <string name="zh">中文</string>
+
+    <string name="sign_out_title">Вы ўпэўненыя, што хочаце выйсці?</string>
+    <string name="sign_out_body">Усе вашыя дадзеныя, у тым ліку гісторыя перапісак, захоўваюцца</string>
+    <string name="sign_out_yes">Выйсці</string>
+    <string name="sign_out_no">Адмена</string>
+
+    <string name="delete_title">Вы ўпэўненыя, што хочаце выдаліць свой акаўнт?</string>
+    <string name="delete_body">Усе вашыя дадзеныя будуць выдалены, а гісторыя перапісак не будзе захоўвацца</string>
+    <string name="delete_yes">Выдаліць</string>
+    <string name="delete_no">Адмена</string>
 
     <!--  Contacts  -->
     <string name="contacts_title">Кантакты</string>

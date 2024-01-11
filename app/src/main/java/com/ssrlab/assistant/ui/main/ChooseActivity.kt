@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
+import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.THEME
 import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
@@ -68,6 +69,13 @@ class ChooseActivity : AppCompatActivity() {
     fun intentToMail() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:hello@asistent.by")
+        startActivity(intent)
+    }
+
+    fun intentBack() {
+        val intent = Intent(this@ChooseActivity, LaunchActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
