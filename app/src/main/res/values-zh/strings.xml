@@ -38,8 +38,8 @@
     <string name="pass_rec_title">忘记密码？</string>
     <string name="pass_rec_body">别担心，我们会将密码恢复说明发送到您的电子邮件</string>
     <string name="pass_rec_btn">发送</string>
-    <string name="pass_rec_exist_err">使用此电子邮件注册的帐户未找到</string>
     <string name="pass_rec_success">邮件已发送</string>
+    <string name="pass_rec_exists">There is no user with this email</string>
 
     <!--  Choose  -->
     <string name="choose_title">選擇一個與之交談的人</string>

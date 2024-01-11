@@ -34,6 +34,7 @@ class ResetPasswordFragment: BaseLaunchFragment() {
 
     private fun setUpButtons() {
         binding.passwordBack.setOnClickListener { findNavController().popBackStack() }
+        binding.passwordMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
 
         setUpApplyButton()
     }
@@ -43,18 +44,35 @@ class ResetPasswordFragment: BaseLaunchFragment() {
     }
 
     private fun checkLogin() {
+        inputHelper.hideKeyboard(binding.root)
+
         binding.apply {
+            //check field emptiness
             if (passwordEmailInput.text?.isEmpty() == true) {
                 val msg = ContextCompat.getString(launchActivity, R.string.empty_field_error)
                 inputHelper.setEditTextError(passwordEmailInput, passwordEmailErrorTitle, passwordEmailErrorHolder, msg)
             } else {
-                authClient.sendPasswordResetEmail(passwordEmailInput.text.toString(), {
-                    val msg = ContextCompat.getString(launchActivity, R.string.pass_rec_success)
-                    Toast.makeText(launchActivity, msg, Toast.LENGTH_SHORT).show()
-                    findNavController().popBackStack()
-                }, {
-                    inputHelper.showErrorSnack(it, binding.root)
-                })
+                //check email is valid
+                if (authClient.isEmailValid(passwordEmailInput.text.toString())) {
+                    //check if user exists
+                    authClient.checkIfUserExists(passwordEmailInput.text.toString(), {
+                        //send password reset email
+                        authClient.sendPasswordResetEmail(passwordEmailInput.text.toString(), {
+                            val msg = ContextCompat.getString(launchActivity, R.string.pass_rec_success)
+                            Toast.makeText(launchActivity, msg, Toast.LENGTH_SHORT).show()
+                            findNavController().popBackStack()
+                        }, {
+                            inputHelper.showErrorSnack(it, binding.root)
+                        })
+                    }, {
+                        val msg = ContextCompat.getString(launchActivity, R.string.pass_rec_exists)
+                        inputHelper.showErrorSnack(msg, binding.root)
+                    })
+
+                } else {
+                    val msg = ContextCompat.getString(launchActivity, R.string.email_type_error)
+                    inputHelper.setEditTextError(passwordEmailInput, passwordEmailErrorTitle, passwordEmailErrorHolder, msg)
+                }
             }
         }
     }

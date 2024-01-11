@@ -38,8 +38,8 @@
     <string name="pass_rec_title">Забыли пароль?</string>
     <string name="pass_rec_body">Не беспокойтесь, мы вышлем инструкции по восстановлению на вашу электронную почту</string>
     <string name="pass_rec_btn">Отправить</string>
-    <string name="pass_rec_exist_err">Аккаунт с этим адресом электронной почты не зарегистрирован</string>
     <string name="pass_rec_success">Отправлено на почту</string>
+    <string name="pass_rec_exists">There is no user with this email</string>
 
     <!--  Choose  -->
     <string name="choose_title">Выберите собеседника</string>

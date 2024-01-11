@@ -90,6 +90,8 @@ class LoginFragment: BaseLaunchFragment() {
                 val login = loginEmailInput.text.toString()
                 val password = loginPasswordInput.text.toString()
 
+                inputHelper.hideKeyboard(binding.root)
+
                 handleEmptyInput(login, password)
             }
         }

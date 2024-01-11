@@ -38,8 +38,8 @@
     <string name="pass_rec_title">Forgot your password?</string>
     <string name="pass_rec_body">Don\'t worry, we\'ll send password recovery instructions to your email</string>
     <string name="pass_rec_btn">Send</string>
-    <string name="pass_rec_exist_err">Account with this email is not registered</string>
     <string name="pass_rec_success">Email sent</string>
+    <string name="pass_rec_exists">There is no user with this email</string>
 
     <!--  Choose  -->
     <string name="choose_title">Choose speaker</string>

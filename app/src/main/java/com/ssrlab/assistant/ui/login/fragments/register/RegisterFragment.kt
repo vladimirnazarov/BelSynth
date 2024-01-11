@@ -86,6 +86,8 @@ class RegisterFragment: BaseLaunchFragment() {
                 val login = registerEmailInput.text.toString()
                 val password = registerPasswordInput.text.toString()
 
+                inputHelper.hideKeyboard(binding.root)
+
                 handleEmptyInput(login, password)
             }
         }

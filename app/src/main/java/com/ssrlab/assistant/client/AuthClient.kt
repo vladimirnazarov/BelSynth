@@ -75,6 +75,15 @@ class AuthClient(private val context: Context) {
             .addOnFailureListener { onFailure(it.message.toString()) }
     }
 
+    fun checkIfUserExists(email: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        fireAuth.createUserWithEmailAndPassword(email, "      ")
+            .addOnSuccessListener {
+                fireAuth.currentUser?.delete()
+                onFailure()
+            }
+            .addOnFailureListener { onSuccess() }
+    }
+
 //    fun deleteUser(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
 //        fireAuth.currentUser?.delete()
 //            ?.addOnSuccessListener { onSuccess() }
@@ -143,4 +152,6 @@ class AuthClient(private val context: Context) {
             onFailure(errMsg, 0)
         }
     }
+
+    fun isEmailValid(email: String) = email.matches(emailRegex)
 }
