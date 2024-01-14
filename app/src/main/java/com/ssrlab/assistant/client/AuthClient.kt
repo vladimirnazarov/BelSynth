@@ -84,11 +84,11 @@ class AuthClient(private val context: Context) {
             .addOnFailureListener { onSuccess() }
     }
 
-//    fun deleteUser(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-//        fireAuth.currentUser?.delete()
-//            ?.addOnSuccessListener { onSuccess() }
-//            ?.addOnFailureListener { onFailure(it.message.toString()) }
-//    }
+    fun deleteUser(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        fireAuth.currentUser?.delete()
+            ?.addOnSuccessListener { onSuccess() }
+            ?.addOnFailureListener { onFailure(it.message.toString()) }
+    }
 
     fun signIn(login: String, password: String, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit, onVerification: () -> Unit) {
         if (login.matches(emailRegex)) {
@@ -121,6 +121,11 @@ class AuthClient(private val context: Context) {
 
             activity.getLauncher().launch(intent)
         }
+    }
+
+    fun signOut(onSuccess: () -> Unit) {
+        fireAuth.signOut()
+        onSuccess()
     }
 
     private fun generateSignInClient(activity: LaunchActivity) {

@@ -87,11 +87,23 @@
     <!--  Settings  -->
     <string name="settings_title">Настройки</string>
     <string name="dark_theme">Тёмная тема</string>
+    <string name="log_out">Выйти из аккаунта</string>
+    <string name="delete_account">Удалить аккаунт</string>
     <string name="language">Язык</string>
     <string name="be">Беларуская</string>
     <string name="en">English</string>
     <string name="ru">Русский</string>
     <string name="zh">中文</string>
+
+    <string name="sign_out_title">Вы уверены, что хотите выйти из своего аккаунта?</string>
+    <string name="sign_out_body">Все ваши данные, в том числе и история переписок, будут сохранены</string>
+    <string name="sign_out_yes">Выйти</string>
+    <string name="sign_out_no">Отмена</string>
+
+    <string name="delete_title">Вы уверены, что хотите удалить свой аккаунт?</string>
+    <string name="delete_body">Все ваши данные будут удалены, а история переписок не будет сохранена</string>
+    <string name="delete_yes">Удалить</string>
+    <string name="delete_no">Отмена</string>
 
     <!--  Contacts  -->
     <string name="contacts_title">Контакты</string>

@@ -87,11 +87,23 @@
     <!--  Settings  -->
     <string name="settings_title">Settings</string>
     <string name="dark_theme">Night mode</string>
+    <string name="log_out">Sign out</string>
+    <string name="delete_account">Delete account</string>
     <string name="language">Language</string>
     <string name="be">Беларуская</string>
     <string name="en">English</string>
     <string name="ru">Русский</string>
     <string name="zh">中文</string>
+
+    <string name="sign_out_title">Are you sure you want to sign out?</string>
+    <string name="sign_out_body">All your data, including chat history, will be saved</string>
+    <string name="sign_out_yes">Sign out</string>
+    <string name="sign_out_no">Cancel</string>
+
+    <string name="delete_title">Are you sure you want to delete your account?</string>
+    <string name="delete_body">All your data will be deleted, and chat history will not be saved</string>
+    <string name="delete_yes">Delete</string>
+    <string name="delete_no">Cancel</string>
 
     <!--  Contacts  -->
     <string name="contacts_title">Contacts</string>

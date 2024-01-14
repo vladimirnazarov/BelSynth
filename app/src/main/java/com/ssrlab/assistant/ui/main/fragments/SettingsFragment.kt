@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
 import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
@@ -30,6 +31,8 @@ class SettingsFragment: BaseMainFragment() {
         chooseActivity.setUpToolbar(resources.getString(R.string.settings_title), isBackButtonVisible = true)
         setUpThemeSwitch()
         setUpRadioGroup()
+        setUpAccountDelete()
+        setUpSignOut()
     }
 
     private fun setUpThemeSwitch() {
@@ -41,6 +44,42 @@ class SettingsFragment: BaseMainFragment() {
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
             chooseActivity.saveTheme(checked)
+        }
+    }
+
+    private fun setUpAccountDelete() {
+        val textResources = arrayListOf(
+            ContextCompat.getString(chooseActivity, R.string.delete_title),
+            ContextCompat.getString(chooseActivity, R.string.delete_body),
+            ContextCompat.getString(chooseActivity, R.string.delete_yes),
+            ContextCompat.getString(chooseActivity, R.string.delete_no)
+        )
+
+        binding.settingsDelete.setOnClickListener {
+            initDialog(textResources) {
+                authClient.deleteUser({
+                    chooseActivity.intentBack()
+                }, {
+                    inputHelper.showErrorSnack(it, binding.root)
+                })
+            }
+        }
+    }
+
+    private fun setUpSignOut() {
+        val textResources = arrayListOf(
+            ContextCompat.getString(chooseActivity, R.string.sign_out_title),
+            ContextCompat.getString(chooseActivity, R.string.sign_out_body),
+            ContextCompat.getString(chooseActivity, R.string.sign_out_yes),
+            ContextCompat.getString(chooseActivity, R.string.sign_out_no)
+        )
+
+        binding.settingsLogOut.setOnClickListener {
+            initDialog(textResources) {
+                authClient.signOut {
+                    chooseActivity.intentBack()
+                }
+            }
         }
     }
 

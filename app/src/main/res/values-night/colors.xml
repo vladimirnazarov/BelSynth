@@ -72,4 +72,10 @@
     <color name="record_wave">#FFFFFF</color>
     <color name="loudness_wave">#0981C2</color>
 
+    <color name="dialog_back">#F6F6F6</color>
+    <color name="dialog_text_primary">#010411</color>
+    <color name="dialog_text_secondary">#73747A</color>
+    <color name="dialog_button">#0981C2</color>
+    <color name="dialog_ripple">#065B88</color>
+
 </resources>
