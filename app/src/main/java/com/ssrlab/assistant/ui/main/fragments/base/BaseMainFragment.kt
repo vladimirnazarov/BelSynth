@@ -1,6 +1,5 @@
 package com.ssrlab.assistant.ui.main.fragments.base
 
-import android.app.Activity
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,14 +8,12 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.client.AuthClient
 import com.ssrlab.assistant.databinding.DialogAttentionBinding
 import com.ssrlab.assistant.ui.main.ChooseActivity
 import com.ssrlab.assistant.utils.helpers.TextHelper
-import kotlin.time.times
 
 open class BaseMainFragment: Fragment() {
 
