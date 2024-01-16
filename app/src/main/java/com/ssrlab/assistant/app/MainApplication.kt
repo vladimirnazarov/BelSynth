@@ -12,6 +12,7 @@ import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.ui.main.ChooseActivity
 import com.ssrlab.assistant.utils.CHAT_SOUND
 import com.ssrlab.assistant.utils.FIRST_LAUNCH
+import com.ssrlab.assistant.utils.IS_USER_RATED
 import com.ssrlab.assistant.utils.LOCALE
 import com.ssrlab.assistant.utils.THEME
 import java.util.Locale
@@ -24,6 +25,7 @@ class MainApplication: Application() {
 
     private var localeString = ""
     private var isFirstLaunch = true
+    private var isUserRated = false
     private var isSoundEnabled = true
 
     override fun onCreate() {
@@ -43,11 +45,13 @@ class MainApplication: Application() {
 
     fun isFirstLaunch() = isFirstLaunch
     fun isSoundEnabled() = isSoundEnabled
+    fun isUserRated() = isUserRated
 
     @Suppress("DEPRECATION")
     fun loadPreferences(sharedPreferences: SharedPreferences) {
         localeString = sharedPreferences.getString(LOCALE, "be").toString()
         theme = sharedPreferences.getBoolean(THEME, false)
+        isUserRated = sharedPreferences.getBoolean(IS_USER_RATED, false)
         isFirstLaunch = sharedPreferences.getBoolean(FIRST_LAUNCH, true)
         isSoundEnabled = sharedPreferences.getBoolean(CHAT_SOUND, true)
 
@@ -86,6 +90,13 @@ class MainApplication: Application() {
                     apply()
                 }
             }
+        }
+    }
+
+    fun saveIsUserRated(sharedPreferences: SharedPreferences, activity: ChatActivity) {
+        with (sharedPreferences.edit()) {
+            putBoolean(IS_USER_RATED, true)
+            apply()
         }
     }
 }
