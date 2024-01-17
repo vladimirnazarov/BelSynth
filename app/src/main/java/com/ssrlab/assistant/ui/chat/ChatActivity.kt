@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,6 +26,7 @@ import com.ssrlab.assistant.rv.ChatAdapter
 import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
 import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.helpers.InAppReviewer
 import com.ssrlab.assistant.utils.helpers.TextHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
@@ -232,6 +234,23 @@ class ChatActivity : AppCompatActivity() {
         messagesI.add(MessageInfoObject(id, 1))
 
         updateAdapter()
+        checkIfAppRated()
+    }
+
+    private fun checkIfAppRated() {
+        var identifierForRateView = 1
+        for (i in messagesI)
+            if (i.role == 1)
+                identifierForRateView++
+        if (identifierForRateView == 3 && !mainApp.isUserRated()) {
+            scope.launch {
+                delay(4000)
+                InAppReviewer().askUserForReview(this@ChatActivity) {
+                    mainApp.saveIsUserRated(sharedPreferences, this@ChatActivity)
+                    Toast.makeText(this@ChatActivity, ContextCompat.getString(this@ChatActivity, R.string.thanks), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun loadUserMessage(text: String) {

@@ -23,6 +23,7 @@
     <color name="error">#EB5757</color>
 
     <color name="sign_back">#065986</color>
+    <color name="hint_color">#73747A</color>
 
     <!--  Choose  -->
     <color name="icon_color">#065986</color>

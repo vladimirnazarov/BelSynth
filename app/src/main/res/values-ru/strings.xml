@@ -125,4 +125,5 @@
     <string name="share_text_1">Посмотри, какой интересный ответ мне дал бот</string>
     <string name="share_text_2">через приложение</string>
     <string name="share_using">Поделиться через…</string>
+    <string name="thanks">Спасибо!</string>
 </resources>

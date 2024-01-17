@@ -204,7 +204,7 @@
                 android:fontFamily="@font/roboto"
 
                 android:hint="@string/email_example"
-                android:textColorHint="@color/secondary_text"
+                android:textColorHint="@color/hint_color"
                 android:inputType="textEmailAddress"
 
                 android:layout_marginTop="4dp"
@@ -288,7 +288,7 @@
                 android:fontFamily="@font/roboto"
 
                 android:hint="@string/password_additional"
-                android:textColorHint="@color/secondary_text"
+                android:textColorHint="@color/hint_color"
                 android:inputType="textPassword"
 
                 android:maxLength="24"
@@ -385,7 +385,7 @@
                     app:layout_constraintStart_toStartOf="parent"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     app:layout_constraintTop_toBottomOf="@id/register_terms_1"
@@ -408,8 +408,7 @@
 
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/register_terms_3"
-                        app:layout_constraintStart_toStartOf="parent"/>
+                        app:layout_constraintEnd_toStartOf="@id/register_terms_3"/>
 
                     <TextView
                         android:id="@+id/register_terms_3"
@@ -424,8 +423,8 @@
 
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/register_terms_2"
-                        app:layout_constraintEnd_toStartOf="@id/register_terms_4"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
 
                     <TextView
                         android:id="@+id/register_terms_4"
@@ -443,8 +442,7 @@
 
                         app:layout_constraintStart_toEndOf="@id/register_terms_3"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
+                        app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
