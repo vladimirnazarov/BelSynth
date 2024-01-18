@@ -246,7 +246,7 @@ class ChatActivity : AppCompatActivity() {
             scope.launch {
                 delay(4000)
                 InAppReviewer().askUserForReview(this@ChatActivity) {
-                    mainApp.saveIsUserRated(sharedPreferences, this@ChatActivity)
+                    mainApp.saveIsUserRated(sharedPreferences)
                     Toast.makeText(this@ChatActivity, ContextCompat.getString(this@ChatActivity, R.string.thanks), Toast.LENGTH_SHORT).show()
                 }
             }

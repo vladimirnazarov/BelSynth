@@ -93,7 +93,7 @@ class MainApplication: Application() {
         }
     }
 
-    fun saveIsUserRated(sharedPreferences: SharedPreferences, activity: ChatActivity) {
+    fun saveIsUserRated(sharedPreferences: SharedPreferences) {
         with (sharedPreferences.edit()) {
             putBoolean(IS_USER_RATED, true)
             apply()
