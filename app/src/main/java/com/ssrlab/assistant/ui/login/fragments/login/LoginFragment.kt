@@ -32,6 +32,10 @@ class LoginFragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
+        authClient.automateSignIn(launchActivity) {
+            launchActivity.intentNext()
+        }
+
         setUpButtons()
         binding.loginMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
     }
@@ -41,9 +45,16 @@ class LoginFragment: BaseLaunchFragment() {
         setUpPasswordButton()
         setUpMovementButtons()
         setUpGoogleButton()
+        setUpLanguageButton()
 
         binding.loginForgotText.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_resetPassword1Fragment)
+        }
+    }
+
+    private fun setUpLanguageButton() {
+        binding.loginLanguage.setOnClickListener {
+            inputHelper.initLangDialog(launchActivity, mainApp)
         }
     }
 

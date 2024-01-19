@@ -41,10 +41,10 @@ class LaunchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
-        mainApp.savePreferences(sharedPreferences, this@LaunchActivity)
+        mainApp.saveSecondLaunch(sharedPreferences)
     }
 
     fun intentNext() {
@@ -61,4 +61,6 @@ class LaunchActivity : AppCompatActivity() {
     fun getLauncher() = launcher
 
     fun getMainApp() = mainApp
+
+    fun getSharedPreferences() = sharedPreferences
 }

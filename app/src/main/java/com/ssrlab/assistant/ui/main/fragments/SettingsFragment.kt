@@ -25,8 +25,8 @@ class SettingsFragment: BaseMainFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         chooseActivity.setUpToolbar(resources.getString(R.string.settings_title), isBackButtonVisible = true)
         setUpThemeSwitch()
@@ -58,6 +58,7 @@ class SettingsFragment: BaseMainFragment() {
         binding.settingsDelete.setOnClickListener {
             initDialog(textResources) {
                 authClient.deleteUser({
+                    mainApp.saveUserSignedIn(chooseActivity.getSharedPreferences())
                     chooseActivity.intentBack()
                 }, {
                     inputHelper.showErrorSnack(it, binding.root)
@@ -77,6 +78,7 @@ class SettingsFragment: BaseMainFragment() {
         binding.settingsLogOut.setOnClickListener {
             initDialog(textResources) {
                 authClient.signOut {
+                    mainApp.saveUserSignedIn(chooseActivity.getSharedPreferences())
                     chooseActivity.intentBack()
                 }
             }
@@ -91,7 +93,7 @@ class SettingsFragment: BaseMainFragment() {
                     "en" -> R.id.settings_language_en
                     "ru" -> R.id.settings_language_ru
                     "zh" -> R.id.settings_language_zh
-                    else -> R.id.settings_language_en
+                    else -> R.id.settings_language_be
                 }
             )
 

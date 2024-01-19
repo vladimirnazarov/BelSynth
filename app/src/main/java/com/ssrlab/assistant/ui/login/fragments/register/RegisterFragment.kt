@@ -41,6 +41,13 @@ class RegisterFragment: BaseLaunchFragment() {
         setUpPasswordButton()
         setUpMovementButtons()
         setUpGoogleButton()
+        setUpLanguageButton()
+    }
+
+    private fun setUpLanguageButton() {
+        binding.registerLanguage.setOnClickListener {
+            inputHelper.initLangDialog(launchActivity, mainApp)
+        }
     }
 
     private fun setUpPasswordButton() {
