@@ -29,7 +29,7 @@ open class BaseMainFragment: Fragment() {
         chooseActivity = activity as ChooseActivity
         mainApp = chooseActivity.getMainApp()
 
-        authClient = AuthClient(mainApp.getContext())
+        authClient = AuthClient(mainApp.getContext(), mainApp, chooseActivity.getSharedPreferences())
         inputHelper = TextHelper(mainApp.getContext())
     }
 
@@ -57,15 +57,19 @@ open class BaseMainFragment: Fragment() {
             dialogAttBody.text = textRes[1]
 
             dialogAttButtonYes.text = textRes[2]
-            dialogAttButtonYes.setOnClickListener { onAccept() }
+            dialogAttButtonYes.setOnClickListener {
+                dialog.dismiss()
+                onAccept()
+            }
 
             dialogAttButtonNo.text = textRes[3]
             dialogAttButtonNo.setOnClickListener { dialog.dismiss() }
         }
 
-        val width = displayMetrics.widthPixels
+        val width = chooseActivity.resources.displayMetrics.widthPixels
         val layoutParams = WindowManager.LayoutParams()
-        layoutParams.width = ((0.9 * width).toInt())
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = width - (width / 10)
         dialog.window?.attributes = layoutParams
 
         dialog.show()

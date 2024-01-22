@@ -1,11 +1,18 @@
 package com.ssrlab.assistant.utils.helpers
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.DisplayMetrics
+import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
@@ -16,8 +23,11 @@ import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.app.MainApplication
+import com.ssrlab.assistant.databinding.DialogLanguageBinding
 import com.ssrlab.assistant.databinding.FragmentLoginBinding
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
+import com.ssrlab.assistant.ui.login.LaunchActivity
 
 class TextHelper(private val context: Context) {
 
@@ -160,5 +170,49 @@ class TextHelper(private val context: Context) {
     fun hideKeyboard(view: View) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    @Suppress("DEPRECATION")
+    fun initLangDialog(launchActivity: LaunchActivity, mainApp: MainApplication) {
+        val displayMetrics = DisplayMetrics()
+        launchActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+
+        val dialog = Dialog(launchActivity)
+        val dialogBinding = DialogLanguageBinding.inflate(LayoutInflater.from(context))
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dialogBinding.root)
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(true)
+
+        dialogBinding.dialogLangRadioGroup.apply {
+            check(
+                when (mainApp.getLocale()) {
+                    "be" -> R.id.dialog_lang_be
+                    "en" -> R.id.dialog_lang_en
+                    "ru" -> R.id.dialog_lang_ru
+                    "zh" -> R.id.dialog_lang_zh
+                    else -> R.id.dialog_lang_be
+                }
+            )
+
+            setOnCheckedChangeListener { _, i ->
+                when (i) {
+                    R.id.dialog_lang_be -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "be")
+                    R.id.dialog_lang_en -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                    R.id.dialog_lang_ru -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "ru")
+                    R.id.dialog_lang_zh -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "zh")
+                    else -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                }
+            }
+        }
+
+        val width = launchActivity.resources.displayMetrics.widthPixels
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = width - (width / 10)
+        dialog.window?.attributes = layoutParams
+
+        dialog.show()
     }
 }

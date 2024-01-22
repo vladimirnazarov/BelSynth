@@ -14,6 +14,7 @@
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="android:navigationBarColor">@color/launch_navigation_bar_color</item>
+        <item name="android:windowLightNavigationBar">true</item>
 
     </style>
 

@@ -26,7 +26,7 @@ open class BaseLaunchFragment: Fragment() {
         launchActivity = activity as LaunchActivity
         mainApp = launchActivity.getMainApp()
 
-        authClient = AuthClient(mainApp.getContext())
+        authClient = AuthClient(mainApp.getContext(), mainApp, launchActivity.getSharedPreferences())
         inputHelper = TextHelper(mainApp.getContext())
     }
 }

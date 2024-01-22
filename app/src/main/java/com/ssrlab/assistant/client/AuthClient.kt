@@ -1,6 +1,7 @@
 package com.ssrlab.assistant.client
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -11,15 +12,20 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.ui.login.LaunchActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class AuthClient(private val context: Context) {
+class AuthClient(
+    private val context: Context,
+    private val mainApp: MainApplication,
+    private val sharedPreferences: SharedPreferences
+) {
 
     private val fireAuth = FirebaseAuth.getInstance()
-    private val emailRegex = Regex("^[a-zA-Z0-9][a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9][a-zA-Z0-9]+")
+    private val emailRegex = Regex("^[a-zA-Z0-9][a-zA-Z0-9.]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9][a-zA-Z0-9]+")
 
     private var googleSignInClient: GoogleSignInClient? = null
 
@@ -32,11 +38,13 @@ class AuthClient(private val context: Context) {
         if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.createUserWithEmailAndPassword(login, password).addOnSuccessListener {
-                    fireAuth.signOut()
                     fireAuth.signInWithEmailAndPassword(login, password)
                         .addOnSuccessListener {
                             sendVerificationEmail(
-                                { onSuccess() },
+                                {
+                                    mainApp.saveUserSignedIn(sharedPreferences, isUserSigned = true, email = login, password = password)
+                                    onSuccess()
+                                },
                                 { onFailure(it, 0) }
                             )
                         }
@@ -90,12 +98,30 @@ class AuthClient(private val context: Context) {
             ?.addOnFailureListener { onFailure(it.message.toString()) }
     }
 
+    fun automateSignIn(activity: LaunchActivity, onSuccess: () -> Unit) {
+        mainApp.getIsUserSignObject().apply {
+            if (isSignedIn) {
+                if (!isGoogle) {
+                    fireAuth.signInWithEmailAndPassword(email, password)
+                        .addOnSuccessListener { onSuccess() }
+                } else {
+                    generateSignInClient(activity)
+                    val task = googleSignInClient?.silentSignIn()
+                    if (task?.isSuccessful == true) onSuccess()
+                }
+            }
+        }
+    }
+
     fun signIn(login: String, password: String, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit, onVerification: () -> Unit) {
         if (login.matches(emailRegex)) {
             if (password.length >= 8) {
                 fireAuth.signInWithEmailAndPassword(login, password)
                     .addOnSuccessListener {
-                        if (fireAuth.currentUser?.isEmailVerified == true) onSuccess(it)
+                        if (fireAuth.currentUser?.isEmailVerified == true) {
+                            mainApp.saveUserSignedIn(sharedPreferences, isUserSigned = true, isGoogle = false, email = it.user?.email!!, password = password)
+                            onSuccess(it)
+                        }
                         else onVerification()
                     }
                     .addOnFailureListener { onFailure(it.message!!, 0) }
@@ -151,6 +177,7 @@ class AuthClient(private val context: Context) {
     private fun googleSignInWithCredential(account: GoogleSignInAccount, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         fireAuth.signInWithCredential(credential).addOnSuccessListener {
+            mainApp.saveUserSignedIn(sharedPreferences, isUserSigned = true, isGoogle = true)
             onSuccess(it)
         }.addOnFailureListener {
             val errMsg = it.message.toString()
@@ -160,3 +187,10 @@ class AuthClient(private val context: Context) {
 
     fun isEmailValid(email: String) = email.matches(emailRegex)
 }
+
+data class IsUserSignedIn(
+    var isSignedIn: Boolean = false,
+    var isGoogle: Boolean = false,
+    var email: String = "",
+    var password: String = "",
+)

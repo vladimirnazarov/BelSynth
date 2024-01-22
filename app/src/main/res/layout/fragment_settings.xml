@@ -82,7 +82,6 @@
             android:text="@string/be"
             android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:textStyle="normal"
             android:fontFamily="@font/roboto"
 
             android:paddingHorizontal="16dp"/>
@@ -97,7 +96,6 @@
             android:text="@string/en"
             android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:textStyle="normal"
             android:fontFamily="@font/roboto"
 
             android:paddingHorizontal="16dp"/>
@@ -112,7 +110,6 @@
             android:text="@string/ru"
             android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:textStyle="normal"
             android:fontFamily="@font/roboto"
 
             android:paddingHorizontal="16dp"/>
@@ -127,7 +124,6 @@
             android:text="@string/zh"
             android:textSize="16sp"
             android:textColor="@color/secondary_text"
-            android:textStyle="normal"
             android:fontFamily="@font/roboto"
 
             android:paddingHorizontal="16dp"/>
