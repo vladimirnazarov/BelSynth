@@ -25,6 +25,13 @@
     <color name="hint_color">#73747A</color>
 
     <!--  Choose  -->
+    <color name="donate_gradient_1">#065986</color>
+    <color name="donate_gradient_2">#010411</color>
+    <color name="donate_title">#FFFFFF</color>
+    <color name="donate_sub">#D7D7D7</color>
+    <color name="donate_button_text">#FFFFFF</color>
+    <color name="donate_button_back">#0981C2</color>
+
     <color name="icon_color">#FFFFFF</color>
     <color name="switch_inactive">#959595</color>
     <color name="switch_active">#36B6FB</color>

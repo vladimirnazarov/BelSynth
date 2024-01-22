@@ -50,10 +50,15 @@
     <string name="speaker_5">基里尔</string>
     <string name="speaker_6">瓦西里</string>
     <string name="speaker_7">瓦西里娜</string>
+    <string name="promote_title">建议机器人</string>
     <string name="voice_ready">声音稳定</string>
     <string name="voice_in_progress">正在开发中</string>
     <string name="assistant_with_role">可选择角色的助理</string>
     <string name="assistant_common">普通助理</string>
+
+    <string name="donate_title">帮助应用变得更好！</string>
+    <string name="donate_sub">向开发者捐赠一杯咖啡</string>
+    <string name="donate_button">捐赠</string>
 
     <!--  Role  -->
     <string name="role_title">选择角色</string>

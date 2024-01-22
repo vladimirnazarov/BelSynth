@@ -50,10 +50,15 @@
     <string name="speaker_5">Кирилл</string>
     <string name="speaker_6">Василь</string>
     <string name="speaker_7">Василина</string>
+    <string name="promote_title">Предложить бота</string>
     <string name="voice_ready">(голос стабилизируется)</string>
     <string name="voice_in_progress">(в проработке)</string>
     <string name="assistant_with_role">Ассистенты с выбором роли</string>
     <string name="assistant_common">Общие ассистенты</string>
+
+    <string name="donate_title">Помогите приложению стать лучше!</string>
+    <string name="donate_sub">Пожертвуйте разработчику чашку кофе</string>
+    <string name="donate_button">Пожертвовать</string>
 
     <!--  Role  -->
     <string name="role_title">Выберите роль</string>
