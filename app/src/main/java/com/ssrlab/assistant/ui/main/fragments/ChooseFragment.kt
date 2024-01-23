@@ -34,6 +34,7 @@ class ChooseFragment: BaseMainFragment() {
 
     private fun setUpChats() {
         binding.apply {
+            choosePromoteRipple.setOnClickListener { chooseActivity.intentToLink("https://docs.google.com/forms/d/1Xey4v8z7X2xxppEWpjg6uYlKC3YILYBBrwFpumd8zXs/edit") }
             chooseSpeaker1Ripple.setOnClickListener { chooseActivity.intentToChat("ales", binding.chooseSpeaker1Name.text.toString(), R.drawable.img_speaker_1) }
             chooseSpeaker2Ripple.setOnClickListener { chooseActivity.intentToChat("alesia", binding.chooseSpeaker2Name.text.toString(), R.drawable.img_speaker_2) }
             chooseSpeaker3Ripple.setOnClickListener { chooseActivity.intentToChat("alena", binding.chooseSpeaker3Name.text.toString(), R.drawable.img_speaker_3) }
