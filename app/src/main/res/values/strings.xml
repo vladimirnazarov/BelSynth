@@ -50,10 +50,15 @@
     <string name="speaker_5">Kiryl</string>
     <string name="speaker_6">Vasil</string>
     <string name="speaker_7">Vasilina</string>
+    <string name="promote_title">Suggest a bot</string>
     <string name="voice_ready">(voice stabilizes)</string>
     <string name="voice_in_progress">(in development)</string>
     <string name="assistant_with_role">Assistants with a choice of role</string>
     <string name="assistant_common">Common assistants</string>
+
+    <string name="donate_title">Help the app get better!</string>
+    <string name="donate_sub">Donate a cup of coffee to the developer</string>
+    <string name="donate_button">Donate</string>
 
     <!--  Role  -->
     <string name="role_title">Choose a role</string>

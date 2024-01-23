@@ -26,6 +26,105 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/choose_donate_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/background_donate"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/choose_donate_back_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:background="@drawable/ic_ellipses"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/choose_donate_developer_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/img_developer"
+
+                    android:layout_marginEnd="12dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/choose_donate_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/donate_title"
+                    android:textColor="@color/donate_title"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto"
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/choose_donate_developer_img"/>
+
+                <TextView
+                    android:id="@+id/choose_donate_sub"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/donate_sub"
+                    android:textSize="12sp"
+                    android:textColor="@color/donate_sub"
+                    android:fontFamily="@font/roboto"
+
+                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/choose_donate_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/choose_donate_developer_img"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/choose_donate_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/donate_button"
+                    android:textColor="@color/donate_button_text"
+                    android:textSize="12sp"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/roboto"
+
+                    android:backgroundTint="@color/donate_button_back"
+                    app:rippleColor="@color/speaker_ripple"
+
+                    app:cornerRadius="100dp"
+
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/choose_donate_sub"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/choose_title_1"
                 android:layout_width="match_parent"
@@ -40,10 +139,10 @@
                 android:gravity="start"
 
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="28dp"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/choose_donate_holder"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -634,6 +733,69 @@
                     app:layout_constraintTop_toBottomOf="@id/choose_speaker_5_name"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/choose_promote"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                android:background="@drawable/background_speaker_active"
+
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+
+                app:layout_constraintStart_toEndOf="@id/choose_separator_central"
+                app:layout_constraintBottom_toBottomOf="@id/choose_speaker_5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/choose_speaker_4">
+
+                <ImageButton
+                    android:id="@+id/choose_promote_ripple"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+
+                    android:background="@drawable/ripple_speaker"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/choose_promote_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/img_promote"
+
+                    android:layout_marginTop="16dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/choose_promote_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/promote_title"
+                    android:textColor="@color/speaker_text"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto"
+
+                    android:gravity="center"
+
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/choose_promote_image"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
