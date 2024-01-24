@@ -28,8 +28,15 @@ import com.ssrlab.assistant.databinding.DialogLanguageBinding
 import com.ssrlab.assistant.databinding.FragmentLoginBinding
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
 import com.ssrlab.assistant.ui.login.LaunchActivity
+import com.ssrlab.assistant.utils.LANGUAGE_DIALOG_DELAY
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TextHelper(private val context: Context) {
+
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     /**
      * 1 - OK;
@@ -198,11 +205,41 @@ class TextHelper(private val context: Context) {
 
             setOnCheckedChangeListener { _, i ->
                 when (i) {
-                    R.id.dialog_lang_be -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "be")
-                    R.id.dialog_lang_en -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
-                    R.id.dialog_lang_ru -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "ru")
-                    R.id.dialog_lang_zh -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "zh")
-                    else -> mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                    R.id.dialog_lang_be -> {
+                        dialog.dismiss()
+                        scope.launch {
+                            delay(LANGUAGE_DIALOG_DELAY)
+                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "be")
+                        }
+                    }
+                    R.id.dialog_lang_en -> {
+                        dialog.dismiss()
+                        scope.launch {
+                            delay(LANGUAGE_DIALOG_DELAY)
+                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                        }
+                    }
+                    R.id.dialog_lang_ru -> {
+                        dialog.dismiss()
+                        scope.launch {
+                            delay(LANGUAGE_DIALOG_DELAY)
+                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "ru")
+                        }
+                    }
+                    R.id.dialog_lang_zh -> {
+                        dialog.dismiss()
+                        scope.launch {
+                            delay(LANGUAGE_DIALOG_DELAY)
+                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "zh")
+                        }
+                    }
+                    else -> {
+                        dialog.dismiss()
+                        scope.launch {
+                            delay(LANGUAGE_DIALOG_DELAY)
+                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                        }
+                    }
                 }
             }
         }

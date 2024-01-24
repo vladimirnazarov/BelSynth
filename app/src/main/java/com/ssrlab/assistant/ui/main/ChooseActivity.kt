@@ -79,6 +79,12 @@ class ChooseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun intentToLink(link: String) {
+        val webPage = Uri.parse(link)
+        val intent = Intent(Intent.ACTION_VIEW, webPage)
+        startActivity(intent)
+    }
+
     fun getMainApp() = mainApp
     fun getSharedPreferences() = sharedPreferences
 }
