@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".ui.main.ChooseActivity"
+            android:name=".ui.choose.ChooseActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/LaunchTheme">

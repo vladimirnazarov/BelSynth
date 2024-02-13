@@ -2,7 +2,6 @@ package com.ssrlab.assistant.ui.chat
 
 import android.Manifest
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -10,13 +9,12 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.db.objects.MessageInfoObject
@@ -24,7 +22,6 @@ import com.ssrlab.assistant.db.objects.UserMessage
 import com.ssrlab.assistant.db.objects.UserVoiceMessage
 import com.ssrlab.assistant.rv.ChatAdapter
 import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
-import com.ssrlab.assistant.utils.PREFERENCES
 import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.helpers.InAppReviewer
 import com.ssrlab.assistant.utils.helpers.TextHelper
@@ -38,16 +35,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
-class ChatActivity : AppCompatActivity() {
-
-    private val mainApp = MainApplication()
+class ChatActivity : BaseActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var chatHelper: ChatHelper
     private lateinit var visualizerView: FFTVisualizerView
 
     private val viewModel: ChatViewModel by viewModels()
-    private lateinit var sharedPreferences: SharedPreferences
 
     private var speaker = ""
     private var role = ""
@@ -71,7 +65,6 @@ class ChatActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         mainApp.setContext(this@ChatActivity)
         mainApp.loadPreferences(sharedPreferences)
 

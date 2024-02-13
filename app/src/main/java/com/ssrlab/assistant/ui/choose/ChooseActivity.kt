@@ -1,48 +1,29 @@
-package com.ssrlab.assistant.ui.main
+package com.ssrlab.assistant.ui.choose
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import com.ssrlab.assistant.app.MainApplication
+import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.ui.login.LaunchActivity
-import com.ssrlab.assistant.utils.PREFERENCES
-import com.ssrlab.assistant.utils.THEME
 import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
 
-class ChooseActivity : AppCompatActivity() {
+class ChooseActivity : BaseActivity() {
 
     private lateinit var binding: ActivityChooseBinding
     private lateinit var animHelper: LaunchToolbarAnimHelper
 
-    private val mainApp = MainApplication()
-    private lateinit var sharedPreferences: SharedPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         mainApp.setContext(this@ChooseActivity)
         mainApp.loadPreferences(sharedPreferences)
-
         super.onCreate(savedInstanceState)
 
         binding = ActivityChooseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         animHelper = LaunchToolbarAnimHelper()
-    }
-
-    fun saveTheme(theme: Boolean) {
-        val sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
-            putBoolean(THEME, theme)
-            apply()
-        }
-
-        recreate()
     }
 
     fun setUpToolbar(title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
@@ -84,7 +65,4 @@ class ChooseActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW, webPage)
         startActivity(intent)
     }
-
-    fun getMainApp() = mainApp
-    fun getSharedPreferences() = sharedPreferences
 }

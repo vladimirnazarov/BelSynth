@@ -1,16 +1,18 @@
 package com.ssrlab.assistant.app
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.IsUserSignedIn
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.ui.login.LaunchActivity
-import com.ssrlab.assistant.ui.main.ChooseActivity
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.utils.AUTH_EMAIL
 import com.ssrlab.assistant.utils.AUTH_PASSWORD
 import com.ssrlab.assistant.utils.CHAT_SOUND
@@ -25,8 +27,7 @@ import java.util.Locale
 class MainApplication: Application() {
 
     private var locale = Locale("en")
-    private val config = Configuration()
-    private var theme = false
+    private var appTheme = false
 
     private var localeString = ""
     private var isFirstLaunch = true
@@ -58,10 +59,9 @@ class MainApplication: Application() {
     fun isSoundEnabled() = isSoundEnabled
     fun isUserRated() = isUserRated
 
-    @Suppress("DEPRECATION")
     fun loadPreferences(sharedPreferences: SharedPreferences) {
         localeString = sharedPreferences.getString(LOCALE, "be").toString()
-        theme = sharedPreferences.getBoolean(THEME, false)
+        appTheme = sharedPreferences.getBoolean(THEME, false)
         isUserRated = sharedPreferences.getBoolean(IS_USER_RATED, false)
         isFirstLaunch = sharedPreferences.getBoolean(FIRST_LAUNCH, true)
         isSoundEnabled = sharedPreferences.getBoolean(CHAT_SOUND, true)
@@ -78,15 +78,12 @@ class MainApplication: Application() {
             password = userPassword
         }
 
-        if (theme) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        config.setLocale(locale)
-        context.resources.configuration.setLocale(locale)
+        loadTheme()
+    }
 
-        val config = context.resources.configuration
-        config.setLocale(Locale(localeString))
-        Locale.setDefault(Locale(localeString))
-
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    private fun loadTheme() {
+        if (appTheme) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     fun savePreferences(sharedPreferences: SharedPreferences, activity: Activity, locale: String? = null, value: Boolean? = null) {
@@ -114,6 +111,15 @@ class MainApplication: Application() {
                 }
             }
         }
+    }
+
+    fun saveTheme(theme: Boolean, sharedPreferences: SharedPreferences, activity: Activity) {
+        with(sharedPreferences.edit()) {
+            putBoolean(THEME, theme)
+            apply()
+        }
+
+        activity.recreate()
     }
 
     fun saveSecondLaunch(sharedPreferences: SharedPreferences) {

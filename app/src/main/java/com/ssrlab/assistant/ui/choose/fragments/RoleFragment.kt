@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.main.fragments
+package com.ssrlab.assistant.ui.choose.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,9 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRoleChooseBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
+import com.ssrlab.assistant.ui.choose.fragments.base.BaseChooseFragment
 
-class RoleFragment: BaseMainFragment() {
+class RoleFragment: BaseChooseFragment() {
 
     private lateinit var binding: FragmentRoleChooseBinding
 
