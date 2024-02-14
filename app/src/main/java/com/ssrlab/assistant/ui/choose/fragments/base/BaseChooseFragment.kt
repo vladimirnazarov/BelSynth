@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.main.fragments.base
+package com.ssrlab.assistant.ui.choose.fragments.base
 
 import android.app.Dialog
 import android.graphics.Color
@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.client.AuthClient
 import com.ssrlab.assistant.databinding.DialogAttentionBinding
-import com.ssrlab.assistant.ui.main.ChooseActivity
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.utils.helpers.TextHelper
 
-open class BaseMainFragment: Fragment() {
+open class BaseChooseFragment: Fragment() {
 
     lateinit var chooseActivity: ChooseActivity
     lateinit var mainApp: MainApplication
@@ -27,9 +27,9 @@ open class BaseMainFragment: Fragment() {
         super.onCreate(savedInstanceState)
 
         chooseActivity = activity as ChooseActivity
-        mainApp = chooseActivity.getMainApp()
+        mainApp = chooseActivity.mainApp
 
-        authClient = AuthClient(mainApp.getContext(), mainApp, chooseActivity.getSharedPreferences())
+        authClient = AuthClient(mainApp.getContext(), mainApp, chooseActivity.sharedPreferences)
         inputHelper = TextHelper(mainApp.getContext())
     }
 

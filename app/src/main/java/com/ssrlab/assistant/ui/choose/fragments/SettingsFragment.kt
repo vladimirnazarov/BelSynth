@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.main.fragments
+package com.ssrlab.assistant.ui.choose.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
+import com.ssrlab.assistant.ui.choose.fragments.base.BaseChooseFragment
 
-class SettingsFragment: BaseMainFragment() {
+class SettingsFragment: BaseChooseFragment() {
 
     private lateinit var binding: FragmentSettingsBinding
 
@@ -43,7 +43,7 @@ class SettingsFragment: BaseMainFragment() {
             if (checked) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-            chooseActivity.saveTheme(checked)
+            mainApp.saveTheme(checked, chooseActivity.sharedPreferences, chooseActivity)
         }
     }
 
@@ -58,7 +58,7 @@ class SettingsFragment: BaseMainFragment() {
         binding.settingsDelete.setOnClickListener {
             initDialog(textResources) {
                 authClient.deleteUser({
-                    mainApp.saveUserSignedIn(chooseActivity.getSharedPreferences())
+                    mainApp.saveUserSignedIn(chooseActivity.sharedPreferences)
                     chooseActivity.intentBack()
                 }, {
                     inputHelper.showErrorSnack(it, binding.root)
@@ -78,7 +78,7 @@ class SettingsFragment: BaseMainFragment() {
         binding.settingsLogOut.setOnClickListener {
             initDialog(textResources) {
                 authClient.signOut {
-                    mainApp.saveUserSignedIn(chooseActivity.getSharedPreferences())
+                    mainApp.saveUserSignedIn(chooseActivity.sharedPreferences)
                     chooseActivity.intentBack()
                 }
             }
@@ -99,11 +99,11 @@ class SettingsFragment: BaseMainFragment() {
 
             setOnCheckedChangeListener { _, i ->
                 when (i) {
-                    R.id.settings_language_be -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "be")
-                    R.id.settings_language_en -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "en")
-                    R.id.settings_language_ru -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "ru")
-                    R.id.settings_language_zh -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "zh")
-                    else -> mainApp.savePreferences(chooseActivity.getSharedPreferences(), chooseActivity, "en")
+                    R.id.settings_language_be -> mainApp.savePreferences(chooseActivity.sharedPreferences, chooseActivity, "be")
+                    R.id.settings_language_en -> mainApp.savePreferences(chooseActivity.sharedPreferences, chooseActivity, "en")
+                    R.id.settings_language_ru -> mainApp.savePreferences(chooseActivity.sharedPreferences, chooseActivity, "ru")
+                    R.id.settings_language_zh -> mainApp.savePreferences(chooseActivity.sharedPreferences, chooseActivity, "zh")
+                    else -> mainApp.savePreferences(chooseActivity.sharedPreferences, chooseActivity, "en")
                 }
             }
         }

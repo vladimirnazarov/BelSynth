@@ -3,34 +3,27 @@ package com.ssrlab.assistant.ui.login
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import com.ssrlab.assistant.app.MainApplication
+import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
-import com.ssrlab.assistant.ui.main.ChooseActivity
-import com.ssrlab.assistant.utils.PREFERENCES
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import kotlinx.coroutines.*
 import java.util.*
 
 @SuppressLint("CustomSplashScreen")
-class LaunchActivity : AppCompatActivity() {
+class LaunchActivity : BaseActivity() {
 
-    private val mainApp = MainApplication()
     private lateinit var binding: ActivityLaunchBinding
 
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var launcher: ActivityResultLauncher<Intent>
     private var googleCallback: (ActivityResult) -> Unit = {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
         mainApp.setContext(this@LaunchActivity)
         mainApp.loadPreferences(sharedPreferences)
-
         super.onCreate(savedInstanceState)
 
         binding = ActivityLaunchBinding.inflate(layoutInflater)
@@ -59,8 +52,4 @@ class LaunchActivity : AppCompatActivity() {
     }
 
     fun getLauncher() = launcher
-
-    fun getMainApp() = mainApp
-
-    fun getSharedPreferences() = sharedPreferences
 }

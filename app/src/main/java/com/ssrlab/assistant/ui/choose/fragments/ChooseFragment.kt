@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.main.fragments
+package com.ssrlab.assistant.ui.choose.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,9 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentChooseBinding
-import com.ssrlab.assistant.ui.main.fragments.base.BaseMainFragment
+import com.ssrlab.assistant.ui.choose.fragments.base.BaseChooseFragment
 
-class ChooseFragment: BaseMainFragment() {
+class ChooseFragment: BaseChooseFragment() {
 
     private lateinit var binding: FragmentChooseBinding
 
@@ -34,6 +34,7 @@ class ChooseFragment: BaseMainFragment() {
 
     private fun setUpChats() {
         binding.apply {
+            chooseDonateButton.setOnClickListener { chooseActivity.intentToLink("https://boosty.to/asistent.ai/donate") }
             choosePromoteRipple.setOnClickListener { chooseActivity.intentToLink("https://docs.google.com/forms/d/1Xey4v8z7X2xxppEWpjg6uYlKC3YILYBBrwFpumd8zXs/edit") }
             chooseSpeaker1Ripple.setOnClickListener { chooseActivity.intentToChat("ales", binding.chooseSpeaker1Name.text.toString(), R.drawable.img_speaker_1) }
             chooseSpeaker2Ripple.setOnClickListener { chooseActivity.intentToChat("alesia", binding.chooseSpeaker2Name.text.toString(), R.drawable.img_speaker_2) }

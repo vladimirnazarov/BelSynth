@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
-    tools:context=".ui.main.ChooseActivity"
+    tools:context=".ui.choose.ChooseActivity"
     tools:ignore="ContentDescription"
 
     android:background="@color/background_color"

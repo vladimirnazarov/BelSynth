@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/chooseFragment"
-        android:name="com.ssrlab.assistant.ui.main.fragments.ChooseFragment"
+        android:name="com.ssrlab.assistant.ui.choose.fragments.ChooseFragment"
         android:label="ChooseFragment">
 
         <action
@@ -42,17 +42,17 @@
 
     <fragment
         android:id="@+id/contactsFragment"
-        android:name="com.ssrlab.assistant.ui.main.fragments.ContactsFragment"
+        android:name="com.ssrlab.assistant.ui.choose.fragments.ContactsFragment"
         android:label="ContactsFragment"/>
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.ssrlab.assistant.ui.main.fragments.SettingsFragment"
+        android:name="com.ssrlab.assistant.ui.choose.fragments.SettingsFragment"
         android:label="SettingsFragment"/>
 
     <fragment
         android:id="@+id/roleFragment"
-        android:name="com.ssrlab.assistant.ui.main.fragments.RoleFragment"
+        android:name="com.ssrlab.assistant.ui.choose.fragments.RoleFragment"
         android:label="RoleFragment"/>
 
 </navigation>

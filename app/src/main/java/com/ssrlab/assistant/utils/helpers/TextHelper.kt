@@ -209,35 +209,35 @@ class TextHelper(private val context: Context) {
                         dialog.dismiss()
                         scope.launch {
                             delay(LANGUAGE_DIALOG_DELAY)
-                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "be")
+                            mainApp.savePreferences(launchActivity.sharedPreferences, launchActivity, "be")
                         }
                     }
                     R.id.dialog_lang_en -> {
                         dialog.dismiss()
                         scope.launch {
                             delay(LANGUAGE_DIALOG_DELAY)
-                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                            mainApp.savePreferences(launchActivity.sharedPreferences, launchActivity, "en")
                         }
                     }
                     R.id.dialog_lang_ru -> {
                         dialog.dismiss()
                         scope.launch {
                             delay(LANGUAGE_DIALOG_DELAY)
-                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "ru")
+                            mainApp.savePreferences(launchActivity.sharedPreferences, launchActivity, "ru")
                         }
                     }
                     R.id.dialog_lang_zh -> {
                         dialog.dismiss()
                         scope.launch {
                             delay(LANGUAGE_DIALOG_DELAY)
-                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "zh")
+                            mainApp.savePreferences(launchActivity.sharedPreferences, launchActivity, "zh")
                         }
                     }
                     else -> {
                         dialog.dismiss()
                         scope.launch {
                             delay(LANGUAGE_DIALOG_DELAY)
-                            mainApp.savePreferences(launchActivity.getSharedPreferences(), launchActivity, "en")
+                            mainApp.savePreferences(launchActivity.sharedPreferences, launchActivity, "en")
                         }
                     }
                 }
