@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -101,13 +103,16 @@ class VideoFragment: BaseLaunchFragment() {
                             text = launchActivity.resources.getText(R.string.launch_name)
                             startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.long_alpha_in))
                             visibility = View.VISIBLE
+
+                            animation.setAnimationListener(object : AnimationListener {
+                                override fun onAnimationStart(animation: Animation?) {}
+                                override fun onAnimationEnd(animation: Animation?) {
+                                    moveNext()
+                                }
+                                override fun onAnimationRepeat(animation: Animation?) {}
+                            })
                         }
                     }
-                }
-
-                scope.launch {
-                    delay(3000)
-                    launchActivity.runOnUiThread { moveNext() }
                 }
             }
         }
@@ -119,6 +124,9 @@ class VideoFragment: BaseLaunchFragment() {
         if (isFirstLaunch)
             findNavController().navigate(R.id.action_videoFragment_to_registerFragment)
         else
-            findNavController().navigate(R.id.action_videoFragment_to_loginFragment)
+            scope.launch {
+                delay(1000)
+                launchActivity.runOnUiThread { findNavController().navigate(R.id.action_videoFragment_to_loginFragment) }
+        }
     }
 }

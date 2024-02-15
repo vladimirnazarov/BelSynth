@@ -51,6 +51,7 @@ class ChooseFragment: BaseChooseFragment() {
                     )
                 )
             }
+            chooseTest.setOnClickListener { chooseActivity.intentToTest() }
         }
     }
 }
