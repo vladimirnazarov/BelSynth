@@ -1,18 +1,15 @@
 package com.ssrlab.assistant.app
 
 import android.app.Activity
-import android.app.ActivityOptions
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
-import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.IsUserSignedIn
 import com.ssrlab.assistant.ui.chat.ChatActivity
-import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.ui.choose.ChooseActivity
+import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.AUTH_EMAIL
 import com.ssrlab.assistant.utils.AUTH_PASSWORD
 import com.ssrlab.assistant.utils.CHAT_SOUND

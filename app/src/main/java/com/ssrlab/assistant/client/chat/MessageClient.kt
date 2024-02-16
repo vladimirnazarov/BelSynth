@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.client
+package com.ssrlab.assistant.client.chat
 
 import android.util.Log
 import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS

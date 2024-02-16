@@ -65,4 +65,9 @@ class ChooseActivity : BaseActivity() {
         val intent = Intent(Intent.ACTION_VIEW, webPage)
         startActivity(intent)
     }
+
+    fun intentToTest() {
+        val intent = Intent(this@ChooseActivity, TestActivity::class.java)
+        startActivity(intent)
+    }
 }
