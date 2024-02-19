@@ -31,6 +31,8 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/roboto"
 
+                app:cornerRadius="20dp"
+
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
 
@@ -48,12 +50,314 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/roboto"
 
+                app:cornerRadius="20dp"
+
+                android:visibility="gone"
+
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
 
                 app:layout_constraintTop_toBottomOf="@id/test_chats_info"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/test_create_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/background_dialog"
+                android:elevation="4dp"
+
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+
+                app:layout_constraintTop_toBottomOf="@id/test_chat"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/test_create_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_create"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto"
+
+                    android:gravity="center"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_create_input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_name"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_create_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_create_input_role"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_role"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_create_input_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_create_input_bot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_bot"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_create_input_role"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/test_create_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_create"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/roboto"
+
+                    app:cornerRadius="20dp"
+
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_create_input_bot"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/test_edit_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/background_dialog"
+                android:elevation="4dp"
+
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+
+                app:layout_constraintTop_toBottomOf="@id/test_create_holder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/test_edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_edit"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto"
+
+                    android:gravity="center"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_edit_input_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_name"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_edit_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_edit_input_role"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_role"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_edit_input_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_edit_input_bot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_bot"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_edit_input_role"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_edit_input_chat_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_id"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_edit_input_bot"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/test_edit_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_edit"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/roboto"
+
+                    app:cornerRadius="20dp"
+
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_edit_input_chat_id"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/test_delete_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/background_dialog"
+                android:elevation="4dp"
+
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+
+                app:layout_constraintTop_toBottomOf="@id/test_edit_holder"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/test_delete_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_delete"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/roboto"
+
+                    android:gravity="center"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/test_delete_input_chat_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:textSize="18sp"
+                    android:hint="@string/test_id"
+
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    android:padding="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_delete_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/test_delete_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/test_delete"
+                    android:textAllCaps="false"
+                    android:fontFamily="@font/roboto"
+
+                    app:cornerRadius="20dp"
+
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/test_delete_input_chat_id"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/test_debug"
@@ -66,7 +370,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginHorizontal="16dp"
 
-                app:layout_constraintTop_toBottomOf="@id/test_chat"
+                app:layout_constraintTop_toBottomOf="@id/test_delete_holder"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
