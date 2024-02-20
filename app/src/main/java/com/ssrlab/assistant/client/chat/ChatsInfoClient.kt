@@ -12,13 +12,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class ChatsInfoClient(private val context: Context) {
+class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
 
     private var chatsInfoClient = OkHttpClient.Builder().build()
     private val fireAuth = FirebaseAuth.getInstance()
@@ -26,20 +29,20 @@ class ChatsInfoClient(private val context: Context) {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
+    /** Common chat info **/
+    override fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
         getAllChatsBack(onSuccess, onFailure)
     }
 
+    /** Chat info back **/
     private fun getAllChatsBack(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
-        val uid = fireAuth.currentUser?.uid ?: "null"
-
-        if (uid != "null") {
+        checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/chats")
                 .addHeader("x-user-id", uid)
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object : Callback {
+            chatsInfoClient.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -71,16 +74,14 @@ class ChatsInfoClient(private val context: Context) {
                     }
                 }
             })
-        } else {
+        }, {
             val errorMessage = ContextCompat.getString(context, R.string.null_uid)
             onFailure(errorMessage)
-        }
+        })
     }
 
     private fun getChatInfoById(chatId: String, onSuccess: (ChatInfoObject) -> Unit, onFailure: (String) -> Unit) {
-        val uid = fireAuth.currentUser?.uid ?: "null"
-
-        if (uid != "null") {
+        checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/chat/$chatId")
                 .addHeader("x-user-id", uid)
@@ -111,9 +112,142 @@ class ChatsInfoClient(private val context: Context) {
                     }
                 }
             })
-        } else {
+        }, {
             val errorMessage = ContextCompat.getString(context, R.string.null_uid)
             onFailure(errorMessage)
-        }
+        })
+    }
+
+    /** Control chats **/
+    override fun createChat(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+        createChatBack(name, role, botName, onSuccess, onFailure)
+    }
+
+    override fun editChat(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        editChatBack(name, role, botName, chatId, onSuccess, onFailure)
+    }
+
+    override fun deleteChat(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        deleteChatBack(chatId, onSuccess, onFailure)
+    }
+
+    /** Control back **/
+    private fun checkUid(onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+        val uid = fireAuth.currentUser?.uid ?: "null"
+
+        if (uid != "null") onSuccess(uid)
+        else onFailure()
+    }
+
+    private fun createChatBack(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+        checkUid({ uid ->
+            val mediaType = "application/json".toMediaType()
+            val body = "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
+
+            val request = Request.Builder()
+                .url("https://ml1.ssrlab.by/chat-api/chat")
+                .post(body)
+                .addHeader("x-user-id", uid)
+                .addHeader("Content-Type", "application/json")
+                .build()
+
+            chatsInfoClient.newCall(request).enqueue(object: Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailure(e.message.toString())
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+                    val jObject = responseBody?.let { JSONObject(it) }
+
+                    val chatId = jObject?.getString("chat_id") ?: ""
+                    if (chatId != "") onSuccess(chatId)
+                    else {
+                        val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
+                        onFailure(errorMessage)
+                    }
+                }
+            })
+        }, {
+            val errorMessage = ContextCompat.getString(context, R.string.null_uid)
+            onFailure(errorMessage)
+        })
+    }
+
+    private fun editChatBack(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        checkUid({ uid ->
+            val mediaType = "application/json".toMediaType()
+            val body =  "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
+
+            val request = Request.Builder()
+                .url("https://ml1.ssrlab.by/chat-api/chat/$chatId")
+                .put(body)
+                .addHeader("x-user-id", uid)
+                .addHeader("Content-Type", "application/json")
+                .build()
+
+            chatsInfoClient.newCall(request).enqueue(object: Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailure(e.message.toString())
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+                    val jObject = responseBody?.let { JSONObject(it) }
+
+                    try {
+                        val message = jObject?.getString("message")
+                        if (message == "Chat edited successfully") onSuccess()
+                        else {
+                            val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
+                            onFailure(errorMessage)
+                        }
+                    } catch (e: JSONException) {
+                        onFailure(e.message.toString())
+                    }
+                }
+            })
+        }, {
+            val errorMessage = ContextCompat.getString(context, R.string.null_uid)
+            onFailure(errorMessage)
+        })
+    }
+
+    private fun deleteChatBack(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        checkUid({ uid ->
+            val mediaType = "text/plain".toMediaType()
+            val body = "".toRequestBody(mediaType)
+
+            val request = Request.Builder()
+                .url("https://ml1.ssrlab.by/chat-api/chat/$chatId")
+                .addHeader("x-user-id", uid)
+                .method("DELETE", body)
+                .build()
+
+            chatsInfoClient.newCall(request).enqueue(object: Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailure(e.message.toString())
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+                    val jObject = responseBody?.let { JSONObject(it) }
+
+                    try {
+                        val message = jObject?.getString("message") ?: ""
+                        if (message == "Chat deleted successfully") onSuccess()
+                        else {
+                            val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
+                            onFailure(errorMessage)
+                        }
+                    } catch (e: JSONException) {
+                        onFailure(e.message.toString())
+                    }
+                }
+            })
+        }, {
+            val errorMessage = ContextCompat.getString(context, R.string.null_uid)
+            onFailure(errorMessage)
+        })
     }
 }
