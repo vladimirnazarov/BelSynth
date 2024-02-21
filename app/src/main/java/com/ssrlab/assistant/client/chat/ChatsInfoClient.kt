@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.db.objects.info.ChatInfoObject
+import com.ssrlab.assistant.client.chat.model.ChatsInfoInterface
+import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

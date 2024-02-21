@@ -22,3 +22,5 @@ const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
 const val REQUEST_TIME_OUT = 180L
 
 const val LANGUAGE_DIALOG_DELAY = 100L
+
+const val MAX_LENGTH = 10
