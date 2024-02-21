@@ -12,7 +12,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.client.chat.MessageClient
+import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.ui.chat.*

@@ -3,12 +3,15 @@ package com.ssrlab.assistant.ui.choose
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
 import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.chat.ChatMessagesClient
 import com.ssrlab.assistant.client.chat.ChatsInfoClient
-import com.ssrlab.assistant.client.chat.MessageClient
+import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.databinding.ActivityTestBinding
+import com.ssrlab.assistant.utils.MAX_LENGTH
+import com.ssrlab.assistant.utils.helpers.TextHelper
 
 class TestActivity : AppCompatActivity() {
 
@@ -27,11 +30,27 @@ class TestActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        setUpEditTexts()
+
         initClients()
         initChatInfoAction()
         initChatCreateAction()
         initChatEditAction()
         initDeleteChatAction()
+    }
+
+    private fun setUpEditTexts() {
+        val filters = arrayOf(InputFilter.LengthFilter(MAX_LENGTH), TextHelper(this@TestActivity).createNoSpaceFilter())
+        binding.apply {
+            testCreateInputBot.filters = filters
+            testCreateInputRole.filters = filters
+
+            testEditInputBot.filters = filters
+            testEditInputChatId.filters = filters
+            testEditInputRole.filters = filters
+
+            testDeleteInputChatId.filters = filters
+        }
     }
 
     private fun initClients() {

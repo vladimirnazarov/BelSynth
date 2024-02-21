@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.db.objects.info
+package com.ssrlab.assistant.db.objects.chat
 
 data class ChatInfoObject(
     val id: Int,

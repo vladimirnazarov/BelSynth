@@ -1,6 +1,6 @@
-package com.ssrlab.assistant.client.chat
+package com.ssrlab.assistant.client.chat.model
 
-import com.ssrlab.assistant.db.objects.info.ChatInfoObject
+import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
 
 interface ChatsInfoInterface {
 
