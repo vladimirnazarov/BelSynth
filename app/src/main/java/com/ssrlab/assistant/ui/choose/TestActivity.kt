@@ -37,6 +37,7 @@ class TestActivity : AppCompatActivity() {
         initChatCreateAction()
         initChatEditAction()
         initDeleteChatAction()
+        initGetMessagesAction()
     }
 
     private fun setUpEditTexts() {
@@ -55,7 +56,7 @@ class TestActivity : AppCompatActivity() {
 
     private fun initClients() {
         chatsInfoClient = ChatsInfoClient(this@TestActivity)
-        chatMessagesClient = ChatMessagesClient()
+        chatMessagesClient = ChatMessagesClient(this@TestActivity)
         messageClient = MessageClient
     }
 
@@ -114,10 +115,7 @@ class TestActivity : AppCompatActivity() {
                                 chatsInfoClient.editChat(chatName.toString(), chatRole.toString(), botName.toString(), chatId.toString(), {
                                     runOnUiThread { testDebug.text = "Success" }
                                 }, {
-                                    runOnUiThread {
-                                        val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
-                                        testDebug.text = errorMessage
-                                    }
+                                    runOnUiThread { testDebug.text = it }
                                 })
                             } else {
                                 val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
@@ -148,10 +146,25 @@ class TestActivity : AppCompatActivity() {
                     chatsInfoClient.deleteChat(chatId.toString(), {
                         runOnUiThread { testDebug.text = "Success" }
                     }, {
-                        runOnUiThread {
-                            val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
-                            testDebug.text = errorMessage
-                        }
+                        runOnUiThread { testDebug.text = it }
+                    })
+                } else {
+                    val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
+                    testDebug.text = errorMessage
+                }
+            }
+        }
+    }
+
+    private fun initGetMessagesAction() {
+        binding.apply {
+            testMessagesButton.setOnClickListener {
+                val chatId = testMessagesInputChatId.text ?: ""
+                if (chatId.isNotEmpty()) {
+                    chatMessagesClient.loadMessages(chatId.toString(), { messages ->
+                        runOnUiThread { testDebug.text = messages.toString() }
+                    }, {
+                        runOnUiThread { testDebug.text = it }
                     })
                 } else {
                     val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)

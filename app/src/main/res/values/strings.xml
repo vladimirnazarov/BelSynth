@@ -18,6 +18,8 @@
 
     <string name="test_delete" translatable="false">Delete chat</string>
 
+    <string name="test_messages" translatable="false">Get messages</string>
+
     <!--  Login & registration  -->
     <string name="sign_in">Sign in</string>
     <string name="sign_in_button">Sign in</string>
