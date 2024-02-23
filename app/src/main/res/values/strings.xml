@@ -153,5 +153,6 @@
     <string name="array_is_empty" translatable="false">Array is empty</string>
     <string name="chat_info_is_empty" translatable="false">Chat info is empty</string>
     <string name="something_went_wrong" translatable="false">Something went wrong, check your fields</string>
+    <string name="error_uploading_audio" translatable="false">Audio haven\'t been loaded</string>
 
 </resources>

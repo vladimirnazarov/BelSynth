@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.chat.model.ChatsInfoInterface
 import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
+import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,10 +22,16 @@ import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
 
-    private var chatsInfoClient = OkHttpClient.Builder().build()
+    private var chatsInfoClient = OkHttpClient.Builder()
+        .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+        .writeTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+        .readTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
+        .build()
+
     private val fireAuth = FirebaseAuth.getInstance()
 
     private val job = Job()
@@ -32,11 +39,6 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
 
     /** Common chat info **/
     override fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
-        getAllChatsBack(onSuccess, onFailure)
-    }
-
-    /** Chat info back **/
-    private fun getAllChatsBack(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/chats")
@@ -121,26 +123,6 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
 
     /** Control chats **/
     override fun createChat(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
-        createChatBack(name, role, botName, onSuccess, onFailure)
-    }
-
-    override fun editChat(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        editChatBack(name, role, botName, chatId, onSuccess, onFailure)
-    }
-
-    override fun deleteChat(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        deleteChatBack(chatId, onSuccess, onFailure)
-    }
-
-    /** Control back **/
-    private fun checkUid(onSuccess: (String) -> Unit, onFailure: () -> Unit) {
-        val uid = fireAuth.currentUser?.uid ?: "null"
-
-        if (uid != "null") onSuccess(uid)
-        else onFailure()
-    }
-
-    private fun createChatBack(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "application/json".toMediaType()
             val body = "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
@@ -175,7 +157,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
         })
     }
 
-    private fun editChatBack(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    override fun editChat(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "application/json".toMediaType()
             val body =  "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
@@ -214,7 +196,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
         })
     }
 
-    private fun deleteChatBack(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    override fun deleteChat(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "text/plain".toMediaType()
             val body = "".toRequestBody(mediaType)
@@ -250,5 +232,13 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
             val errorMessage = ContextCompat.getString(context, R.string.null_uid)
             onFailure(errorMessage)
         })
+    }
+
+    /** Control back **/
+    private fun checkUid(onSuccess: (String) -> Unit, onFailure: () -> Unit) {
+        val uid = fireAuth.currentUser?.uid ?: "null"
+
+        if (uid != "null") onSuccess(uid)
+        else onFailure()
     }
 }
