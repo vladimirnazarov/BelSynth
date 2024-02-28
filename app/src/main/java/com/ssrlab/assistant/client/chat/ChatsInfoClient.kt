@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.client.chat.model.ChatsInfoInterface
 import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
 import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +23,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
+class ChatsInfoClient(private val context: Context) {
 
     private var chatsInfoClient = OkHttpClient.Builder()
         .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
@@ -38,7 +37,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
     /** Common chat info **/
-    override fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
+    fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/chats")
@@ -122,7 +121,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
     }
 
     /** Control chats **/
-    override fun createChat(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+    fun createChat(name: String, role: String, botName: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "application/json".toMediaType()
             val body = "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
@@ -157,7 +156,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
         })
     }
 
-    override fun editChat(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun editChat(name: String, role: String, botName: String, chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "application/json".toMediaType()
             val body =  "{\"name\":\"$name\",\"role\":\"$role\",\"bot_name\":\"$botName\"}".toRequestBody(mediaType)
@@ -196,7 +195,7 @@ class ChatsInfoClient(private val context: Context): ChatsInfoInterface {
         })
     }
 
-    override fun deleteChat(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun deleteChat(chatId: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val mediaType = "text/plain".toMediaType()
             val body = "".toRequestBody(mediaType)

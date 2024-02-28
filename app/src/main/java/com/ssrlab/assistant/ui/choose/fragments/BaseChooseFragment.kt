@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.choose.fragments.base
+package com.ssrlab.assistant.ui.choose.fragments
 
 import android.app.Dialog
 import android.graphics.Color

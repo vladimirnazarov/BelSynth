@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentEmailConfirmationBinding
-import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
+import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

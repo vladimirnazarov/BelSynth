@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentVideoBinding
-import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

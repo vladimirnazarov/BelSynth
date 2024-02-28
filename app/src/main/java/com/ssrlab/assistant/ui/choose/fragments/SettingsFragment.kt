@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
-import com.ssrlab.assistant.ui.choose.fragments.base.BaseChooseFragment
 
 class SettingsFragment: BaseChooseFragment() {
 

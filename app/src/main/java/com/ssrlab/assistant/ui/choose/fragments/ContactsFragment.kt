@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentContactsBinding
-import com.ssrlab.assistant.ui.choose.fragments.base.BaseChooseFragment
 
 class ContactsFragment: BaseChooseFragment() {
 
