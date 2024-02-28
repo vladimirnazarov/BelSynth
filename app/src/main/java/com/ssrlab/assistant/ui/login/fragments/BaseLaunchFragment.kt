@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.login.fragments.base
+package com.ssrlab.assistant.ui.login.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

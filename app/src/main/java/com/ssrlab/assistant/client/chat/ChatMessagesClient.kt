@@ -6,7 +6,6 @@ import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.client.chat.model.ChatMessagesInterface
 import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +29,7 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-class ChatMessagesClient(private val context: Context): ChatMessagesInterface {
+class ChatMessagesClient(private val context: Context) {
 
     private var chatClient = OkHttpClient.Builder()
         .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
@@ -43,7 +42,7 @@ class ChatMessagesClient(private val context: Context): ChatMessagesInterface {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    override fun loadMessages(chatId: String, onSuccess: (ArrayList<Message>) -> Unit, onFailure: (String) -> Unit) {
+    fun loadMessages(chatId: String, onSuccess: (ArrayList<Message>) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/message/$chatId")
@@ -102,7 +101,7 @@ class ChatMessagesClient(private val context: Context): ChatMessagesInterface {
         })
     }
 
-    override fun sendAudio(audioFile: File, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+    fun sendAudio(audioFile: File, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         val inputPath = audioFile.path
         val outputPath = "$${audioFile.parent}/temp/temp.mp3"
 
@@ -140,7 +139,7 @@ class ChatMessagesClient(private val context: Context): ChatMessagesInterface {
         }
     }
 
-    override fun sendMessage(
+    fun sendMessage(
         chatId: String,
         text: String?,
         audioLink: String?,

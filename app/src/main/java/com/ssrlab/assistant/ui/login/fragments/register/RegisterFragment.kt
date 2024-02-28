@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
-import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
+import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 
 class RegisterFragment: BaseLaunchFragment() {
 

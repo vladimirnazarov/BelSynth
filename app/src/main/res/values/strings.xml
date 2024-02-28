@@ -5,20 +5,17 @@
     <string name="google_web_client_id">450308038671-a48i1s1raku2ccl59gpcvhr1ilbrbukd.apps.googleusercontent.com</string>
 
     <string name="test" translatable="false">test</string>
-    <string name="test_info" translatable="false">Chats info</string>
-    <string name="test_chat_messages" translatable="false">Chat messages</string>
-
-    <string name="test_create" translatable="false">Create chat</string>
+    <string name="test_id" translatable="false">Chat id</string>
     <string name="test_name" translatable="false">Name</string>
     <string name="test_role" translatable="false">Role</string>
     <string name="test_bot" translatable="false">Bot name</string>
-
-    <string name="test_edit" translatable="false">Edit chat</string>
-    <string name="test_id" translatable="false">Chat id</string>
-
-    <string name="test_delete" translatable="false">Delete chat</string>
-
-    <string name="test_messages" translatable="false">Get messages</string>
+    <string name="test_text" translatable="false">Text</string>
+    <string name="test_chats_info" translatable="false">Chats info</string>
+    <string name="test_chat_create" translatable="false">Create chat</string>
+    <string name="test_chat_edit" translatable="false">Edit chat</string>
+    <string name="test_chat_delete" translatable="false">Delete chat</string>
+    <string name="test_chat_get_messages" translatable="false">Get chat messages</string>
+    <string name="test_chat_send_text_message" translatable="false">Send text message</string>
 
     <!--  Login & registration  -->
     <string name="sign_in">Sign in</string>

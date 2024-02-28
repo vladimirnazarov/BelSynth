@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentPasswordBinding
-import com.ssrlab.assistant.ui.login.fragments.base.BaseLaunchFragment
+import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 
 class ResetPasswordFragment: BaseLaunchFragment() {
 

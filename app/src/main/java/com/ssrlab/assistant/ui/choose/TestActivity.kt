@@ -173,4 +173,25 @@ class TestActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun initSendTextMessageAction() {
+        binding.apply {
+            testSendTextButton.setOnClickListener {
+                val text = testSendTextInputText.text ?: ""
+                val chatId = testSendTextInputChatId.text ?: ""
+
+                if (text.isNotEmpty()) {
+                    if (chatId.isNotEmpty()) {
+
+                    } else {
+                        val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
+                        testDebug.text = errorMessage
+                    }
+                } else {
+                    val errorMessage = ContextCompat.getString(this@TestActivity, R.string.something_went_wrong)
+                    testDebug.text = errorMessage
+                }
+            }
+        }
+    }
 }
