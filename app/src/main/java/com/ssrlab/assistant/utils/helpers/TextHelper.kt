@@ -5,8 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -254,19 +252,4 @@ class TextHelper(private val context: Context) {
 
         dialog.show()
     }
-
-    class NoSpaceFilter: InputFilter {
-        override fun filter(
-            source: CharSequence?,
-            start: Int,
-            end: Int,
-            dest: Spanned?,
-            dstart: Int,
-            dend: Int
-        ): CharSequence? {
-            return source?.filterNot { it.isWhitespace() }
-        }
-    }
-
-    fun createNoSpaceFilter() = NoSpaceFilter()
 }
