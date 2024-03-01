@@ -140,13 +140,18 @@ class ChatsInfoClient(private val context: Context) {
 
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body?.string()
-                    val jObject = responseBody?.let { JSONObject(it) }
 
-                    val chatId = jObject?.getString("chat_id") ?: ""
-                    if (chatId != "") onSuccess(chatId)
-                    else {
-                        val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
-                        onFailure(errorMessage)
+                    try {
+                        val jObject = responseBody?.let { JSONObject(it) }
+
+                        val chatId = jObject?.getString("chat_id") ?: ""
+                        if (chatId != "") onSuccess(chatId)
+                        else {
+                            val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
+                            onFailure(errorMessage)
+                        }
+                    } catch (e: JSONException) {
+                        onFailure(e.message.toString())
                     }
                 }
             })
