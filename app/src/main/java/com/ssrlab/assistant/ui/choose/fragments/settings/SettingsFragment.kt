@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.choose.fragments
+package com.ssrlab.assistant.ui.choose.fragments.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
+import com.ssrlab.assistant.ui.choose.fragments.BaseChooseFragment
 
 class SettingsFragment: BaseChooseFragment() {
 

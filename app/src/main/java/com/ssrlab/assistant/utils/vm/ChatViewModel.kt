@@ -183,7 +183,6 @@ class ChatViewModel : ViewModel() {
 
     @SuppressLint("MissingPermission")
     private fun startRecordingFunctionality(chatActivity: ChatActivity, outputFile: File) {
-
         val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
         audioRecord = AudioRecord(
             MediaRecorder.AudioSource.MIC,

@@ -26,7 +26,7 @@ class ChatHelper {
 
         scope.launch {
             for (i in viewArray) {
-                i.startAnimation(AnimationUtils.loadAnimation(context, R.anim.recognition_dots_animation))
+                i.startAnimation(AnimationUtils.loadAnimation(context, R.anim.dots_recognition_animation))
                 delay(250)
             }
         }

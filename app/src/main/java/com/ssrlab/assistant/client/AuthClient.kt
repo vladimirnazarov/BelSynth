@@ -1,5 +1,6 @@
 package com.ssrlab.assistant.client
 
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.ContextCompat
@@ -98,17 +99,29 @@ class AuthClient(
             ?.addOnFailureListener { onFailure(it.message.toString()) }
     }
 
-    fun automateSignIn(activity: LaunchActivity, onSuccess: () -> Unit) {
+    fun automateSignIn(activity: LaunchActivity, dialog: Dialog, onSuccess: () -> Unit) {
         mainApp.getIsUserSignObject().apply {
             if (isSignedIn) {
+                dialog.show()
+
                 if (!isGoogle) {
                     fireAuth.signInWithEmailAndPassword(email, password)
-                        .addOnSuccessListener { onSuccess() }
+                        .addOnSuccessListener {
+                            dialog.dismiss()
+                            onSuccess()
+                        }
                 } else {
                     generateSignInClient(activity)
                     val task = googleSignInClient?.silentSignIn()
-                    if (task?.isSuccessful == true) onSuccess()
+                    if (task?.isSuccessful == true) {
+                        dialog.dismiss()
+                        onSuccess()
+                    } else {
+                        dialog.dismiss()
+                    }
                 }
+            } else {
+                dialog.dismiss()
             }
         }
     }
@@ -135,14 +148,14 @@ class AuthClient(
         }
     }
 
-    fun signIn(activity: LaunchActivity, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
+    fun signIn(activity: LaunchActivity, dialog: Dialog, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
         generateSignInClient(activity)
         val intent = googleSignInClient!!.signInIntent
 
         googleSignInClient!!.signOut().addOnCompleteListener {
             activity.googleIntent { result ->
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                handleGoogleSignInResult(task, { onSuccess(it) }, { msg, type -> onFailure(msg, type) })
+                handleGoogleSignInResult(dialog, task, { onSuccess(it) }, { msg, type -> onFailure(msg, type) })
             }
 
             activity.getLauncher().launch(intent)
@@ -165,21 +178,27 @@ class AuthClient(
         }
     }
 
-    private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>, onSuccess: (AuthResult) -> Unit,onFailure: (String, Int) -> Unit) {
+    private fun handleGoogleSignInResult(dialog: Dialog, task: Task<GoogleSignInAccount>, onSuccess: (AuthResult) -> Unit,onFailure: (String, Int) -> Unit) {
         if (task.isSuccessful) {
             val account: GoogleSignInAccount? = task.result
             if (account != null)
-                googleSignInWithCredential(account, { onSuccess(it) }, { msg, type -> onFailure(msg, type) })
+                googleSignInWithCredential(dialog, account, { onSuccess(it) }, { msg, type -> onFailure(msg, type) })
         } else
             onFailure(task.exception.toString(), 0)
     }
 
-    private fun googleSignInWithCredential(account: GoogleSignInAccount, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
+    private fun googleSignInWithCredential(dialog: Dialog, account: GoogleSignInAccount, onSuccess: (AuthResult) -> Unit, onFailure: (String, Int) -> Unit) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        dialog.show()
+
         fireAuth.signInWithCredential(credential).addOnSuccessListener {
             mainApp.saveUserSignedIn(sharedPreferences, isUserSigned = true, isGoogle = true)
+
+            dialog.dismiss()
             onSuccess(it)
         }.addOnFailureListener {
+            dialog.dismiss()
+
             val errMsg = it.message.toString()
             onFailure(errMsg, 0)
         }

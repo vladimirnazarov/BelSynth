@@ -2,8 +2,8 @@ package com.ssrlab.assistant.client.chat
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-//import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
-//import com.arthenica.mobileffmpeg.FFmpeg
+import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
+import com.arthenica.mobileffmpeg.FFmpeg
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.db.objects.messages.Message
@@ -102,14 +102,14 @@ class ChatMessagesClient(private val context: Context) {
     }
 
     fun sendAudio(audioFile: File, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
-//        val inputPath = audioFile.absolutePath
-//        val outputPath = "${context.cacheDir}/temp"
+        val inputPath = audioFile.absolutePath
+        val outputPath = "${context.cacheDir}/temp/temp_converted.mp3"
 
-//        convertToMp3(inputPath, outputPath) { result ->
-//            if (result) {
-//                val file = File(outputPath, "temp_converted.mp3")
+        convertToMp3(inputPath, outputPath) { result ->
+            if (result) {
+                val file = File(outputPath, "temp_converted.mp3")
 
-                val fileBody = audioFile.asRequestBody("application/octet-stream".toMediaType())
+                val fileBody = file.asRequestBody("application/octet-stream".toMediaType())
                 val body = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("audio_file", audioFile.name, fileBody)
@@ -133,11 +133,11 @@ class ChatMessagesClient(private val context: Context) {
                             onSuccess(responseBody)
                     }
                 })
-//            } else {
-//                val errorMessage = ContextCompat.getString(context, R.string.error_uploading_audio)
-//                onFailure(errorMessage)
-//            }
-//        }
+            } else {
+                val errorMessage = ContextCompat.getString(context, R.string.error_uploading_audio)
+                onFailure(errorMessage)
+            }
+        }
     }
 
     fun sendMessage(
@@ -244,19 +244,19 @@ class ChatMessagesClient(private val context: Context) {
         else onFailure()
     }
 
-//    private fun convertToMp3(inputPath: String, outputPath: String, onResult: (Boolean) -> Unit) {
-//        val command = arrayOf(
-//            "-i", inputPath, "-y",
-//            "-vn", //disable video
-//            "-ar", "44100", //frequency
-//            "-ac", "2", //channels
-//            "-b:a", "32k", //bitrate
-//            outputPath
-//        )
-//
-//        FFmpeg.executeAsync(command) { _, returnCode ->
-//            if (returnCode == RETURN_CODE_SUCCESS) onResult(true)
-//            else onResult(false)
-//        }
-//    }
+    private fun convertToMp3(inputPath: String, outputPath: String, onResult: (Boolean) -> Unit) {
+        val command = arrayOf(
+            "-i", inputPath, "-y",
+            "-vn", //disable video
+            "-ar", "44100", //frequency
+            "-ac", "2", //channels
+            "-b:a", "32k", //bitrate
+            outputPath
+        )
+
+        FFmpeg.executeAsync(command) { _, returnCode ->
+            if (returnCode == RETURN_CODE_SUCCESS) onResult(true)
+            else onResult(false)
+        }
+    }
 }

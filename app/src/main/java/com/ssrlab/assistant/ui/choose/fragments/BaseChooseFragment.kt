@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
@@ -17,11 +16,11 @@ import com.ssrlab.assistant.utils.helpers.TextHelper
 
 open class BaseChooseFragment: Fragment() {
 
-    lateinit var chooseActivity: ChooseActivity
-    lateinit var mainApp: MainApplication
+    protected lateinit var chooseActivity: ChooseActivity
+    protected lateinit var mainApp: MainApplication
 
-    lateinit var authClient: AuthClient
-    lateinit var inputHelper: TextHelper
+    protected lateinit var authClient: AuthClient
+    protected lateinit var inputHelper: TextHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +38,7 @@ open class BaseChooseFragment: Fragment() {
      * 3. Yes
      * 4. No
      */
-    @Suppress("DEPRECATION")
-    fun initDialog(textRes: ArrayList<String>, onAccept: () -> Unit) {
-        val displayMetrics = DisplayMetrics()
-        chooseActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
-
+    protected fun initDialog(textRes: ArrayList<String>, onAccept: () -> Unit) {
         val dialog = Dialog(chooseActivity)
         val dialogBinding = DialogAttentionBinding.inflate(LayoutInflater.from(chooseActivity))
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
