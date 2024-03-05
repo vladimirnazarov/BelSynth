@@ -811,6 +811,7 @@
                 android:fontFamily="@font/roboto"
 
                 app:cornerRadius="20dp"
+                android:visibility="gone"
 
                 android:layout_marginTop="16dp"
 

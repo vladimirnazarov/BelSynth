@@ -21,6 +21,8 @@ class VideoFragment: BaseLaunchFragment() {
     private lateinit var binding: FragmentVideoBinding
     private lateinit var controller: WindowInsetsControllerCompat
 
+    private var isAnimationStarted = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,8 +41,8 @@ class VideoFragment: BaseLaunchFragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
 
         controller.hide(WindowInsetsCompat.Type.systemBars())
         initLogo()
@@ -53,13 +55,15 @@ class VideoFragment: BaseLaunchFragment() {
     }
 
     private fun initLogo() {
-        if (mainApp.isFirstLaunch()) {
+        if (!isAnimationStarted && mainApp.isFirstLaunch()) {
             binding.apply {
 
                 scope.launch {
                     launchActivity.runOnUiThread {
                         videoIc.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.long_alpha_in))
                         videoIc.visibility = View.VISIBLE
+
+                        isAnimationStarted = true
                     }
 
                     delay(750)
@@ -85,7 +89,7 @@ class VideoFragment: BaseLaunchFragment() {
                     setOnCompletionListener { moveNext() }
                 }
             }
-        } else {
+        } else if (!isAnimationStarted) {
             binding.apply {
                 videoBg.visibility = View.VISIBLE
 
@@ -93,6 +97,8 @@ class VideoFragment: BaseLaunchFragment() {
                     launchActivity.runOnUiThread {
                         videoIc.startAnimation(AnimationUtils.loadAnimation(launchActivity, R.anim.long_alpha_in))
                         videoIc.visibility = View.VISIBLE
+
+                        isAnimationStarted = true
                     }
 
                     delay(750)

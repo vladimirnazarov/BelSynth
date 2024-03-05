@@ -69,7 +69,7 @@ class RegisterFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.registerGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, {
+            authClient.signIn(launchActivity, dialog, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
@@ -95,6 +95,7 @@ class RegisterFragment: BaseLaunchFragment() {
 
                 inputHelper.hideKeyboard(binding.root)
 
+                dialog.show()
                 handleEmptyInput(login, password)
             }
         }
@@ -105,8 +106,11 @@ class RegisterFragment: BaseLaunchFragment() {
             when (it) {
                 1 -> {
                     authClient.signUp(login, password, {
+                        dialog.dismiss()
                         findNavController().navigate(R.id.action_registerFragment_to_confirmEmailFragment)
                     }) { msg, type ->
+                        dialog.dismiss()
+
                         inputHelper.handleErrorTypes(
                             message = msg,
                             type = type,
@@ -117,6 +121,8 @@ class RegisterFragment: BaseLaunchFragment() {
                     }
                 }
                 2 -> {
+                    dialog.dismiss()
+
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 1,
@@ -125,6 +131,8 @@ class RegisterFragment: BaseLaunchFragment() {
                     )
                 }
                 3 -> {
+                    dialog.dismiss()
+
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 2,
@@ -133,6 +141,8 @@ class RegisterFragment: BaseLaunchFragment() {
                     )
                 }
                 4 -> {
+                    dialog.dismiss()
+
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 3,

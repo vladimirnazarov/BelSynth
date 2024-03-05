@@ -85,5 +85,6 @@
     <color name="dialog_text_secondary">#73747A</color>
     <color name="dialog_button">#0981C2</color>
     <color name="dialog_ripple">#065B88</color>
+    <color name="dialog_loading_color">#0981C2</color>
 
 </resources>

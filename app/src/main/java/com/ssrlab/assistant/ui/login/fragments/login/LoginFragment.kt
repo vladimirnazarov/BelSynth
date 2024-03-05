@@ -32,7 +32,7 @@ class LoginFragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
-        authClient.automateSignIn(launchActivity) {
+        authClient.automateSignIn(launchActivity, dialog) {
             launchActivity.intentNext()
         }
 
@@ -77,7 +77,7 @@ class LoginFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.loginGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, {
+            authClient.signIn(launchActivity, dialog, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
@@ -103,6 +103,7 @@ class LoginFragment: BaseLaunchFragment() {
 
                 inputHelper.hideKeyboard(binding.root)
 
+                dialog.show()
                 handleEmptyInput(login, password)
             }
         }
@@ -113,8 +114,11 @@ class LoginFragment: BaseLaunchFragment() {
             when (it) {
                 1 -> {
                     authClient.signIn(login, password, {
+                        dialog.dismiss()
                         launchActivity.intentNext()
                     }, { msg, type ->
+                        dialog.dismiss()
+
                         inputHelper.handleErrorTypes(
                             message = msg,
                             type = type,
@@ -123,10 +127,13 @@ class LoginFragment: BaseLaunchFragment() {
                             binding = binding
                         )
                     }, {
+                        dialog.dismiss()
                         findNavController().navigate(R.id.action_loginFragment_to_confirmEmailFragment)
                     })
                 }
                 2 -> {
+                    dialog.dismiss()
+
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 1,
@@ -135,6 +142,8 @@ class LoginFragment: BaseLaunchFragment() {
                     )
                 }
                 3 -> {
+                    dialog.dismiss()
+
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 2,
@@ -143,6 +152,8 @@ class LoginFragment: BaseLaunchFragment() {
                     )
                 }
                 4 -> {
+                    dialog.dismiss()
+                    
                     inputHelper.handleErrorTypes(
                         message = ContextCompat.getString(launchActivity, R.string.empty_field_error),
                         type = 3,

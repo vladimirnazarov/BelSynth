@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.ui.choose.fragments
+package com.ssrlab.assistant.ui.choose.fragments.chat
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentChooseBinding
+import com.ssrlab.assistant.ui.choose.fragments.BaseChooseFragment
 
 class ChooseFragment: BaseChooseFragment() {
 
