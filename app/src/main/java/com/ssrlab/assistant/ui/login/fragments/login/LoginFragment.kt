@@ -1,5 +1,6 @@
 package com.ssrlab.assistant.ui.login.fragments.login
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,7 @@ class LoginFragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
-        authClient.automateSignIn(launchActivity, dialog) {
+        authClient.automateSignIn(launchActivity, scope) {
             launchActivity.intentNext()
         }
 
@@ -77,7 +78,7 @@ class LoginFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.loginGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, dialog, {
+            authClient.signIn(launchActivity, scope, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
@@ -103,13 +104,15 @@ class LoginFragment: BaseLaunchFragment() {
 
                 inputHelper.hideKeyboard(binding.root)
 
+                val dialog = generateLoadingDialog()
                 dialog.show()
-                handleEmptyInput(login, password)
+
+                handleEmptyInput(login, password, dialog)
             }
         }
     }
 
-    private fun handleEmptyInput(login: String, password: String) {
+    private fun handleEmptyInput(login: String, password: String, dialog: Dialog) {
         inputHelper.checkSignEmptiness(binding.loginEmailInput, binding.loginPasswordInput) {
             when (it) {
                 1 -> {

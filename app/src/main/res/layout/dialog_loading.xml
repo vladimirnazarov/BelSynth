@@ -38,8 +38,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_1"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -51,8 +51,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_3"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -64,8 +64,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_2"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -76,8 +76,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_5"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -89,8 +89,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_4"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -101,8 +101,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_7"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -114,8 +114,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_6"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
@@ -126,8 +126,8 @@
 
             <ImageView
                 android:id="@+id/loading_dot_8"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
 
                 android:background="@drawable/background_loading_dot"
 
