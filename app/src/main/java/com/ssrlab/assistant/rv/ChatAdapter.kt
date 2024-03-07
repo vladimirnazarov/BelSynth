@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.db.*
 import com.ssrlab.assistant.db.objects.BotMessage
 import com.ssrlab.assistant.db.objects.MessageInfoObject
 import com.ssrlab.assistant.db.objects.UserMessage
@@ -26,7 +25,6 @@ import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.initializeMe
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.pauseAudio
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject.playAudio
 
-@Suppress("KotlinConstantConditions")
 class ChatAdapter(
     private val messageI: ArrayList<MessageInfoObject>,
     private val botMessage: ArrayList<BotMessage>,
@@ -54,7 +52,6 @@ class ChatAdapter(
 
     override fun getItemCount(): Int = messageI.size + 3
 
-    @Suppress("ControlFlowWithEmptyBody")
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val view = holder.itemView
 

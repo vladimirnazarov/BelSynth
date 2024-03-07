@@ -1,5 +1,6 @@
 package com.ssrlab.assistant.ui.login.fragments.register
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,7 +70,7 @@ class RegisterFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.registerGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, dialog, {
+            authClient.signIn(launchActivity, scope, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
@@ -95,13 +96,15 @@ class RegisterFragment: BaseLaunchFragment() {
 
                 inputHelper.hideKeyboard(binding.root)
 
+                val dialog = generateLoadingDialog()
                 dialog.show()
-                handleEmptyInput(login, password)
+
+                handleEmptyInput(login, password, dialog)
             }
         }
     }
 
-    private fun handleEmptyInput(login: String, password: String) {
+    private fun handleEmptyInput(login: String, password: String, dialog: Dialog) {
         inputHelper.checkSignEmptiness(binding.registerEmailInput, binding.registerPasswordInput) {
             when (it) {
                 1 -> {

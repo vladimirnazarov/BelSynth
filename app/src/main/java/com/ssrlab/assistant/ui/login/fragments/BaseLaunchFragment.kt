@@ -31,7 +31,6 @@ open class BaseLaunchFragment: Fragment() {
     protected lateinit var inputHelper: TextHelper
 
     protected val scope = CoroutineScope(Dispatchers.IO + Job())
-    protected lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +40,9 @@ open class BaseLaunchFragment: Fragment() {
 
         authClient = AuthClient(mainApp.getContext(), mainApp, launchActivity.sharedPreferences)
         inputHelper = TextHelper(mainApp.getContext())
-
-        dialog = generateLoadingDialog()
     }
 
-    private fun generateLoadingDialog(): Dialog {
+    protected fun generateLoadingDialog(): Dialog {
         val dialog = Dialog(launchActivity)
         val dialogBinding = DialogLoadingBinding.inflate(LayoutInflater.from(launchActivity))
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

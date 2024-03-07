@@ -106,7 +106,6 @@ class ChatActivity : BaseActivity() {
         setUpMessageSendButton()
 
         val inputHelper = TextHelper(this@ChatActivity)
-        binding.chatRvImm.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
         binding.chatToolbar.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
     }
 
