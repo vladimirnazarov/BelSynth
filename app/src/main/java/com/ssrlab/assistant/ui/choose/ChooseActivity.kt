@@ -8,6 +8,12 @@ import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.ui.login.LaunchActivity
+import com.ssrlab.assistant.utils.CHAT_ID
+import com.ssrlab.assistant.utils.CHAT_IMAGE
+import com.ssrlab.assistant.utils.CHAT_NAME
+import com.ssrlab.assistant.utils.CHAT_ROLE
+import com.ssrlab.assistant.utils.CHAT_ROLE_CODE
+import com.ssrlab.assistant.utils.CHAT_ROLE_INT
 import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
 
 class ChooseActivity : BaseActivity() {
@@ -32,12 +38,12 @@ class ChooseActivity : BaseActivity() {
 
     fun intentToChat(chatId: String, title: String, img: Int, roleCode: String = "assistant", roleInt: Int = 0, role: String = "") {
         val intent = Intent(this, ChatActivity::class.java)
-        intent.putExtra("chat_id", chatId)
-        intent.putExtra("chat_name", title)
-        intent.putExtra("chat_img", img)
-        intent.putExtra("chat_role_code", roleCode)
-        intent.putExtra("chat_role_int", roleInt)
-        intent.putExtra("chat_role", role)
+        intent.putExtra(CHAT_ID, chatId)
+        intent.putExtra(CHAT_NAME, title)
+        intent.putExtra(CHAT_IMAGE, img)
+        intent.putExtra(CHAT_ROLE_CODE, roleCode)
+        intent.putExtra(CHAT_ROLE_INT, roleInt)
+        intent.putExtra(CHAT_ROLE, role)
         startActivity(intent)
     }
 
