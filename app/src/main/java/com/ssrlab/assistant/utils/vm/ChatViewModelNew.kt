@@ -14,14 +14,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.MessageClient
+import com.ssrlab.assistant.client.chat.ChatMessagesClient
+import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityChatBinding
-import com.ssrlab.assistant.db.objects.BotMessage
+import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.ui.chat.ChatActivityNew
-import com.ssrlab.assistant.utils.AUDIO_FORMAT
-import com.ssrlab.assistant.utils.CHANNEL_CONFIG
-import com.ssrlab.assistant.utils.SAMPLE_RATE
+import com.ssrlab.assistant.utils.*
 import com.ssrlab.assistant.utils.helpers.ChatHelper
-import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObjectNew
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.CoroutineScope
@@ -33,12 +32,20 @@ import java.io.File
 import java.io.FileOutputStream
 
 @Suppress("StaticFieldLeak")
-class ChatViewModelNew(private val chatActivity: ChatActivityNew) : ViewModel() {
+class ChatViewModelNew(
+    private val chatActivity: ChatActivityNew,
+    private val chatsInfoClient: ChatsInfoClient,
+    private val chatMessagesClient: ChatMessagesClient
+) : ViewModel() {
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(private val chatActivity: ChatActivityNew) : ViewModelProvider.Factory {
+    class Factory(
+        private val chatActivity: ChatActivityNew,
+        private val chatsInfoClient: ChatsInfoClient,
+        private val chatMessagesClient: ChatMessagesClient
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ChatViewModelNew(chatActivity) as T
+            return ChatViewModelNew(chatActivity, chatsInfoClient, chatMessagesClient) as T
         }
     }
 
@@ -51,25 +58,25 @@ class ChatViewModelNew(private val chatActivity: ChatActivityNew) : ViewModel() 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun generateFirstMessage(id: Int, roleInt: Int) : BotMessage {
-        var botMessage = BotMessage(id, text = "Вітаю! Чым я магу дапамагчы?")
+    fun generateFirstMessage(roleInt: Int) : Message {
+        val message = Message(text = "Вітаю! Чым я магу дапамагчы?", role = BOT)
         when (roleInt) {
-            1 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_1)) }
-            2 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_2)) }
-            3 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_3)) }
-            4 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_4)) }
-            5 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_5)) }
-            6 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_6)) }
-            7 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_7)) }
-            8 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_8)) }
-            9 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_9)) }
-            10 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_10)) }
-            11 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_11)) }
-            12 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_12)) }
-            13 -> { botMessage = BotMessage(id, chatActivity.resources.getString(R.string.role_additional_13)) }
+            1 -> { message.text = chatActivity.resources.getString(R.string.role_additional_1) }
+            2 -> { message.text = chatActivity.resources.getString(R.string.role_additional_2) }
+            3 -> { message.text = chatActivity.resources.getString(R.string.role_additional_3) }
+            4 -> { message.text = chatActivity.resources.getString(R.string.role_additional_4) }
+            5 -> { message.text = chatActivity.resources.getString(R.string.role_additional_5) }
+            6 -> { message.text = chatActivity.resources.getString(R.string.role_additional_6) }
+            7 -> { message.text = chatActivity.resources.getString(R.string.role_additional_7) }
+            8 -> { message.text = chatActivity.resources.getString(R.string.role_additional_8) }
+            9 -> { message.text = chatActivity.resources.getString(R.string.role_additional_9) }
+            10 -> { message.text = chatActivity.resources.getString(R.string.role_additional_10) }
+            11 -> { message.text = chatActivity.resources.getString(R.string.role_additional_11) }
+            12 -> { message.text = chatActivity.resources.getString(R.string.role_additional_12) }
+            13 -> { message.text = chatActivity.resources.getString(R.string.role_additional_13) }
         }
 
-        return botMessage
+        return message
     }
 
     fun startRecording(outputFile: File) {
@@ -96,77 +103,80 @@ class ChatViewModelNew(private val chatActivity: ChatActivityNew) : ViewModel() 
         }
     }
 
+    //TODO
     fun sendMessage(text: String, speaker: String, role: String) {
-        val botAudio = MutableLiveData<File>()
+        val botAudio = ""
         var botText = ""
 
         scope.launch {
-            MessageClient.sendMessage(text, speaker, role, { responseAudioLink, responseText ->
-                chatActivity.runOnUiThread {
-                    botText = responseText
-                    loadAudioFile(responseAudioLink) {
-                        chatActivity.runOnUiThread { botAudio.value = it }
-                    }
-                }
-            }) { showErrorMessage(it) }
+//            MessageClient.sendMessage(text, speaker, role, { responseAudioLink, responseText ->
+//                chatActivity.runOnUiThread {
+//                    botText = responseText
+//                    loadAudioFile(responseAudioLink) {
+//                        chatActivity.runOnUiThread { botAudio.value = it }
+//                    }
+//                }
+//            }) { showErrorMessage(it) }
         }
 
-        botAudio.observe(chatActivity) {
-            chatActivity.apply {
-                loadBotMessage(botText, it)
-
-                if (playable.value!!) {
-                    MediaPlayerObjectNew.pauseAudio()
-                    MediaPlayerObjectNew.initializeMediaPlayer(chatActivity, it.toUri())
-                    MediaPlayerObjectNew.playAudio()
-                }
-
-                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
-            }
-        }
+//        botAudio.observe(chatActivity) {
+//            chatActivity.apply {
+//                loadBotMessage(botText, it)
+//
+//                if (playable.value!!) {
+//                    MediaPlayerObjectNew.pauseAudio()
+//                    MediaPlayerObjectNew.initializeMediaPlayer(it)
+//                    MediaPlayerObjectNew.playAudio()
+//                }
+//
+//                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
+//            }
+//        }
     }
 
+    //TODO
     fun sendMessage(audio: File, speaker: String, role: String) {
-        val botAudio = MutableLiveData<File>()
+        val botAudio = ""
         var botText = ""
 
         scope.launch {
-            MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
-                chatActivity.runOnUiThread {
-                    botText = responseText
-                    loadAudioFile(responseAudioLink) {
-                        chatActivity.runOnUiThread { botAudio.value = it }
-                    }
-                }
-            }) {
-                MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
-                    chatActivity.runOnUiThread {
-                        botText = responseText
-                        loadAudioFile(responseAudioLink) {
-                            chatActivity.runOnUiThread { botAudio.value = it }
-                        }
-                    }
-                }) {
-                    showErrorMessage(it)
-                }
-            }
+//            MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
+//                chatActivity.runOnUiThread {
+//                    botText = responseText
+//                    loadAudioFile(responseAudioLink) {
+//                        chatActivity.runOnUiThread { botAudio.value = it }
+//                    }
+//                }
+//            }) {
+//                MessageClient.sendMessage(audio, speaker, role, { responseAudioLink, responseText ->
+//                    chatActivity.runOnUiThread {
+//                        botText = responseText
+//                        loadAudioFile(responseAudioLink) {
+//                            chatActivity.runOnUiThread { botAudio.value = it }
+//                        }
+//                    }
+//                }) {
+//                    showErrorMessage(it)
+//                }
+//            }
         }
 
-        botAudio.observe(chatActivity) {
-            chatActivity.apply {
-                loadBotMessage(botText, it)
-
-                if (playable.value!!) {
-                    MediaPlayerObjectNew.pauseAudio()
-                    MediaPlayerObjectNew.initializeMediaPlayer(chatActivity, it.toUri())
-                    MediaPlayerObjectNew.playAudio()
-                }
-
-                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
-            }
-        }
+//        botAudio.observe(chatActivity) {
+//            chatActivity.apply {
+//                loadBotMessage(botText, it)
+//
+//                if (playable.value!!) {
+//                    MediaPlayerObjectNew.pauseAudio()
+//                    MediaPlayerObjectNew.initializeMediaPlayer(chatActivity, it.toUri())
+//                    MediaPlayerObjectNew.playAudio()
+//                }
+//
+//                ChatHelper().hideLoadingUtils(chatActivity.getBinding())
+//            }
+//        }
     }
 
+    //TODO
     private fun loadAudioFile(link: String, onSuccess: (File) -> Unit) {
         val file = File(chatActivity.getExternalFilesDir(null), "bv_msg_${chatActivity.getId()}_${chatActivity.getSpeaker()}.mp3")
 //        val file = File("${chatActivity.cacheDir}/chats/${chatActivity.getSpeaker()}_${chatActivity.getRole()}", "bot_voice_${chatActivity.getId()}.mp3")
@@ -189,9 +199,8 @@ class ChatViewModelNew(private val chatActivity: ChatActivityNew) : ViewModel() 
 
     @Suppress("DEPRECATION")
     private fun createMediaRecorder(context: Context) : MediaRecorder {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            MediaRecorder(context)
-        } else MediaRecorder()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) MediaRecorder(context)
+        else MediaRecorder()
     }
 
     @SuppressLint("MissingPermission")

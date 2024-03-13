@@ -7,7 +7,10 @@ import com.arthenica.mobileffmpeg.FFmpeg
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.db.objects.messages.Message
+import com.ssrlab.assistant.utils.BOT
+import com.ssrlab.assistant.utils.NULL
 import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
+import com.ssrlab.assistant.utils.USER
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -69,7 +72,7 @@ class ChatMessagesClient(private val context: Context) {
 
                                 val requestMessage = Message(
                                     jObject.getString("message_text"),
-                                    "user",
+                                    USER,
                                     userAudioLink
                                 )
 
@@ -77,7 +80,7 @@ class ChatMessagesClient(private val context: Context) {
 
                                 val responseMessage = Message(
                                     jObject.getString("response_text"),
-                                    "bot",
+                                    BOT,
                                     botAudioLink
                                 )
 
@@ -127,9 +130,9 @@ class ChatMessagesClient(private val context: Context) {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val responseBody = response.body?.string() ?: "null"
+                        val responseBody = response.body?.string() ?: NULL
 
-                        if (responseBody != "null")
+                        if (responseBody != NULL)
                             onSuccess(responseBody)
                     }
                 })
@@ -184,7 +187,7 @@ class ChatMessagesClient(private val context: Context) {
 
                     val message = Message(
                         jObject!!.getString("text"),
-                        "bot",
+                        BOT,
                         jObject.getString("audio")
                     )
 
@@ -225,7 +228,7 @@ class ChatMessagesClient(private val context: Context) {
 
                     val message = Message(
                         jObject!!.getString("text"),
-                        "bot",
+                        BOT,
                         jObject.getString("audio")
                     )
 
@@ -238,9 +241,9 @@ class ChatMessagesClient(private val context: Context) {
     }
 
     private fun checkUid(onSuccess: (String) -> Unit, onFailure: () -> Unit) {
-        val uid = fireAuth.currentUser?.uid ?: "null"
+        val uid = fireAuth.currentUser?.uid ?: NULL
 
-        if (uid != "null") onSuccess(uid)
+        if (uid != NULL) onSuccess(uid)
         else onFailure()
     }
 

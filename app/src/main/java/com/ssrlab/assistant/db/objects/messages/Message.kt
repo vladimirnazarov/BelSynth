@@ -1,7 +1,9 @@
 package com.ssrlab.assistant.db.objects.messages
 
+import com.ssrlab.assistant.utils.NULL
+
 data class Message(
-    val text: String = "null",
+    var text: String = NULL,
     val role: String,
-    val audio: String = "null"
+    val audio: String = NULL
 )

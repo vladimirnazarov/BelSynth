@@ -53,3 +53,10 @@ const val ROLE_12 = "teacher"
 const val ROLE_13 = "writer"
 
 const val INDEFINITE = "indefinite"
+const val BOT = "bot"
+const val USER = "user"
+const val CLIPBOARD_TEXT = "asistent_clipboard"
+const val NULL = "null"
+
+const val PLAY = "play"
+const val PAUSE = "pause"

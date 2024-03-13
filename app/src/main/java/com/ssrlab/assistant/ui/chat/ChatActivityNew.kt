@@ -3,12 +3,16 @@ package com.ssrlab.assistant.ui.chat
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.app.ShareCompat
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.chat.ChatMessagesClient
+import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityChatBinding
+import com.ssrlab.assistant.rv.ChatAdapterNew
 import com.ssrlab.assistant.utils.*
 import com.ssrlab.assistant.utils.helpers.ChatHelper
-import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
+import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObjectNew
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModelNew
 import java.io.File
@@ -18,9 +22,11 @@ class ChatActivityNew: BaseActivity() {
     private lateinit var binding: ActivityChatBinding
     private lateinit var chatHelper: ChatHelper
     private lateinit var visualizerView: FFTVisualizerView
+    private lateinit var chatsInfoClient: ChatsInfoClient
+    private lateinit var chatMessagesClient: ChatMessagesClient
 
     private val viewModel: ChatViewModelNew by viewModels {
-        ChatViewModelNew.Factory(this@ChatActivityNew)
+        ChatViewModelNew.Factory(this@ChatActivityNew, chatsInfoClient, chatMessagesClient)
     }
 
     private var playableValue = true
@@ -31,6 +37,7 @@ class ChatActivityNew: BaseActivity() {
 
     private var id = 1
     private lateinit var audioFile: File
+    private lateinit var adapter: ChatAdapterNew
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mainApp.setContext(this@ChatActivityNew)
@@ -40,6 +47,15 @@ class ChatActivityNew: BaseActivity() {
 
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        chatsInfoClient = ChatsInfoClient(this@ChatActivityNew)
+        chatMessagesClient = ChatMessagesClient(this@ChatActivityNew)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        setupChat()
     }
 
     override fun onStop() {
@@ -50,15 +66,18 @@ class ChatActivityNew: BaseActivity() {
 
     private fun setupChat() {
         getIntents()
+        setupAudioButton()
+        setupToolbar()
 
         playableValue = sharedPreferences.getBoolean("playable_${speaker}_${role}", true)
+        viewModel.playable.value = playableValue
     }
 
     private fun setupAudioButton() {
         viewModel.playable.observe(this@ChatActivityNew) {
             if (!it) {
                 binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_off)
-                MediaPlayerObject.pauseAudio(adapter = adapter)
+//                MediaPlayerObjectNew.pauseAudio(adapter = adapter)
             } else {
                 binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_on)
             }
@@ -116,6 +135,16 @@ class ChatActivityNew: BaseActivity() {
             putBoolean("playable_${speaker}_${role}", playableValue)
             apply()
         }
+    }
+
+    fun shareIntent(text: String) {
+        val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n\n$text"
+
+        ShareCompat.IntentBuilder(this@ChatActivityNew)
+            .setChooserTitle(resources.getText(R.string.share_using))
+            .setType("text/plain")
+            .setText(finalText)
+            .startChooser()
     }
 
     fun getChatHelper() = chatHelper
