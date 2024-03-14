@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
+import com.ssrlab.assistant.ui.chat.ChatActivityNew
 import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.CHAT_ID
 import com.ssrlab.assistant.utils.CHAT_IMAGE
@@ -37,7 +38,8 @@ class ChooseActivity : BaseActivity() {
     }
 
     fun intentToChat(chatId: String, title: String, img: Int, roleCode: String = "assistant", roleInt: Int = 0, role: String = "") {
-        val intent = Intent(this, ChatActivity::class.java)
+//        val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, ChatActivityNew::class.java)
         intent.putExtra(CHAT_ID, chatId)
         intent.putExtra(CHAT_NAME, title)
         intent.putExtra(CHAT_IMAGE, img)
