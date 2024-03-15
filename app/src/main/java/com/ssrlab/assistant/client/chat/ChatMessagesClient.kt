@@ -1,11 +1,13 @@
 package com.ssrlab.assistant.client.chat
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.utils.BOT
 import com.ssrlab.assistant.utils.NULL
@@ -29,6 +31,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -104,19 +107,22 @@ class ChatMessagesClient(private val context: Context) {
         })
     }
 
-    fun sendAudio(audioFile: File, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+    fun uploadAudio(audioFile: File, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         val inputPath = audioFile.absolutePath
         val outputPath = "${context.cacheDir}/temp/temp_converted.mp3"
 
+        val path = File("${context.cacheDir}/temp/")
+        if (!path.exists()) path.mkdirs()
+
         convertToMp3(inputPath, outputPath) { result ->
             if (result) {
-                val file = File(outputPath, "temp_converted.mp3")
+                val file = File(outputPath)
 
                 val fileBody = file.asRequestBody("application/octet-stream".toMediaType())
                 val body = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("audio_file", audioFile.name, fileBody)
-                    .addFormDataPart("format", "m4a")
+                    .addFormDataPart("format", "mp3")
                     .build()
 
                 val request = Request.Builder()
@@ -145,31 +151,27 @@ class ChatMessagesClient(private val context: Context) {
 
     fun sendMessage(
         chatId: String,
-        text: String?,
-        audioLink: String?,
-        voiceType: String,
-        role: String,
+        text: String = NULL,
+        audioLink: String = NULL,
         onSuccess: (Message) -> Unit,
         onFailure: (String) -> Unit
     ) {
-        val isText = audioLink == null
+        val isText = audioLink == NULL
 
-        if (isText) sendTextMessage(chatId, text!!, voiceType, role, onSuccess, onFailure)
-        else sendVoiceMessage(chatId, audioLink!!, voiceType, role, onSuccess, onFailure)
+        if (isText) sendTextMessage(chatId, text, onSuccess, onFailure)
+        else sendVoiceMessage(chatId, audioLink, onSuccess, onFailure)
     }
 
     private fun sendTextMessage(
         chatId: String,
         text: String,
-        voiceType: String,
-        role: String,
         onSuccess: (Message) -> Unit,
         onFailure: (String) -> Unit
     ) {
         val mediaType = "application/json".toMediaType()
-        val body = "{\"text\":\"$text\",\"voice_type\":\"${voiceType.lowercase()}\",\"chat_id\":\"$chatId\",\"role\":\"${role.lowercase()}\",\"with_voice\":true,\"search_in_internet\":true,\"format\":\"mp3\"}".toRequestBody(mediaType)
+        val body = "{\"chat_id\":\"$chatId\",\"text\":\"$text\",\"format\":\"mp3\"}".toRequestBody(mediaType)
         val request = Request.Builder()
-            .url("https://ml1.ssrlab.by/api/android/text")
+            .url("https://ml1.ssrlab.by/api/android/text-new-chat-id-only")
             .post(body)
             .addHeader("Content-Type", "application/json")
             .build()
@@ -202,15 +204,13 @@ class ChatMessagesClient(private val context: Context) {
     private fun sendVoiceMessage(
         chatId: String,
         audioLink: String,
-        voiceType: String,
-        role: String,
         onSuccess: (Message) -> Unit,
         onFailure: (String) -> Unit
     ) {
         val mediaType = "application/json".toMediaType()
-        val body = "{\"chat_id\":\"$chatId\",\"voice_type\":\"${voiceType.lowercase()}\",\"role\":\"${role.lowercase()}\",\"input_audio_url\":$audioLink,\"format\":\"mp3\"}".toRequestBody(mediaType)
+        val body = "{\"chat_id\":\"$chatId\",\"input_audio_url\":$audioLink,\"format\":\"mp3\"}".toRequestBody(mediaType)
         val request = Request.Builder()
-            .url("https://ml1.ssrlab.by/api/android/voice-new")
+            .url("https://ml1.ssrlab.by/api/android/voice-new-chat-id-only")
             .post(body)
             .addHeader("Content-Type", "application/json")
             .build()
@@ -236,6 +236,34 @@ class ChatMessagesClient(private val context: Context) {
                 } catch (e: JSONException) {
                     onFailure(e.message.toString())
                 }
+            }
+        })
+    }
+
+    fun getAudio(link: String, file: File, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        val request = Request.Builder()
+            .url(link)
+            .build()
+
+        chatClient.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onFailure(e.message!!)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    response.body?.string()?.let { onFailure(it) }
+                }
+
+                else {
+                    val fos = FileOutputStream(file)
+                    fos.write(response.body?.bytes())
+                    fos.close()
+
+                    onSuccess()
+                }
+
+                response.close()
             }
         })
     }

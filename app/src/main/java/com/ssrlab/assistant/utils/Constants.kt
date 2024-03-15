@@ -26,10 +26,11 @@ const val LANGUAGE_DIALOG_DELAY = 100L
 const val CHAT_NAME = "chat_name"
 const val CHAT_IMAGE = "chat_img"
 const val CHAT_TITLE = "chat_title"
-const val CHAT_ID = "chat_id"
+const val CHAT_SPEAKER = "chat_speaker"
 const val CHAT_ROLE = "chat_role"
 const val CHAT_ROLE_CODE = "chat_role_code"
 const val CHAT_ROLE_INT = "chat_role_int"
+const val CHAT_ID = "chat_id"
 
 const val BOT_1 = "ales"
 const val BOT_2 = "alesia"

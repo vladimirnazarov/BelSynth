@@ -1,9 +1,11 @@
 package com.ssrlab.assistant.utils.helpers.objects
 
 import android.media.MediaPlayer
+import android.net.Uri
 import android.widget.ImageButton
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.rv.ChatAdapterNew
+import com.ssrlab.assistant.ui.chat.ChatActivityNew
 import com.ssrlab.assistant.utils.PAUSE
 import com.ssrlab.assistant.utils.PLAY
 import kotlinx.coroutines.CoroutineScope
@@ -19,12 +21,12 @@ object MediaPlayerObjectNew {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun initializeMediaPlayer(link: String) {
+    fun initializeMediaPlayer(chatActivity: ChatActivityNew, uri: Uri) {
         playerStatus = PLAY
         mediaPlayer = MediaPlayer()
 
         try {
-            mediaPlayer!!.setDataSource(link)
+            mediaPlayer!!.setDataSource(chatActivity, uri)
             mediaPlayer!!.prepare()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -83,15 +85,21 @@ object MediaPlayerObjectNew {
     }
 
     fun getAudioDuration(link: String): Int {
-        val newMediaPlayer = MediaPlayer()
+        val durationMP = MediaPlayer()
 
         try {
-            newMediaPlayer.setDataSource(link)
-            return newMediaPlayer.duration
+            durationMP.setDataSource(link)
+            val duration = durationMP.duration
+            durationMP.release()
+
+            return duration
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        return mediaPlayer?.duration ?: 0
+        val duration = durationMP.duration
+        durationMP.release()
+
+        return duration
     }
 }

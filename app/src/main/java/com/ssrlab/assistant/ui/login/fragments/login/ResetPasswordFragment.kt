@@ -62,11 +62,11 @@ class ResetPasswordFragment: BaseLaunchFragment() {
                             Toast.makeText(launchActivity, msg, Toast.LENGTH_SHORT).show()
                             findNavController().popBackStack()
                         }, {
-                            inputHelper.showErrorSnack(it, binding.root)
+                            launchActivity.showErrorSnack(it, binding.root)
                         })
                     }, {
                         val msg = ContextCompat.getString(launchActivity, R.string.pass_rec_exists)
-                        inputHelper.showErrorSnack(msg, binding.root)
+                        launchActivity.showErrorSnack(msg, binding.root)
                     })
 
                 } else {
