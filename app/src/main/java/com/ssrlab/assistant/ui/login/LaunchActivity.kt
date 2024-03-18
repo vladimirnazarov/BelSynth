@@ -10,8 +10,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
 import com.ssrlab.assistant.ui.choose.ChooseActivity
-import kotlinx.coroutines.*
-import java.util.*
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : BaseActivity() {

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
+import com.ssrlab.assistant.ui.chat.ChatActivityNew
 import kotlinx.coroutines.*
 
 class ChatHelper {
@@ -39,6 +40,18 @@ class ChatHelper {
     fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivity, scope: CoroutineScope) {
         binding.apply {
             chatProgressHolder.visibility = View.VISIBLE
+            loadDotsAnim(chatActivity, binding, scope)
+
+            chatRecordRipple.isClickable = false
+            chatKeyboardButton.isClickable = false
+        }
+    }
+
+    fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivityNew) {
+        binding.apply {
+            chatProgressHolder.visibility = View.VISIBLE
+
+            val scope = CoroutineScope(Dispatchers.IO + Job())
             loadDotsAnim(chatActivity, binding, scope)
 
             chatRecordRipple.isClickable = false

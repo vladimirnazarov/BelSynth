@@ -20,7 +20,6 @@ open class BaseChooseFragment: Fragment() {
     protected lateinit var mainApp: MainApplication
 
     protected lateinit var authClient: AuthClient
-    protected lateinit var inputHelper: TextHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +28,6 @@ open class BaseChooseFragment: Fragment() {
         mainApp = chooseActivity.mainApp
 
         authClient = AuthClient(mainApp.getContext(), mainApp, chooseActivity.sharedPreferences)
-        inputHelper = TextHelper(mainApp.getContext())
     }
 
     /**

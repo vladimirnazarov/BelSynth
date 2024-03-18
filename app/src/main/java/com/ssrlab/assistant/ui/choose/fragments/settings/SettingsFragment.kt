@@ -61,7 +61,7 @@ class SettingsFragment: BaseChooseFragment() {
                     mainApp.saveUserSignedIn(chooseActivity.sharedPreferences)
                     chooseActivity.intentBack()
                 }, {
-                    inputHelper.showErrorSnack(it, binding.root)
+                    chooseActivity.showErrorSnack(it, binding.root)
                 })
             }
         }

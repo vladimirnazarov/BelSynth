@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
+import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.databinding.DialogLanguageBinding
@@ -34,7 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class TextHelper(private val context: Context) {
+class TextHelper(private val activity: BaseActivity) {
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -56,7 +57,7 @@ class TextHelper(private val context: Context) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (errorView.visibility == View.VISIBLE) fadeAnim(errorView, true)
-                editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et)
+                editText.background = ContextCompat.getDrawable(activity, R.drawable.background_sign_et)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -66,7 +67,7 @@ class TextHelper(private val context: Context) {
         fadeAnim(errorHolder)
         textView.text = message
 
-        editText.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+        editText.background = ContextCompat.getDrawable(activity, R.drawable.background_sign_et_error)
         createEditTextListener(editText, errorHolder)
     }
 
@@ -81,8 +82,8 @@ class TextHelper(private val context: Context) {
         textView1.text = message
         textView2.text = message
 
-        editText1.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
-        editText2.background = ContextCompat.getDrawable(context, R.drawable.background_sign_et_error)
+        editText1.background = ContextCompat.getDrawable(activity, R.drawable.background_sign_et_error)
+        editText2.background = ContextCompat.getDrawable(activity, R.drawable.background_sign_et_error)
         createEditTextListener(editText1, errorHolder1)
         createEditTextListener(editText2, errorHolder2)
     }
@@ -124,7 +125,7 @@ class TextHelper(private val context: Context) {
         binding: ViewBinding
     ) {
         when (type) {
-            0 -> showErrorSnack(message, binding.root)
+            0 -> activity.showErrorSnack(message, binding.root)
             1 -> {
                 if (textView1 != null)
                     setEditTextError(login, textView1, emailErrorView, message)
@@ -140,18 +141,9 @@ class TextHelper(private val context: Context) {
         }
     }
 
-    fun showErrorSnack(errorMessage: String, view: View) {
-        val snack = Snackbar.make(view, errorMessage, Snackbar.LENGTH_SHORT)
-        snack.apply {
-            setTextColor(ContextCompat.getColor(context, R.color.snack_text))
-            setBackgroundTint(ContextCompat.getColor(context, R.color.error))
-            show()
-        }
-    }
-
     private fun fadeAnim(view: View, isOut: Boolean = false) {
-        val alphaInAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_in)
-        val alphaOutAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.medium_alpha_out)
+        val alphaInAnim: Animation = AnimationUtils.loadAnimation(activity, R.anim.medium_alpha_in)
+        val alphaOutAnim: Animation = AnimationUtils.loadAnimation(activity, R.anim.medium_alpha_out)
         if (isOut) {
             view.startAnimation(alphaOutAnim)
             view.visibility = View.INVISIBLE
@@ -165,17 +157,17 @@ class TextHelper(private val context: Context) {
         button.setOnClickListener {
             if (editText.transformationMethod == PasswordTransformationMethod.getInstance()) {
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_hide_password))
+                button.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_hide_password))
             }
             else {
                 editText.transformationMethod = PasswordTransformationMethod.getInstance()
-                button.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_show_password))
+                button.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_show_password))
             }
         }
     }
 
     fun hideKeyboard(view: View) {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
@@ -185,7 +177,7 @@ class TextHelper(private val context: Context) {
         launchActivity.windowManager.defaultDisplay.getMetrics(displayMetrics)
 
         val dialog = Dialog(launchActivity)
-        val dialogBinding = DialogLanguageBinding.inflate(LayoutInflater.from(context))
+        val dialogBinding = DialogLanguageBinding.inflate(LayoutInflater.from(activity))
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(dialogBinding.root)
 

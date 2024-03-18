@@ -39,7 +39,7 @@ open class BaseLaunchFragment: Fragment() {
         mainApp = launchActivity.mainApp
 
         authClient = AuthClient(mainApp.getContext(), mainApp, launchActivity.sharedPreferences)
-        inputHelper = TextHelper(mainApp.getContext())
+        inputHelper = TextHelper(launchActivity)
     }
 
     protected fun generateLoadingDialog(): Dialog {

@@ -15,6 +15,7 @@ import com.ssrlab.assistant.client.MessageClient
 import com.ssrlab.assistant.client.chat.ChatMessagesClient
 import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityTestBinding
+import com.ssrlab.assistant.utils.NULL
 import java.io.File
 
 class TestActivity : AppCompatActivity() {
@@ -179,7 +180,7 @@ class TestActivity : AppCompatActivity() {
 
                 if (text.isNotEmpty()) {
                     if (chatId.isNotEmpty()) {
-                        chatMessagesClient.sendMessage(chatId.toString(), text.toString(), null, "Vasil", "assistant", { message ->
+                        chatMessagesClient.sendMessage(chatId.toString(), text.toString(), NULL,  { message ->
                             runOnUiThread { testDebug.text = message.toString() }
                         }, { errorMessage ->
                             runOnUiThread { testDebug.text = errorMessage }
@@ -202,8 +203,8 @@ class TestActivity : AppCompatActivity() {
                 val chatId = testSendAudioInputChatId.text ?: ""
                 if (chatId.isNotEmpty()) {
                     if (observableFile.value != null) {
-                        chatMessagesClient.sendAudio(observableFile.value!!, { link ->
-                            chatMessagesClient.sendMessage(chatId.toString(), null, link, "Vasil", "assistant", { message ->
+                        chatMessagesClient.uploadAudio(observableFile.value!!, { link ->
+                            chatMessagesClient.sendMessage(chatId.toString(), NULL, link, { message ->
                                 runOnUiThread { testDebug.text = message.toString() }
                             }, { errorMessage ->
                                 runOnUiThread { testDebug.text = errorMessage }

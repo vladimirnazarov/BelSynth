@@ -10,8 +10,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.chat.ChatMessagesClient
 import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.ui.chat.ChatActivityNew
 import com.ssrlab.assistant.utils.BOT
@@ -20,10 +22,12 @@ import com.ssrlab.assistant.utils.NULL
 import com.ssrlab.assistant.utils.USER
 import com.ssrlab.assistant.utils.helpers.ChatHelper
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObjectNew
+import java.io.File
 
 class ChatAdapterNew(
     private val messages: ArrayList<Message>,
-    private val chatActivity: ChatActivityNew
+    private val chatActivity: ChatActivityNew,
+    private val chatMessagesClient: ChatMessagesClient
 ) : RecyclerView.Adapter<ChatAdapterNew.ChatViewHolderNew>() {
 
     private val arrayOfButtons = ArrayList<ImageButton>()
@@ -79,10 +83,10 @@ class ChatAdapterNew(
                     }
 
                     if (position > 0 && messages[position].audio != NULL) {
-                        val audio = messages[position].audio
+                        val audioLink = messages[position].audio
 
-                        playView.setOnClickListener { playBotAudio(audio) }
-                        playButton.setOnClickListener { playBotAudio(audio) }
+                        playView.setOnClickListener { playAudio(audioLink) }
+                        playButton.setOnClickListener { playAudio(audioLink) }
                     } else {
                         playView.isClickable = false
                         playButton.visibility = View.GONE
@@ -107,9 +111,7 @@ class ChatAdapterNew(
                             if (playingArray[arrayOfButtons.indexOf(playButton)]) {
                                 mediaObject.pauseAudio(this@ChatAdapterNew)
                             } else {
-                                mediaObject.pauseAudio(this@ChatAdapterNew)
-                                mediaObject.initializeMediaPlayer(audioLink)
-                                mediaObject.playAudio(playButton, this@ChatAdapterNew)
+                                playAudio(audioLink)
 
                                 playingArray[arrayOfButtons.indexOf(playButton)] = true
                             }
@@ -139,7 +141,8 @@ class ChatAdapterNew(
         }
     }
 
-    private fun playBotAudio(link: String) {
+    //TODO
+    private fun playAudio(link: String) {
         for (i in 0 until playingArray.size) {
             if (playingArray[i]) {
                 arrayOfButtons[i].setImageResource(R.drawable.ic_msg_voice_play)
@@ -147,9 +150,21 @@ class ChatAdapterNew(
             }
         }
 
-        mediaObject.pauseAudio()
-        mediaObject.initializeMediaPlayer(link)
-        mediaObject.playAudio()
+        val newLink = if (link.startsWith("\"") && link.endsWith("\"")) {
+            link.substring(1, link.length - 1)
+        } else link
+
+        val path = File("${chatActivity.cacheDir}/temp/")
+        if (!path.exists()) path.mkdirs()
+
+        val file = File(path, "temp_playable.mp3")
+        chatMessagesClient.getAudio(newLink, file, {
+            mediaObject.pauseAudio()
+            mediaObject.initializeMediaPlayer(chatActivity, file.toUri())
+            mediaObject.playAudio()
+        }) {
+            chatActivity.getChatViewModel().showErrorMessage(it)
+        }
     }
 
     fun getPlayingArray() = playingArray
