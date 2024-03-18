@@ -33,7 +33,7 @@ class LoginFragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
-        authClient.automateSignIn(launchActivity, scope) {
+        authClient.automateSignIn(launchActivity) {
             launchActivity.intentNext()
         }
 
@@ -78,7 +78,7 @@ class LoginFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.loginGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, scope, {
+            authClient.signIn(launchActivity, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(

@@ -85,8 +85,8 @@ class ChatAdapterNew(
                     if (position > 0 && messages[position].audio != NULL) {
                         val audioLink = messages[position].audio
 
-                        playView.setOnClickListener { playAudio(audioLink) }
-                        playButton.setOnClickListener { playAudio(audioLink) }
+                        playView.setOnClickListener { playAudio(link = audioLink) }
+                        playButton.setOnClickListener { playAudio(link = audioLink) }
                     } else {
                         playView.isClickable = false
                         playButton.visibility = View.GONE
@@ -104,14 +104,18 @@ class ChatAdapterNew(
                         arrayOfButtons.add(playButton)
                         playingArray.add(false)
 
-                        val audioLink = messages[position].audio
+                        val audioPath = messages[position].audio
+                        val audioLink = if (audioPath.startsWith("\"") && audioPath.endsWith("\"")) {
+                            audioPath.substring(1, audioPath.length - 1)
+                        } else audioPath
+
                         duration.text = ChatHelper().convertToTimerMode(mediaObject.getAudioDuration(audioLink))
 
                         playButton.setOnClickListener {
                             if (playingArray[arrayOfButtons.indexOf(playButton)]) {
                                 mediaObject.pauseAudio(this@ChatAdapterNew)
                             } else {
-                                playAudio(audioLink)
+                                playAudio(playButton, audioLink)
 
                                 playingArray[arrayOfButtons.indexOf(playButton)] = true
                             }
@@ -141,8 +145,7 @@ class ChatAdapterNew(
         }
     }
 
-    //TODO
-    private fun playAudio(link: String) {
+    fun playAudio(playButton: ImageButton? = null, link: String) {
         for (i in 0 until playingArray.size) {
             if (playingArray[i]) {
                 arrayOfButtons[i].setImageResource(R.drawable.ic_msg_voice_play)
@@ -150,18 +153,16 @@ class ChatAdapterNew(
             }
         }
 
-        val newLink = if (link.startsWith("\"") && link.endsWith("\"")) {
-            link.substring(1, link.length - 1)
-        } else link
-
         val path = File("${chatActivity.cacheDir}/temp/")
         if (!path.exists()) path.mkdirs()
 
         val file = File(path, "temp_playable.mp3")
-        chatMessagesClient.getAudio(newLink, file, {
+        chatMessagesClient.getAudio(link, file, {
             mediaObject.pauseAudio()
             mediaObject.initializeMediaPlayer(chatActivity, file.toUri())
-            mediaObject.playAudio()
+
+            if (playButton != null) mediaObject.playAudio(playButton, this@ChatAdapterNew)
+            else mediaObject.playAudio()
         }) {
             chatActivity.getChatViewModel().showErrorMessage(it)
         }

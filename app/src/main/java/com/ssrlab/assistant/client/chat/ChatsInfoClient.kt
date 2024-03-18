@@ -2,39 +2,22 @@ package com.ssrlab.assistant.client.chat
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.CommonClient
 import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
-import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
-class ChatsInfoClient(private val context: Context) {
-
-    private var chatsInfoClient = OkHttpClient.Builder()
-        .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .writeTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .readTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .build()
-
-    private val fireAuth = FirebaseAuth.getInstance()
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
+class ChatsInfoClient(private val context: Context): CommonClient() {
 
     /** Common chat info **/
     fun getAllChats(onSuccess: (ArrayList<ChatInfoObject>) -> Unit, onFailure: (String) -> Unit) {
@@ -44,8 +27,12 @@ class ChatsInfoClient(private val context: Context) {
                 .addHeader("x-user-id", uid)
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object: Callback {
+            val dialog = initDialog(context)
+            dialog.show()
+
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
+                    dialog.dismiss()
                     onFailure(e.message.toString())
                 }
 
@@ -55,24 +42,42 @@ class ChatsInfoClient(private val context: Context) {
 
                     val chatInfoArray = arrayListOf<ChatInfoObject>()
 
-                    val chatIdArray = jObject?.getJSONArray("chat_ids")
-                    if (chatIdArray?.length() != 0) {
-                        for (i in 0 until chatIdArray?.length()!!) {
-                            getChatInfoById(chatIdArray[i] as String, {
-                                chatInfoArray.add(it)
-                            }, { errorMessage ->
-                                onFailure(errorMessage)
-                            })
+                    try {
+                        val chatsArray = jObject?.getJSONArray("chats")
+                        val chatIdArray = arrayListOf<String>()
+
+                        if (chatsArray != null) {
+                            for (i in 0 until chatsArray.length())
+                                chatIdArray.add(chatsArray.getJSONObject(i).getString("chat_id"))
                         }
 
-                        while (chatInfoArray.size != chatIdArray.length()) {
-                            scope.launch { delay(100) }
+                        while (chatIdArray.size != chatsArray!!.length()) scope.launch { delay(100) }
+
+                        if (chatIdArray.size != 0) {
+                            for (i in 0 until chatIdArray.size) {
+                                getChatInfoById(chatIdArray[i], {
+                                    chatInfoArray.add(it)
+                                }, { errorMessage ->
+                                    onFailure(errorMessage)
+                                })
+                            }
+
+                            while (chatInfoArray.size != chatIdArray.size) {
+                                scope.launch { delay(100) }
+                            }
+
+                            dialog.dismiss()
+                            onSuccess(chatInfoArray)
+                        } else {
+                            dialog.dismiss()
+
+                            val errorMessage = ContextCompat.getString(context, R.string.array_is_empty)
+                            onFailure(errorMessage)
                         }
 
-                        onSuccess(chatInfoArray)
-                    } else {
-                        val errorMessage = ContextCompat.getString(context, R.string.array_is_empty)
-                        onFailure(errorMessage)
+                    } catch (e: JSONException) {
+                        dialog.dismiss()
+                        onFailure(e.message.toString())
                     }
                 }
             })
@@ -89,7 +94,7 @@ class ChatsInfoClient(private val context: Context) {
                 .addHeader("x-user-id", uid)
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object: Callback {
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -133,7 +138,10 @@ class ChatsInfoClient(private val context: Context) {
                 .addHeader("Content-Type", "application/json")
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object: Callback {
+            val dialog = initDialog(context)
+            dialog.show()
+
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -145,12 +153,18 @@ class ChatsInfoClient(private val context: Context) {
                         val jObject = responseBody?.let { JSONObject(it) }
 
                         val chatId = jObject?.getString("chat_id") ?: ""
-                        if (chatId != "") onSuccess(chatId)
+                        if (chatId != "") {
+                            dialog.dismiss()
+                            onSuccess(chatId)
+                        }
                         else {
+                            dialog.dismiss()
+
                             val errorMessage = ContextCompat.getString(context, R.string.something_went_wrong)
                             onFailure(errorMessage)
                         }
                     } catch (e: JSONException) {
+                        dialog.dismiss()
                         onFailure(e.message.toString())
                     }
                 }
@@ -173,7 +187,7 @@ class ChatsInfoClient(private val context: Context) {
                 .addHeader("Content-Type", "application/json")
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object: Callback {
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -211,7 +225,7 @@ class ChatsInfoClient(private val context: Context) {
                 .method("DELETE", body)
                 .build()
 
-            chatsInfoClient.newCall(request).enqueue(object: Callback {
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -228,6 +242,43 @@ class ChatsInfoClient(private val context: Context) {
                             onFailure(errorMessage)
                         }
                     } catch (e: JSONException) {
+                        onFailure(e.message.toString())
+                    }
+                }
+            })
+        }, {
+            val errorMessage = ContextCompat.getString(context, R.string.null_uid)
+            onFailure(errorMessage)
+        })
+    }
+
+    fun getMessagesCount(chatId: String, onSuccess: (Int) -> Unit, onFailure: (String) -> Unit) {
+        checkUid({ uid ->
+            val request = Request.Builder()
+                .url("https://ml1.ssrlab.by/chat-api/chat/msg_count/$chatId")
+                .addHeader("x-user-id", uid)
+                .build()
+
+            val dialog = initDialog(context)
+            dialog.show()
+
+            client.newCall(request).enqueue(object: Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    dialog.dismiss()
+                    onFailure(e.message.toString())
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseBody = response.body?.string()
+                    val jObject = responseBody?.let { JSONObject(it) }
+
+                    try {
+                        val count = jObject?.getInt("msg_count") ?: 0
+
+                        dialog.dismiss()
+                        onSuccess(count)
+                    } catch (e: JSONException) {
+                        dialog.dismiss()
                         onFailure(e.message.toString())
                     }
                 }

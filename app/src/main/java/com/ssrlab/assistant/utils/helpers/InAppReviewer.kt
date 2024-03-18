@@ -8,6 +8,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.model.ReviewErrorCode
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.ui.chat.ChatActivity
+import com.ssrlab.assistant.ui.chat.ChatActivityNew
 
 class InAppReviewer {
 
@@ -29,6 +30,28 @@ class InAppReviewer {
             }
             .addOnFailureListener {
                 showErrorSnack(activity.getBinding().root, it.message.toString())
+            }
+    }
+
+    fun askUserForReview(activity: ChatActivityNew, onSuccess: () -> Unit) {
+        val reviewManager = ReviewManagerFactory.create(activity)
+        val request = reviewManager.requestReviewFlow()
+
+        request
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val reviewInfo = task.result
+                    reviewManager.launchReviewFlow(activity, reviewInfo)
+                        .addOnCompleteListener { onSuccess() }
+                        .addOnFailureListener { showErrorSnack(activity.getBinding().root, it.message.toString()) }
+                } else {
+                    @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
+                    activity.getChatViewModel().showErrorMessage(reviewErrorCode.toString())
+                }
+            }
+
+            .addOnFailureListener {
+                activity.getChatViewModel().showErrorMessage(it.message.toString())
             }
     }
 

@@ -23,6 +23,7 @@ import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.rv.ChatAdapterNew
 import com.ssrlab.assistant.utils.AUDIO_FORMAT
+import com.ssrlab.assistant.utils.BOT
 import com.ssrlab.assistant.utils.CHANNEL_CONFIG
 import com.ssrlab.assistant.utils.CHAT_ID
 import com.ssrlab.assistant.utils.CHAT_IMAGE
@@ -36,10 +37,12 @@ import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
 import com.ssrlab.assistant.utils.SAMPLE_RATE
 import com.ssrlab.assistant.utils.USER
 import com.ssrlab.assistant.utils.helpers.ChatHelper
+import com.ssrlab.assistant.utils.helpers.InAppReviewer
 import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObjectNew
 import com.ssrlab.assistant.utils.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModelNew
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
+import kotlinx.coroutines.delay
 import java.io.File
 import java.io.FileOutputStream
 
@@ -196,8 +199,12 @@ class ChatActivityNew: BaseActivity() {
 
     private fun setupAdapter() {
         binding.apply {
-            val firstMessage = viewModel.generateFirstMessage(roleInt)
-            messages.add(firstMessage)
+            if (messages.isEmpty()) {
+                //TODO
+                val firstMessage = viewModel.generateFirstMessage(roleInt)
+                messages.add(firstMessage)
+            }
+
             adapter = ChatAdapterNew(messages, this@ChatActivityNew, chatMessagesClient)
 
             chatChatRv.layoutManager = LinearLayoutManager(this@ChatActivityNew)
@@ -280,6 +287,9 @@ class ChatActivityNew: BaseActivity() {
                 messages.add(it)
                 viewModel.updateAdapter(adapter, messages)
                 chatHelper.hideLoadingUtils(binding)
+
+                if (viewModel.getPlayable()) adapter.playAudio(link = it.audio)
+                runOnUiThread { checkIfAppRated() }
             }
         }, {
             viewModel.showErrorMessage(it)
@@ -326,21 +336,19 @@ class ChatActivityNew: BaseActivity() {
         }.start()
     }
 
-    //TODO
     private fun checkIfAppRated() {
-//        var identifierForRateView = 1
-//        for (i in messagesI)
-//            if (i.role == 1)
-//                identifierForRateView++
-//        if (identifierForRateView == 3 && !mainApp.isUserRated()) {
-//            scope.launch {
-//                delay(4000)
-//                InAppReviewer().askUserForReview(this@ChatActivity) {
-//                    mainApp.saveIsUserRated(sharedPreferences)
-//                    Toast.makeText(this@ChatActivity, ContextCompat.getString(this@ChatActivity, R.string.thanks), Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
+        var identifierForRateView = 1
+        for (i in messages)
+            if (i.role == BOT)
+                identifierForRateView++
+        if (identifierForRateView == 5 && !mainApp.isUserRated()) {
+            viewModel.launch {
+                delay(4000)
+                InAppReviewer().askUserForReview(this@ChatActivityNew) {
+                    mainApp.saveIsUserRated(sharedPreferences)
+                }
+            }
+        }
     }
 
     private fun getIntents() {
@@ -389,7 +397,9 @@ class ChatActivityNew: BaseActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                audioFile = File("$cacheDir/chats/${speaker}_$role", "user_temp.mp4")
+                val audioPath = File("$cacheDir/chats/${speaker}_${roleCode}")
+                if (!audioPath.exists()) audioPath.mkdirs()
+                audioFile = File(audioPath, "user_temp.mp4")
 
                 MediaPlayerObjectNew.pauseAudio(adapter = adapter)
 
