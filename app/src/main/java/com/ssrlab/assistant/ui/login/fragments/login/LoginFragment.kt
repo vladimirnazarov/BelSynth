@@ -33,9 +33,11 @@ class LoginFragment: BaseLaunchFragment() {
     override fun onStart() {
         super.onStart()
 
-        authClient.automateSignIn(launchActivity) {
+        authClient.automateSignIn(launchActivity, {
             launchActivity.intentNext()
-        }
+        }, {
+            launchActivity.showErrorSnack(it, binding.root)
+        })
 
         setUpButtons()
         binding.loginMain.setOnClickListener { inputHelper.hideKeyboard(binding.root) }

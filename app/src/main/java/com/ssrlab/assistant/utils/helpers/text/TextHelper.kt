@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.utils.helpers
+package com.ssrlab.assistant.utils.helpers.text
 
 import android.app.Dialog
 import android.content.Context
@@ -21,7 +21,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
-import com.google.android.material.snackbar.Snackbar
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication

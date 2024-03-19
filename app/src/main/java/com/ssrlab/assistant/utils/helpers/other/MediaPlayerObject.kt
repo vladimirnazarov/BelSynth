@@ -1,11 +1,11 @@
-package com.ssrlab.assistant.utils.helpers.objects
+package com.ssrlab.assistant.utils.helpers.other
 
 import android.media.MediaPlayer
 import android.net.Uri
 import android.widget.ImageButton
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.rv.ChatAdapterNew
-import com.ssrlab.assistant.ui.chat.ChatActivityNew
+import com.ssrlab.assistant.rv.ChatAdapter
+import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.PAUSE
 import com.ssrlab.assistant.utils.PLAY
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-object MediaPlayerObjectNew {
+object MediaPlayerObject {
 
     private var mediaPlayer: MediaPlayer? = null
     private var playerStatus = ""
@@ -21,7 +21,7 @@ object MediaPlayerObjectNew {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Unconfined + job)
 
-    fun initializeMediaPlayer(chatActivity: ChatActivityNew, uri: Uri) {
+    fun initializeMediaPlayer(chatActivity: ChatActivity, uri: Uri) {
         playerStatus = PLAY
         mediaPlayer = MediaPlayer()
 
@@ -33,7 +33,7 @@ object MediaPlayerObjectNew {
         }
     }
 
-    fun playAudio(playButton: ImageButton? = null, adapter: ChatAdapterNew? = null) {
+    fun playAudio(playButton: ImageButton? = null, adapter: ChatAdapter? = null) {
         scope.launch {
             when (playerStatus) {
                 PAUSE -> {
@@ -67,7 +67,7 @@ object MediaPlayerObjectNew {
         }
     }
 
-    fun pauseAudio(adapter: ChatAdapterNew? = null) {
+    fun pauseAudio(adapter: ChatAdapter? = null) {
         if (playerStatus == PAUSE) {
             mediaPlayer!!.pause()
 

@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import com.ssrlab.assistant.client.IsUserSignedIn
-import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.AUTH_EMAIL
@@ -53,7 +52,6 @@ class MainApplication: Application() {
     fun getLocale() = localeString
 
     fun isFirstLaunch() = isFirstLaunch
-    fun isSoundEnabled() = isSoundEnabled
     fun isUserRated() = isUserRated
 
     fun loadPreferences(sharedPreferences: SharedPreferences) {
@@ -83,7 +81,7 @@ class MainApplication: Application() {
         else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
-    fun savePreferences(sharedPreferences: SharedPreferences, activity: Activity, locale: String? = null, value: Boolean? = null) {
+    fun savePreferences(sharedPreferences: SharedPreferences, activity: Activity, locale: String? = null) {
         when(activity) {
             is LaunchActivity -> {
                 with(sharedPreferences.edit()) {
@@ -100,12 +98,6 @@ class MainApplication: Application() {
                 }
 
                 activity.recreate()
-            }
-            is ChatActivity -> {
-                sharedPreferences.edit {
-                    if (value != null) putBoolean(CHAT_SOUND, value)
-                    apply()
-                }
             }
         }
     }

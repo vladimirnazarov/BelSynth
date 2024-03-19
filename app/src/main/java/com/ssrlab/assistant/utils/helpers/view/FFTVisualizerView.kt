@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.utils.view
+package com.ssrlab.assistant.utils.helpers.view
 
 import android.content.Context
 import android.graphics.Canvas

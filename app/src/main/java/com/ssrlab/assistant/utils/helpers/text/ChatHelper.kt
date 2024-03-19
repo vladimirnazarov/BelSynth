@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.utils.helpers
+package com.ssrlab.assistant.utils.helpers.text
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,6 @@ import android.widget.ImageView
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.ActivityChatBinding
 import com.ssrlab.assistant.ui.chat.ChatActivity
-import com.ssrlab.assistant.ui.chat.ChatActivityNew
 import kotlinx.coroutines.*
 
 class ChatHelper {
@@ -47,7 +46,7 @@ class ChatHelper {
         }
     }
 
-    fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivityNew) {
+    fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivity) {
         binding.apply {
             chatProgressHolder.visibility = View.VISIBLE
 

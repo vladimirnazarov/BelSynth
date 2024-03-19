@@ -1,4 +1,4 @@
-package com.ssrlab.assistant.db.objects.messages
+package com.ssrlab.assistant.db.objects
 
 import com.ssrlab.assistant.utils.NULL
 
