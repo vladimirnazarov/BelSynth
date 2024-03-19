@@ -70,7 +70,7 @@ class RegisterFragment: BaseLaunchFragment() {
 
     private fun setUpGoogleButton() {
         binding.registerGoogleRipple.setOnClickListener {
-            authClient.signIn(launchActivity, scope, {
+            authClient.signIn(launchActivity, {
                 launchActivity.intentNext()
             }, { msg, type ->
                 inputHelper.handleErrorTypes(

@@ -51,18 +51,22 @@ class ChooseActivity : BaseActivity() {
     }
 
     private fun getAllChats() {
-        chatsInfoClient.getAllChats({
-            chatsInfoArray = it
-        }, {
-            showErrorSnack(it, binding.root)
-        })
+        if (chatsInfoArray.isEmpty()) {
+            chatsInfoClient.getAllChats({
+                chatsInfoArray = it
+            }, {
+                showErrorSnack(it, binding.root)
+            })
+        }
     }
 
     fun intentToChat(speaker: String, title: String, img: Int, roleCode: String = "assistant", roleInt: Int = 0, role: String = "") {
         var chatId = NULL
+
         for (i in chatsInfoArray) {
             if (i.botName == speaker && i.role == roleCode) {
                 chatId = i.chatId
+                break
             }
         }
 

@@ -1,28 +1,21 @@
 package com.ssrlab.assistant.client.chat
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
-import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
-import com.ssrlab.assistant.client.MessageClient
+import com.ssrlab.assistant.client.CommonClient
 import com.ssrlab.assistant.db.objects.messages.Message
 import com.ssrlab.assistant.utils.BOT
 import com.ssrlab.assistant.utils.NULL
-import com.ssrlab.assistant.utils.REQUEST_TIME_OUT
 import com.ssrlab.assistant.utils.USER
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -33,20 +26,8 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 
-class ChatMessagesClient(private val context: Context) {
-
-    private var chatClient = OkHttpClient.Builder()
-        .connectTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .writeTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .readTimeout(REQUEST_TIME_OUT, TimeUnit.SECONDS)
-        .build()
-
-    private val fireAuth = FirebaseAuth.getInstance()
-
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
+class ChatMessagesClient(private val context: Context): CommonClient() {
 
     fun loadMessages(chatId: String, onSuccess: (ArrayList<Message>) -> Unit, onFailure: (String) -> Unit) {
         checkUid({ uid ->
@@ -55,7 +36,7 @@ class ChatMessagesClient(private val context: Context) {
                 .addHeader("x-user-id", uid)
                 .build()
 
-            chatClient.newCall(request).enqueue(object: Callback {
+            client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     onFailure(e.message.toString())
                 }
@@ -130,7 +111,7 @@ class ChatMessagesClient(private val context: Context) {
                     .post(body)
                     .build()
 
-                chatClient.newCall(request).enqueue(object : Callback {
+                client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         onFailure(e.message.toString())
                     }
@@ -176,7 +157,7 @@ class ChatMessagesClient(private val context: Context) {
             .addHeader("Content-Type", "application/json")
             .build()
 
-        chatClient.newCall(request).enqueue(object : Callback {
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onFailure(e.message.toString())
             }
@@ -215,7 +196,7 @@ class ChatMessagesClient(private val context: Context) {
             .addHeader("Content-Type", "application/json")
             .build()
 
-        chatClient.newCall(request).enqueue(object : Callback {
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onFailure(e.message.toString())
             }
@@ -245,7 +226,7 @@ class ChatMessagesClient(private val context: Context) {
             .url(link)
             .build()
 
-        chatClient.newCall(request).enqueue(object : Callback {
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onFailure(e.message!!)
             }
