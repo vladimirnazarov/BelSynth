@@ -32,20 +32,6 @@ class ChatHelper {
         }
     }
 
-    fun loadRecordAnim(context: Context, binding: ActivityChatBinding) {
-        binding.chatDurationIcon.startAnimation(AnimationUtils.loadAnimation(context, R.anim.record_animation))
-    }
-
-    fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivity, scope: CoroutineScope) {
-        binding.apply {
-            chatProgressHolder.visibility = View.VISIBLE
-            loadDotsAnim(chatActivity, binding, scope)
-
-            chatRecordRipple.isClickable = false
-            chatKeyboardButton.isClickable = false
-        }
-    }
-
     fun showLoadingUtils(binding: ActivityChatBinding, chatActivity: ChatActivity) {
         binding.apply {
             chatProgressHolder.visibility = View.VISIBLE
