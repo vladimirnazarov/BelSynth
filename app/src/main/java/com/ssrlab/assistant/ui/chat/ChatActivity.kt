@@ -1,68 +1,99 @@
 package com.ssrlab.assistant.ui.chat
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.media.AudioRecord
+import android.media.MediaRecorder
+import android.os.Build
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewTreeObserver
+import android.view.Window
+import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
+import com.ssrlab.assistant.client.chat.ChatMessagesClient
+import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityChatBinding
-import com.ssrlab.assistant.db.objects.BotMessage
-import com.ssrlab.assistant.db.objects.MessageInfoObject
-import com.ssrlab.assistant.db.objects.UserMessage
-import com.ssrlab.assistant.db.objects.UserVoiceMessage
+import com.ssrlab.assistant.databinding.DialogLoadingBinding
+import com.ssrlab.assistant.db.client.DatabaseClient
+import com.ssrlab.assistant.db.objects.Message
 import com.ssrlab.assistant.rv.ChatAdapter
+import com.ssrlab.assistant.utils.AUDIO_FORMAT
+import com.ssrlab.assistant.utils.BOT
+import com.ssrlab.assistant.utils.CHANNEL_CONFIG
+import com.ssrlab.assistant.utils.CHAT_ID
+import com.ssrlab.assistant.utils.CHAT_IMAGE
+import com.ssrlab.assistant.utils.CHAT_NAME
+import com.ssrlab.assistant.utils.CHAT_ROLE
+import com.ssrlab.assistant.utils.CHAT_ROLE_CODE
+import com.ssrlab.assistant.utils.CHAT_ROLE_INT
+import com.ssrlab.assistant.utils.CHAT_SPEAKER
+import com.ssrlab.assistant.utils.NULL
 import com.ssrlab.assistant.utils.PERMISSIONS_REQUEST_CODE
-import com.ssrlab.assistant.utils.helpers.ChatHelper
-import com.ssrlab.assistant.utils.helpers.InAppReviewer
-import com.ssrlab.assistant.utils.helpers.TextHelper
-import com.ssrlab.assistant.utils.helpers.objects.MediaPlayerObject
-import com.ssrlab.assistant.utils.view.FFTVisualizerView
+import com.ssrlab.assistant.utils.SAMPLE_RATE
+import com.ssrlab.assistant.utils.USER
+import com.ssrlab.assistant.utils.helpers.text.ChatHelper
+import com.ssrlab.assistant.utils.helpers.other.InAppReviewer
+import com.ssrlab.assistant.utils.helpers.other.MediaPlayerObject
+import com.ssrlab.assistant.utils.helpers.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
+import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 
-class ChatActivity : BaseActivity() {
+@Suppress("DEPRECATION")
+class ChatActivity: BaseActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var chatHelper: ChatHelper
     private lateinit var visualizerView: FFTVisualizerView
+    private lateinit var chatsInfoClient: ChatsInfoClient
+    private lateinit var chatMessagesClient: ChatMessagesClient
+    private lateinit var database: DatabaseClient
 
-    private val viewModel: ChatViewModel by viewModels()
+    private val viewModel: ChatViewModel by viewModels {
+        ChatViewModel.Factory(this@ChatActivity)
+    }
 
-    private var speaker = ""
-    private var role = ""
-    private var roleCode = ""
-    private var roleInt = 0
+    private lateinit var audioRecord: AudioRecord
+    private lateinit var mediaRecorder: MediaRecorder
+    private var isRecording = false
 
     private lateinit var imm: InputMethodManager
     private var originalScreenHeight = 0
 
-    private var id = 1
+    private var playableValue = true
+    private var chatId = NULL
+    private var name = NULL
+    private var speaker = NULL
+    private var role = NULL
+    private var roleCode = NULL
+    private var roleInt = 0
+
     private lateinit var audioFile: File
-
-    private val messagesI = arrayListOf<MessageInfoObject>()
-    private val botMessages = arrayListOf<BotMessage>()
-    private val userMessages = arrayListOf<UserMessage>()
-    private val userVoiceMessages = arrayListOf<UserVoiceMessage>()
-
     private lateinit var adapter: ChatAdapter
 
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Unconfined + job)
+    private var messages = arrayListOf<Message>()
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mainApp.setContext(this@ChatActivity)
@@ -73,81 +104,111 @@ class ChatActivity : BaseActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.playable.value = true
-        setUpAudioButton()
-
-        viewModel.playable.value = mainApp.isSoundEnabled()
-
-        getIntentValues()
-
+        chatsInfoClient = ChatsInfoClient(this@ChatActivity)
+        chatMessagesClient = ChatMessagesClient(this@ChatActivity)
         chatHelper = ChatHelper()
-        setUpToolbar()
-
-        setUpFFTLayout()
-        setUpKeyBoardAction()
-        setUpRecordButton()
-
-        binding.apply {
-            val botMessage = viewModel.generateFirstMessage(id, roleInt, this@ChatActivity)
-            botMessages.add(botMessage)
-            messagesI.add(MessageInfoObject(id, 1))
-            adapter = ChatAdapter(messagesI, botMessages, userMessages, userVoiceMessages, this@ChatActivity)
-
-            chatChatRv.layoutManager = LinearLayoutManager(this@ChatActivity)
-            chatChatRv.adapter = adapter
-            chatChatRv.smoothScrollToPosition(adapter.itemCount)
-        }
+        database = DatabaseClient(this@ChatActivity)
     }
 
     override fun onStart() {
         super.onStart()
 
-        chatHelper.loadRecordAnim(this@ChatActivity, binding)
-        setUpMessageSendButton()
-
-        val inputHelper = TextHelper(this@ChatActivity)
-        binding.chatToolbar.setOnClickListener { inputHelper.hideKeyboard(binding.root) }
+        setupChat()
+        setupFFTLayout()
+        setupKeyBoardAction()
+        setupRecordButton()
+        setupMessageSendButton()
     }
 
     override fun onStop() {
         super.onStop()
 
-        MediaPlayerObject.pauseAudio(adapter = adapter)
+        savePlayable()
+        MediaPlayerObject.pauseAudio(adapter)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        getExternalFilesDir(null)
-    }
-
-    private fun setUpAudioButton() {
-        viewModel.playable.observe(this@ChatActivity) {
-            if (!it) {
-                binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_off)
-                MediaPlayerObject.pauseAudio(adapter = adapter)
-
-                mainApp.savePreferences(sharedPreferences, this@ChatActivity, value = false)
-            }
-            else {
-                binding.chatToolbarAudio.setImageResource(R.drawable.ic_volume_on)
-
-                mainApp.savePreferences(sharedPreferences, this@ChatActivity, value = true)
+    private fun getMessages(onSuccess: (ArrayList<Message>) -> Unit, onFailure: () -> Unit) {
+        val messagesObservable = MutableLiveData<ArrayList<Message>?>()
+        messagesObservable.observe(this@ChatActivity) {
+            if (it == null) {
+                onFailure()
+            } else {
+                onSuccess(it)
             }
         }
 
-        binding.chatToolbarAudio.setOnClickListener {
-            viewModel.playable.value = !viewModel.playable.value!!
+        viewModel.apply {
+            launch {
+                val value = database.readFile(chatId)
+                runOnUiThread {
+                    messagesObservable.value = value
+                }
+            }
         }
     }
 
-    private fun setUpFFTLayout() {
-        visualizerView = FFTVisualizerView(this, null)
-        val fftLayout = binding.chatWaveLayout
-        fftLayout.addView(visualizerView)
+    private fun setupChat() {
+        dialog = initDialog()
+        getIntents()
+
+        setupAdapter()
+
+        playableValue = sharedPreferences.getBoolean("playable_${speaker}_${roleCode}", true)
+        viewModel.apply {
+            setupAudioButton(adapter)
+            setupToolbar(name, role, speaker)
+            setPlayable(playableValue)
+        }
     }
 
-    private fun setUpKeyBoardAction() {
+    private fun setupRecordButton() {
+        binding.chatRecordRipple.setOnClickListener {
+            if (!isRecording) {
+                if (checkPermissions()) {
+                    audioFile = initFile()
+
+                    MediaPlayerObject.pauseAudio(adapter = adapter)
+
+                    startRecording(audioFile)
+                    binding.chatRecordImage.setImageResource(R.drawable.ic_mic_off)
+                    binding.chatKeyboardButton.isClickable = false
+                }
+            } else {
+                stopRecording()
+
+                binding.chatRecordImage.setImageResource(R.drawable.ic_mic_on)
+                binding.chatKeyboardButton.isClickable = true
+
+                uploadAudio(audioFile)
+            }
+        }
+    }
+
+    private fun initFile(): File {
+        val audioPath = File("$cacheDir/chats/${speaker}_${roleCode}")
+        if (!audioPath.exists()) audioPath.mkdirs()
+        return File(audioPath, "user_temp.mp4")
+    }
+
+    private fun setupMessageSendButton() {
+        binding.apply {
+            chatChatMsgSend.setOnClickListener {
+                if (chatChatMsgInput.text?.isNotEmpty() == true) {
+                    messages.add(Message(chatChatMsgInput.text!!.toString(), USER))
+                    viewModel.updateAdapter(adapter, messages)
+
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+                    sendMessage(text = chatChatMsgInput.text?.toString()?.replace("\n", ". ").toString())
+                    chatChatMsgInput.text?.clear()
+
+                    saveMessages()
+                }
+            }
+        }
+    }
+
+    private fun setupKeyBoardAction() {
         binding.apply {
             chatKeyboardButton.setOnClickListener {
                 imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -161,12 +222,11 @@ class ChatActivity : BaseActivity() {
                 val screenHeight = chatView.height
 
                 if (originalScreenHeight != screenHeight) {
-                    viewModel.controlBottomVisibility(this@ChatActivity)
+                    viewModel.controlBottomVisibility()
                     chatChatRv.smoothScrollToPosition(adapter.itemCount - 1)
-                }
-                else {
+                } else {
                     viewModel.apply {
-                        controlBottomVisibility( this@ChatActivity, false)
+                        controlBottomVisibility(false)
                     }
                 }
             }
@@ -175,103 +235,268 @@ class ChatActivity : BaseActivity() {
         }
     }
 
-    private fun setUpMessageSendButton() {
-        binding.apply {
-            chatChatMsgSend.setOnClickListener {
-                if (chatChatMsgInput.text?.isNotEmpty() == true) {
-                    loadUserMessage(chatChatMsgInput.text!!.toString())
+    private fun setupFFTLayout() {
+        visualizerView = FFTVisualizerView(this, null)
+        val fftLayout = binding.chatWaveLayout
+        fftLayout.addView(visualizerView)
+    }
 
-                    currentFocus?.let { imm.hideSoftInputFromWindow(it.windowToken, 0) }
+    private fun setupAdapter() {
+        initAdapter(false)
+        dialog.show()
 
-                    chatChatMsgInput.text?.toString()?.replace("\n", ". ")?.let { it1 -> sendTextMessage(it1) }
-                    chatChatMsgInput.text?.clear()
-                }
+        getMessages({
+            dialog.dismiss()
+
+            messages = it
+            compareChats()
+        }, {
+            dialog.dismiss()
+            loadMessages()
+        })
+    }
+
+    private fun loadMessages() {
+        chatMessagesClient.loadMessages(chatId, { loadedMessages ->
+            messages = loadedMessages
+            generateFirstMessage()
+
+            runOnUiThread {
+                initAdapter()
+                saveMessages()
             }
-        }
+        }, {
+            if (it != null) showErrorSnack(it, binding.root)
+
+            generateFirstMessage()
+            runOnUiThread {
+                initAdapter()
+                saveMessages()
+            }
+        })
     }
 
-    private fun sendTextMessage(text: String) {
-        viewModel.sendMessage(text, speaker, role = roleCode, chatActivity = this@ChatActivity)
-        chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
-    }
+    private fun compareChats() {
+        chatsInfoClient.getMessagesCount(chatId, {
+            if (((messages.size - 1) / 2) != it) {
+                chatMessagesClient.loadMessages(chatId, { updatedMessages ->
+                    messages = updatedMessages
+                    generateFirstMessage()
 
-    private fun setUpRecordButton() {
-        binding.chatRecordRipple.setOnClickListener {
-            if (!viewModel.isRecording()) {
-                if (checkPermissions()) {
-                    id += 1
-                    audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp4")
-
-                    MediaPlayerObject.pauseAudio(adapter = adapter)
-
-                    viewModel.startRecording(this@ChatActivity, audioFile)
-                    binding.chatRecordImage.setImageResource(R.drawable.ic_mic_off)
-                    binding.chatKeyboardButton.isClickable = false
-                }
+                    runOnUiThread {
+                        initAdapter()
+                        saveMessages()
+                    }
+                }, {
+                    runOnUiThread {
+                        if (it != null) showErrorSnack(it, binding.root)
+                    }
+                })
             } else {
-                viewModel.stopRecording(binding)
-
-                binding.chatRecordImage.setImageResource(R.drawable.ic_mic_on)
-                binding.chatKeyboardButton.isClickable = true
-
-                loadUserVoiceMessage(audioFile)
-                userVoiceMessages.last().audio?.let { it1 -> viewModel.sendMessage(it1, speaker, role = roleCode, chatActivity = this@ChatActivity) }
-                chatHelper.showLoadingUtils(binding, this@ChatActivity, scope)
+                generateFirstMessage()
+                runOnUiThread {
+                    initAdapter()
+                    saveMessages()
+                }
             }
+        }, {
+            runOnUiThread {
+                val errorMessage = ContextCompat.getString(this@ChatActivity, R.string.unable_to_compare)
+                showErrorSnack(errorMessage, binding.root)
+            }
+        })
+    }
+
+    private fun generateFirstMessage() {
+        if (messages.isNotEmpty() && messages[0] != viewModel.generateFirstMessage(roleInt)) {
+            val firstMessage = viewModel.generateFirstMessage(roleInt)
+            messages.add(0, firstMessage)
+        } else if (messages.isEmpty()) {
+            val firstMessage = viewModel.generateFirstMessage(roleInt)
+            messages.add(firstMessage)
         }
     }
 
-    fun loadBotMessage(text: String, audioFile: File) {
-        botMessages.add(BotMessage(id, text, audioFile))
-        messagesI.add(MessageInfoObject(id, 1))
+    private fun initAdapter(update: Boolean = true) {
+        binding.apply {
+            adapter = ChatAdapter(messages, this@ChatActivity, chatMessagesClient)
+            chatChatRv.layoutManager = LinearLayoutManager(this@ChatActivity)
+            chatChatRv.adapter = adapter
+            chatChatRv.smoothScrollToPosition(adapter.itemCount)
+        }
 
-        updateAdapter()
-        checkIfAppRated()
+        if (update) viewModel.updateAdapter(adapter, messages)
+    }
+
+    private fun startRecording(outputFile: File) {
+        setupAudioRecorder()
+        setupMediaRecorder(outputFile)
+
+        audioRecord.startRecording()
+        mediaRecorder.start()
+        isRecording = true
+
+        val runtime = Runtime.getRuntime()
+        val availableProcessors = runtime.availableProcessors()
+        if (availableProcessors >= 3) {
+            viewModel.showWave()
+            startWaveThread()
+        }
+
+        viewModel.startTimer()
+    }
+
+    private fun stopRecording() {
+        if (isRecording) {
+            this.apply {
+                audioRecord.stop()
+                mediaRecorder.stop()
+
+                audioRecord.release()
+                mediaRecorder.release()
+                isRecording = false
+            }
+
+            viewModel.hideTimerAndWave()
+        }
+    }
+
+    /**
+     * For FFT Thread
+     */
+    @SuppressLint("MissingPermission")
+    private fun setupAudioRecorder() {
+        val minBufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT)
+        audioRecord = AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            SAMPLE_RATE,
+            CHANNEL_CONFIG,
+            AUDIO_FORMAT,
+            minBufferSize
+        )
+    }
+
+    /**
+     * For common voice record
+     */
+    private fun setupMediaRecorder(outputFile: File) {
+        createMediaRecorder(this).apply {
+            setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
+            setAudioSamplingRate(44100)
+            setAudioChannels(1)
+            setAudioEncodingBitRate(128000)
+            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setOutputFile(FileOutputStream(outputFile).fd)
+
+            prepare()
+
+            mediaRecorder = this
+        }
+    }
+
+    private fun sendMessage(text: String = NULL, audio: String = NULL) {
+        chatHelper.showLoadingUtils(binding, this@ChatActivity)
+        chatMessagesClient.sendMessage(chatId, text, audio, {
+            runOnUiThread {
+                messages.add(it)
+                viewModel.updateAdapter(adapter, messages)
+                chatHelper.hideLoadingUtils(binding)
+
+                if (viewModel.getPlayable()) adapter.playAudio(link = it.audio)
+                runOnUiThread {
+                    checkIfAppRated()
+                    saveMessages()
+                }
+            }
+        }, {
+            viewModel.showErrorMessage(it)
+        })
+    }
+
+    private fun uploadAudio(audioFile: File) {
+        chatHelper.showLoadingUtils(binding, this@ChatActivity)
+        chatMessagesClient.uploadAudio(audioFile, {
+            if (!it.matches(Regex("^<.*"))) {
+                runOnUiThread {
+                    chatHelper.hideLoadingUtils(binding)
+                    messages.add(Message(NULL, USER, it))
+                    viewModel.updateAdapter(adapter, messages)
+
+                    sendMessage(audio = it)
+                    saveMessages()
+                }
+            }
+        }, {
+            viewModel.showErrorMessage(it)
+        })
+    }
+
+    private fun createMediaRecorder(context: Context): MediaRecorder {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) MediaRecorder(context)
+        else MediaRecorder()
+    }
+
+    private fun startWaveThread() {
+        Thread {
+            val bufferSize = 1024
+            val buffer = ShortArray(bufferSize)
+            val fftData = FloatArray(bufferSize)
+
+            while (isRecording) {
+                val bytesRead = audioRecord.read(buffer, 0, bufferSize)
+                for (i in 0 until bytesRead) fftData[i] = buffer[i].toFloat() / Short.MAX_VALUE
+
+                val fft = FloatFFT_1D(bufferSize)
+                fft.realForward(fftData)
+
+                runOnUiThread {
+                    visualizerView.updateFFTData(fftData)
+                }
+            }
+        }.start()
     }
 
     private fun checkIfAppRated() {
         var identifierForRateView = 1
-        for (i in messagesI)
-            if (i.role == 1)
+        for (i in messages)
+            if (i.role == BOT)
                 identifierForRateView++
-        if (identifierForRateView == 3 && !mainApp.isUserRated()) {
-            scope.launch {
+        if (identifierForRateView == 5 && !mainApp.isUserRated()) {
+            viewModel.launch {
                 delay(4000)
                 InAppReviewer().askUserForReview(this@ChatActivity) {
                     mainApp.saveIsUserRated(sharedPreferences)
-                    Toast.makeText(this@ChatActivity, ContextCompat.getString(this@ChatActivity, R.string.thanks), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private fun loadUserMessage(text: String) {
-        id += 1
-        userMessages.add(UserMessage(id, text))
-        messagesI.add(MessageInfoObject(id, 2))
+    private fun getIntents() {
+        intent.apply {
+            name = getStringExtra(CHAT_NAME) ?: NULL
+            speaker = getStringExtra(CHAT_SPEAKER) ?: NULL
+            role = getStringExtra(CHAT_ROLE) ?: NULL
+            roleCode = getStringExtra(CHAT_ROLE_CODE) ?: NULL
+            roleInt = getIntExtra(CHAT_ROLE_INT, 0)
+            chatId = getStringExtra(CHAT_ID) ?: NULL
 
-        updateAdapter()
-    }
-
-    private fun loadUserVoiceMessage(audio: File? = null) {
-        userVoiceMessages.add(UserVoiceMessage(id, audio))
-        messagesI.add(MessageInfoObject(id, 3))
-
-        updateAdapter()
-    }
-
-    private fun updateAdapter() {
-        adapter.notifyItemInserted(messagesI.size - 1)
-
-        scope.launch {
-            delay(200)
-            binding.chatChatRv.smoothScrollToPosition(adapter.itemCount)
-            delay(200)
-            binding.chatChatRv.smoothScrollToPosition(adapter.itemCount)
+            binding.chatToolbarImage.setImageResource(getIntExtra(CHAT_IMAGE, R.drawable.img_speaker_1))
         }
     }
 
-    private fun goBack() { onBackPressedDispatcher.onBackPressed() }
+    private fun savePlayable() {
+        sharedPreferences.edit().apply {
+            putBoolean("playable_${speaker}_${roleCode}", viewModel.getPlayable())
+            apply()
+        }
+    }
+
+    private fun saveMessages() {
+        viewModel.launch {
+            database.writeToFile(chatId, messages)
+        }
+    }
 
     fun shareIntent(text: String) {
         val finalText = "${resources.getText(R.string.share_text_1)} $speaker ${resources.getText(R.string.share_text_2)} ${resources.getText(R.string.app_name)}:\n\n$text"
@@ -282,15 +507,6 @@ class ChatActivity : BaseActivity() {
             .setText(finalText)
             .startChooser()
     }
-
-    fun getChatHelper() = chatHelper
-    fun getVisualizerView() = visualizerView
-    fun getId(): Int {
-        id += 1
-        return id - 1
-    }
-    fun getSpeaker() = speaker
-    fun getBinding() = binding
 
     private fun checkPermissions() : Boolean {
         if (ContextCompat.checkSelfPermission(this@ChatActivity, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -308,42 +524,58 @@ class ChatActivity : BaseActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                id += 1
-                audioFile = File(getExternalFilesDir(null), "uv_msg_${id}_${speaker}.mp4")
+                audioFile = initFile()
 
                 MediaPlayerObject.pauseAudio(adapter = adapter)
 
-                viewModel.startRecording(this@ChatActivity, audioFile)
+                startRecording(audioFile)
                 binding.chatRecordImage.setImageResource(R.drawable.ic_mic_off)
                 binding.chatKeyboardButton.isClickable = false
             }
         }
     }
 
-    private fun setUpToolbar() {
-        binding.apply {
-            chatToolbarBack.setOnClickListener { goBack() }
+    private fun initDialog(): Dialog {
+        val dialog = Dialog(this@ChatActivity)
+        val dialogBinding = DialogLoadingBinding.inflate(LayoutInflater.from(this@ChatActivity))
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(dialogBinding.root)
 
-            if (speaker == "vasil") {
-                chatToolbarTitle.visibility = View.GONE
-                chatToolbarTextBlockFull.visibility = View.VISIBLE
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.setCancelable(false)
 
-                chatToolbarTitleFull.text = intent.getStringExtra("chat_name")
-                chatToolbarSubTitleFull.text = role
-            } else {
-                chatToolbarTitle.text = intent.getStringExtra("chat_name")
+        dialogBinding.apply {
+            val viewArray = arrayListOf<ImageView>()
+            viewArray.apply {
+                add(loadingDot1)
+                add(loadingDot2)
+                add(loadingDot3)
+                add(loadingDot4)
+                add(loadingDot5)
+                add(loadingDot6)
+                add(loadingDot7)
+                add(loadingDot8)
+            }
 
-                chatToolbarTitle.visibility = View.VISIBLE
-                chatToolbarTextBlockFull.visibility = View.GONE
+            CoroutineScope(Dispatchers.IO).launch {
+                for (i in viewArray) {
+                    i.startAnimation(AnimationUtils.loadAnimation(this@ChatActivity, R.anim.dots_recognition_animation))
+                    delay(250)
+                }
             }
         }
+
+        val width = this@ChatActivity.resources.displayMetrics.widthPixels
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = width - (width / 10)
+        dialog.window?.attributes = layoutParams
+
+        return dialog
     }
 
-    private fun getIntentValues() {
-        speaker = intent.getStringExtra("chat_id").toString()
-        role = intent.getStringExtra("chat_role").toString()
-        roleCode = intent.getStringExtra("chat_role_code").toString()
-        roleInt = intent.getIntExtra("chat_role_int", 0)
-        binding.chatToolbarImage.setImageResource(intent.getIntExtra("chat_img", R.drawable.img_speaker_1))
-    }
+    fun getBinding() = binding
+    fun isRecording() = isRecording
+    fun getHelper() = chatHelper
+    fun getChatViewModel() = viewModel
 }

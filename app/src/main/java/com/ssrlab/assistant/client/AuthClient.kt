@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.GoogleAuthProvider
+import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.ui.login.LaunchActivity
@@ -95,7 +96,7 @@ class AuthClient(
             ?.addOnFailureListener { onFailure(it.message.toString()) }
     }
 
-    fun automateSignIn(activity: LaunchActivity, onSuccess: () -> Unit) {
+    fun automateSignIn(activity: BaseActivity, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val dialog = initDialog(activity)
         dialog.show()
 
@@ -106,6 +107,9 @@ class AuthClient(
                         .addOnSuccessListener {
                             dialog.dismiss()
                             onSuccess()
+                        }.addOnFailureListener {
+                            dialog.dismiss()
+                            onFailure(it.message.toString())
                         }
                 } else {
                     generateSignInClient(activity)
@@ -164,7 +168,7 @@ class AuthClient(
         onSuccess()
     }
 
-    private fun generateSignInClient(activity: LaunchActivity) {
+    private fun generateSignInClient(activity: BaseActivity) {
         if (googleSignInClient == null) {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(activity.getString(R.string.google_web_client_id))

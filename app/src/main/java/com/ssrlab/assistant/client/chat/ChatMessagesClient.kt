@@ -6,7 +6,7 @@ import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.client.CommonClient
-import com.ssrlab.assistant.db.objects.messages.Message
+import com.ssrlab.assistant.db.objects.Message
 import com.ssrlab.assistant.utils.BOT
 import com.ssrlab.assistant.utils.NULL
 import com.ssrlab.assistant.utils.USER
@@ -29,7 +29,7 @@ import java.io.IOException
 
 class ChatMessagesClient(private val context: Context): CommonClient() {
 
-    fun loadMessages(chatId: String, onSuccess: (ArrayList<Message>) -> Unit, onFailure: (String) -> Unit) {
+    fun loadMessages(chatId: String, onSuccess: (ArrayList<Message>) -> Unit, onFailure: (String?) -> Unit) {
         checkUid({ uid ->
             val request = Request.Builder()
                 .url("https://ml1.ssrlab.by/chat-api/message/$chatId")
@@ -74,8 +74,7 @@ class ChatMessagesClient(private val context: Context): CommonClient() {
                             while (messageArray.size != (jArray.length() * 2)) scope.launch { delay(100) }
                             onSuccess(messageArray)
                         } else {
-                            val errorMessage = ContextCompat.getString(context, R.string.array_is_empty)
-                            onFailure(errorMessage)
+                            onFailure(null)
                         }
                     } catch (e: JSONException) {
                         onFailure(e.message.toString())

@@ -25,12 +25,6 @@
         tools:targetApi="34">
 
         <activity
-            android:name=".ui.choose.TestActivity"
-            android:exported="false"
-            android:theme="@style/LaunchTheme"
-            android:screenOrientation="portrait"/>
-
-        <activity
             android:name=".ui.login.LaunchActivity"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -58,20 +52,6 @@
 
         <activity
             android:name=".ui.chat.ChatActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/MainTheme"
-            android:windowSoftInputMode="adjustResize">
-
-            <intent-filter>
-                <action android:name=".MainActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".ui.chat.ChatActivityNew"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"

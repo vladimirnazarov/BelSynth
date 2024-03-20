@@ -12,7 +12,6 @@ import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.client.AuthClient
 import com.ssrlab.assistant.databinding.DialogAttentionBinding
 import com.ssrlab.assistant.ui.choose.ChooseActivity
-import com.ssrlab.assistant.utils.helpers.TextHelper
 
 open class BaseChooseFragment: Fragment() {
 

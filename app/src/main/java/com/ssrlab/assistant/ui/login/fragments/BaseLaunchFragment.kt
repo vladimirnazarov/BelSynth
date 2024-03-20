@@ -15,7 +15,7 @@ import com.ssrlab.assistant.app.MainApplication
 import com.ssrlab.assistant.client.AuthClient
 import com.ssrlab.assistant.databinding.DialogLoadingBinding
 import com.ssrlab.assistant.ui.login.LaunchActivity
-import com.ssrlab.assistant.utils.helpers.TextHelper
+import com.ssrlab.assistant.utils.helpers.text.TextHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

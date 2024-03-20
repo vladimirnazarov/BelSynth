@@ -7,8 +7,8 @@ import androidx.navigation.NavController
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
-import com.ssrlab.assistant.db.objects.chat.ChatInfoObject
-import com.ssrlab.assistant.ui.chat.ChatActivityNew
+import com.ssrlab.assistant.db.objects.ChatInfoObject
+import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.CHAT_ID
 import com.ssrlab.assistant.utils.CHAT_IMAGE
@@ -18,7 +18,7 @@ import com.ssrlab.assistant.utils.CHAT_ROLE_CODE
 import com.ssrlab.assistant.utils.CHAT_ROLE_INT
 import com.ssrlab.assistant.utils.CHAT_SPEAKER
 import com.ssrlab.assistant.utils.NULL
-import com.ssrlab.assistant.utils.helpers.LaunchToolbarAnimHelper
+import com.ssrlab.assistant.utils.helpers.view.LaunchToolbarAnimHelper
 
 class ChooseActivity : BaseActivity() {
 
@@ -36,7 +36,7 @@ class ChooseActivity : BaseActivity() {
         binding = ActivityChooseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        animHelper = LaunchToolbarAnimHelper()
+        animHelper = LaunchToolbarAnimHelper(this@ChooseActivity)
         chatsInfoClient = ChatsInfoClient(this@ChooseActivity)
     }
 
@@ -47,7 +47,7 @@ class ChooseActivity : BaseActivity() {
     }
 
     fun setUpToolbar(title: String = "", isBackButtonVisible: Boolean = false, isAdditionalButtonsVisible: Boolean = false, navController: NavController? = null) {
-        animHelper.setUpToolbar(this@ChooseActivity, binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
+        animHelper.setUpToolbar(binding, title, isBackButtonVisible, isAdditionalButtonsVisible, navController)
     }
 
     private fun getAllChats() {
@@ -55,7 +55,7 @@ class ChooseActivity : BaseActivity() {
             chatsInfoClient.getAllChats({
                 chatsInfoArray = it
             }, {
-                showErrorSnack(it, binding.root)
+                if (it != null) showErrorSnack(it, binding.root)
             })
         }
     }
@@ -86,7 +86,7 @@ class ChooseActivity : BaseActivity() {
      * According to the previous fun
      */
     private fun intentToChat(chatId: String, speaker: String, title: String, img: Int, roleCode: String = "assistant", roleInt: Int = 0, role: String = "") {
-        val intent = Intent(this, ChatActivityNew::class.java)
+        val intent = Intent(this, ChatActivity::class.java)
         intent.apply {
             putExtra(CHAT_SPEAKER, speaker)
             putExtra(CHAT_NAME, title)
@@ -124,11 +124,6 @@ class ChooseActivity : BaseActivity() {
     fun intentToLink(link: String) {
         val webPage = Uri.parse(link)
         val intent = Intent(Intent.ACTION_VIEW, webPage)
-        startActivity(intent)
-    }
-
-    fun intentToTest() {
-        val intent = Intent(this@ChooseActivity, TestActivity::class.java)
         startActivity(intent)
     }
 }
