@@ -99,21 +99,27 @@ class ChatsInfoClient(private val context: Context): CommonClient() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body?.string()
-                    val jObject = responseBody?.let { JSONObject(it) }
+                    
+                    try {
+                        val jObject = responseBody?.let { JSONObject(it) }
 
-                    if (jObject != null) {
-                        val chatInfoObject = ChatInfoObject(
-                            jObject.getInt("id"),
-                            jObject.getString("chat_id"),
-                            jObject.getString("name"),
-                            jObject.getString("bot_name"),
-                            jObject.getString("role")
-                        )
+                        if (jObject != null) {
+                            val chatInfoObject = ChatInfoObject(
+                                jObject.getInt("id"),
+                                jObject.getString("chat_id"),
+                                jObject.getString("name"),
+                                jObject.getString("bot_name"),
+                                jObject.getString("role")
+                            )
 
-                        onSuccess(chatInfoObject)
-                    } else {
-                        val errorMessage = ContextCompat.getString(context, R.string.chat_info_is_empty)
-                        onFailure(errorMessage)
+                            onSuccess(chatInfoObject)
+                        } else {
+                            val errorMessage =
+                                ContextCompat.getString(context, R.string.chat_info_is_empty)
+                            onFailure(errorMessage)
+                        }
+                    } catch (e: JSONException) {
+                        onFailure(e.message.toString())
                     }
                 }
             })

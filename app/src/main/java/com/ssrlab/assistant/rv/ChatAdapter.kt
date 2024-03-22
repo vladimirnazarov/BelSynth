@@ -82,7 +82,7 @@ class ChatAdapter(
                         chatActivity.currentFocus?.clearFocus()
                     }
 
-                    if (position > 0 && messages[position].audio != NULL) {
+                    if (messages[position].audio != NULL) {
                         val audioLink = messages[position].audio
 
                         playView.setOnClickListener { playAudio(link = audioLink) }
