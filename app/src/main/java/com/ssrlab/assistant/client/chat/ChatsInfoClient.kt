@@ -114,8 +114,7 @@ class ChatsInfoClient(private val context: Context): CommonClient() {
 
                             onSuccess(chatInfoObject)
                         } else {
-                            val errorMessage =
-                                ContextCompat.getString(context, R.string.chat_info_is_empty)
+                            val errorMessage = ContextCompat.getString(context, R.string.chat_info_is_empty)
                             onFailure(errorMessage)
                         }
                     } catch (e: JSONException) {
@@ -197,9 +196,9 @@ class ChatsInfoClient(private val context: Context): CommonClient() {
 
                 override fun onResponse(call: Call, response: Response) {
                     val responseBody = response.body?.string()
-                    val jObject = responseBody?.let { JSONObject(it) }
 
                     try {
+                        val jObject = responseBody?.let { JSONObject(it) }
                         val count = jObject?.getInt("msg_count") ?: 0
 
                         dialog.dismiss()
