@@ -77,11 +77,11 @@ class ChatActivity: BaseActivity() {
     private lateinit var audioRecord: AudioRecord
     private lateinit var mediaRecorder: MediaRecorder
     private var isRecording = false
+    private var playableValue = true
 
     private lateinit var imm: InputMethodManager
     private var originalScreenHeight = 0
 
-    private var playableValue = true
     private var chatId = NULL
     private var name = NULL
     private var speaker = NULL
