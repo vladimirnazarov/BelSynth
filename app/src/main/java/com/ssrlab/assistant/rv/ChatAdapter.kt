@@ -73,6 +73,7 @@ class ChatAdapter(
                     share.setOnClickListener {
                         (textMsg.text as String?)?.let { it1 -> chatActivity.shareIntent(it1) }
                     }
+
                     clipboard.setOnClickListener {
                         val clipboardManager = chatActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText(CLIPBOARD_TEXT, textMsg.text)
@@ -82,14 +83,14 @@ class ChatAdapter(
                         chatActivity.currentFocus?.clearFocus()
                     }
 
-                    if (messages[position].audio != NULL) {
+                    if (messages[position] == messages[0]) {
+                        playView.isClickable = false
+                        playButton.visibility = View.GONE
+                    } else {
                         val audioLink = messages[position].audio
 
                         playView.setOnClickListener { playAudio(link = audioLink) }
                         playButton.setOnClickListener { playAudio(link = audioLink) }
-                    } else {
-                        playView.isClickable = false
-                        playButton.visibility = View.GONE
                     }
                 }
 
