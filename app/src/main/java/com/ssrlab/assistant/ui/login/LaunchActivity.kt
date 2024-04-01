@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.ssrlab.assistant.BaseActivity
 import com.ssrlab.assistant.databinding.ActivityLaunchBinding
-import com.ssrlab.assistant.ui.choose.ChooseActivity
 
 @SuppressLint("CustomSplashScreen")
 class LaunchActivity : BaseActivity() {
@@ -36,13 +35,6 @@ class LaunchActivity : BaseActivity() {
         super.onStart()
 
         mainApp.saveSecondLaunch(sharedPreferences)
-    }
-
-    fun intentNext() {
-        val intent = Intent(this@LaunchActivity, ChooseActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
     }
 
     fun googleIntent(callback: (ActivityResult) -> Unit) {

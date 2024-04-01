@@ -1,8 +1,11 @@
 package com.ssrlab.assistant
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -42,5 +45,25 @@ open class BaseActivity: AppCompatActivity() {
             setBackgroundTint(ContextCompat.getColor(context, R.color.error))
             show()
         }
+    }
+
+    fun intentToLink(link: String) {
+        val webPage = Uri.parse(link)
+        val intent = Intent(Intent.ACTION_VIEW, webPage)
+        startActivity(intent)
+    }
+
+    fun intentNext(context: Context, path: Activity) {
+        val intent = Intent(context, path::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    fun intentBack(context: Context, path: Activity) {
+        val intent = Intent(context, path::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 }

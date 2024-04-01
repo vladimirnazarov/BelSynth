@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentRegisterBinding
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 
 class RegisterFragment: BaseLaunchFragment() {
@@ -43,6 +44,14 @@ class RegisterFragment: BaseLaunchFragment() {
         setUpMovementButtons()
         setUpGoogleButton()
         setUpLanguageButton()
+        setUpTextActions()
+    }
+
+    private fun setUpTextActions() {
+        binding.apply {
+            registerTerms2.setOnClickListener { launchActivity.intentToLink("https://docs.google.com/document/d/1soW4-htffK4gBickNBrqL1XffvJZIN9p/edit?rtpof=true") }
+            registerTerms4.setOnClickListener { launchActivity.intentToLink("https://docs.google.com/document/d/17ilRHtBAf6zKs-TdtY4OKPOy8tpuIi4E/edit") }
+        }
     }
 
     private fun setUpLanguageButton() {
@@ -71,7 +80,7 @@ class RegisterFragment: BaseLaunchFragment() {
     private fun setUpGoogleButton() {
         binding.registerGoogleRipple.setOnClickListener {
             authClient.signIn(launchActivity, {
-                launchActivity.intentNext()
+                launchActivity.intentNext(launchActivity, ChooseActivity())
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
                     message = msg,

@@ -44,7 +44,7 @@ class ChooseFragment: BaseChooseFragment() {
     private fun setUpChats() {
         binding.apply {
             chooseDonateButton.setOnClickListener { chooseActivity.intentToLink("https://boosty.to/asistent.ai/donate") }
-            choosePromoteRipple.setOnClickListener { chooseActivity.intentToLink("https://docs.google.com/forms/d/1Xey4v8z7X2xxppEWpjg6uYlKC3YILYBBrwFpumd8zXs/edit") }
+            choosePromoteRipple.setOnClickListener { chooseActivity.intentToLink("https://docs.google.com/forms/d/1Xey4v8z7X2xxppEWpjg6uYlKC3YILYBBrwFpumd8zXs/prefill") }
             chooseSpeaker1Ripple.setOnClickListener { chooseActivity.intentToChat(BOT_1, binding.chooseSpeaker1Name.text.toString(), R.drawable.img_speaker_1) }
             chooseSpeaker2Ripple.setOnClickListener { chooseActivity.intentToChat(BOT_2, binding.chooseSpeaker2Name.text.toString(), R.drawable.img_speaker_2) }
             chooseSpeaker3Ripple.setOnClickListener { chooseActivity.intentToChat(BOT_3, binding.chooseSpeaker3Name.text.toString(), R.drawable.img_speaker_3) }

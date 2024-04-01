@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentEmailConfirmationBinding
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,7 +40,7 @@ class ConfirmEmailFragment: BaseLaunchFragment() {
     private fun checkIfEmailVerified() {
         authClient.awaitIfUserIsVerified(scope) {
             activity?.runOnUiThread {
-                launchActivity.intentNext()
+                launchActivity.intentNext(launchActivity, ChooseActivity())
             }
         }
     }

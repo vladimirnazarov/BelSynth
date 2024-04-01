@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentLoginBinding
+import com.ssrlab.assistant.ui.choose.ChooseActivity
 import com.ssrlab.assistant.ui.login.fragments.BaseLaunchFragment
 
 class LoginFragment: BaseLaunchFragment() {
@@ -34,7 +35,7 @@ class LoginFragment: BaseLaunchFragment() {
         super.onStart()
 
         authClient.automateSignIn(launchActivity, {
-            launchActivity.intentNext()
+            launchActivity.intentNext(launchActivity, ChooseActivity())
         }, {
             launchActivity.showErrorSnack(it, binding.root)
         })
@@ -81,7 +82,7 @@ class LoginFragment: BaseLaunchFragment() {
     private fun setUpGoogleButton() {
         binding.loginGoogleRipple.setOnClickListener {
             authClient.signIn(launchActivity, {
-                launchActivity.intentNext()
+                launchActivity.intentNext(launchActivity, ChooseActivity())
             }, { msg, type ->
                 inputHelper.handleErrorTypes(
                     message = msg,
@@ -120,7 +121,7 @@ class LoginFragment: BaseLaunchFragment() {
                 1 -> {
                     authClient.signIn(login, password, {
                         dialog.dismiss()
-                        launchActivity.intentNext()
+                        launchActivity.intentNext(launchActivity, ChooseActivity())
                     }, { msg, type ->
                         dialog.dismiss()
 

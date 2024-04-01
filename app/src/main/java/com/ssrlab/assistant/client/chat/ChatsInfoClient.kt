@@ -191,6 +191,8 @@ class ChatsInfoClient(private val context: Context): CommonClient() {
             client.newCall(request).enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     dialog.dismiss()
+
+                    onSuccess(0)
                     onFailure(e.message.toString())
                 }
 
@@ -205,12 +207,16 @@ class ChatsInfoClient(private val context: Context): CommonClient() {
                         onSuccess(count)
                     } catch (e: JSONException) {
                         dialog.dismiss()
+
+                        onSuccess(0)
                         onFailure(e.message.toString())
                     }
                 }
             })
         }, {
             val errorMessage = ContextCompat.getString(context, R.string.null_uid)
+
+            onSuccess(0)
             onFailure(errorMessage)
         })
     }
