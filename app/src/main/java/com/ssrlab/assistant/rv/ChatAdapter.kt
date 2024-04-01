@@ -21,7 +21,6 @@ import com.ssrlab.assistant.utils.CLIPBOARD_TEXT
 import com.ssrlab.assistant.utils.NULL
 import com.ssrlab.assistant.utils.USER
 import com.ssrlab.assistant.utils.helpers.text.ChatHelper
-import com.ssrlab.assistant.utils.helpers.other.MediaPlayerObject
 import java.io.File
 
 class ChatAdapter(
@@ -32,8 +31,6 @@ class ChatAdapter(
 
     private val arrayOfButtons = ArrayList<ImageButton>()
     private val playingArray = ArrayList<Boolean>()
-
-    private val mediaObject = MediaPlayerObject
 
     inner class ChatViewHolderNew(item: View) : RecyclerView.ViewHolder(item)
 
@@ -110,11 +107,11 @@ class ChatAdapter(
                             audioPath.substring(1, audioPath.length - 1)
                         } else audioPath
 
-                        duration.text = ChatHelper().convertToTimerMode(mediaObject.getAudioDuration(audioLink))
+                        duration.text = ChatHelper().convertToTimerMode(chatActivity.getMediaPlayer().getAudioDuration(audioLink))
 
                         playButton.setOnClickListener {
                             if (playingArray[arrayOfButtons.indexOf(playButton)]) {
-                                mediaObject.pauseAudio(this@ChatAdapter)
+                                chatActivity.getMediaPlayer().pauseAudio(this@ChatAdapter)
                             } else {
                                 playAudio(playButton, audioLink)
                                 playingArray[arrayOfButtons.indexOf(playButton)] = true
@@ -158,11 +155,11 @@ class ChatAdapter(
 
         val file = File(path, "temp_playable.mp3")
         chatMessagesClient.getAudio(link, file, {
-            mediaObject.pauseAudio()
-            mediaObject.initializeMediaPlayer(chatActivity, file.toUri())
+            chatActivity.getMediaPlayer().pauseAudio()
+            chatActivity.getMediaPlayer().initializeMediaPlayer(chatActivity, file.toUri())
 
-            if (playButton != null) mediaObject.playAudio(playButton, this@ChatAdapter)
-            else mediaObject.playAudio()
+            if (playButton != null) chatActivity.getMediaPlayer().playAudio(playButton, this@ChatAdapter)
+            else chatActivity.getMediaPlayer().playAudio()
         }) {
             chatActivity.getChatViewModel().showErrorMessage(it)
         }

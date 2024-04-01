@@ -12,7 +12,6 @@ import com.ssrlab.assistant.ui.chat.ChatActivity
 import com.ssrlab.assistant.utils.BOT
 import com.ssrlab.assistant.utils.BOT_6
 import com.ssrlab.assistant.utils.helpers.text.ChatHelper
-import com.ssrlab.assistant.utils.helpers.other.MediaPlayerObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -95,7 +94,7 @@ class ChatViewModel(private val chatActivity: ChatActivity) : ViewModel() {
         playable.observe(chatActivity) {
             if (!it) {
                 chatActivity.getBinding().chatToolbarAudio.setImageResource(R.drawable.ic_volume_off)
-                MediaPlayerObject.pauseAudio(adapter = adapter)
+                chatActivity.getMediaPlayer().pauseAudio(adapter = adapter)
             } else {
                 chatActivity.getBinding().chatToolbarAudio.setImageResource(R.drawable.ic_volume_on)
             }
