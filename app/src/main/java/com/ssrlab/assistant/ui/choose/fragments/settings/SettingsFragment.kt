@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.ssrlab.assistant.R
 import com.ssrlab.assistant.databinding.FragmentSettingsBinding
 import com.ssrlab.assistant.ui.choose.fragments.BaseChooseFragment
+import com.ssrlab.assistant.ui.login.LaunchActivity
 
 class SettingsFragment: BaseChooseFragment() {
 
@@ -59,7 +60,7 @@ class SettingsFragment: BaseChooseFragment() {
             initDialog(textResources) {
                 authClient.deleteUser({
                     mainApp.saveUserSignedIn(chooseActivity.sharedPreferences)
-                    chooseActivity.intentBack()
+                    chooseActivity.intentBack(chooseActivity, LaunchActivity())
                 }, {
                     chooseActivity.showErrorSnack(it, binding.root)
                 })
@@ -79,7 +80,7 @@ class SettingsFragment: BaseChooseFragment() {
             initDialog(textResources) {
                 authClient.signOut {
                     mainApp.saveUserSignedIn(chooseActivity.sharedPreferences)
-                    chooseActivity.intentBack()
+                    chooseActivity.intentBack(chooseActivity, LaunchActivity())
                 }
             }
         }

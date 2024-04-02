@@ -49,7 +49,7 @@ import com.ssrlab.assistant.utils.SAMPLE_RATE
 import com.ssrlab.assistant.utils.USER
 import com.ssrlab.assistant.utils.helpers.text.ChatHelper
 import com.ssrlab.assistant.utils.helpers.other.InAppReviewer
-import com.ssrlab.assistant.utils.helpers.other.MediaPlayerObject
+import com.ssrlab.assistant.utils.helpers.other.MainMediaPlayer
 import com.ssrlab.assistant.utils.helpers.view.FFTVisualizerView
 import com.ssrlab.assistant.utils.vm.ChatViewModel
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D
@@ -91,6 +91,7 @@ class ChatActivity: BaseActivity() {
 
     private lateinit var audioFile: File
     private lateinit var adapter: ChatAdapter
+    private lateinit var mediaPlayer: MainMediaPlayer
 
     private var messages = arrayListOf<Message>()
     private lateinit var dialog: Dialog
@@ -108,6 +109,7 @@ class ChatActivity: BaseActivity() {
         chatMessagesClient = ChatMessagesClient(this@ChatActivity)
         chatHelper = ChatHelper()
         database = DatabaseClient(this@ChatActivity)
+        mediaPlayer = MainMediaPlayer()
     }
 
     override fun onStart() {
@@ -124,7 +126,7 @@ class ChatActivity: BaseActivity() {
         super.onStop()
 
         savePlayable()
-        MediaPlayerObject.pauseAudio(adapter)
+        mediaPlayer.pauseAudio(adapter)
     }
 
     private fun getMessages(onSuccess: (ArrayList<Message>) -> Unit, onFailure: () -> Unit) {
@@ -167,7 +169,7 @@ class ChatActivity: BaseActivity() {
                 if (checkPermissions()) {
                     audioFile = initFile()
 
-                    MediaPlayerObject.pauseAudio(adapter = adapter)
+                    mediaPlayer.pauseAudio(adapter = adapter)
 
                     startRecording(audioFile)
                     binding.chatRecordImage.setImageResource(R.drawable.ic_mic_off)
@@ -381,10 +383,10 @@ class ChatActivity: BaseActivity() {
      */
     private fun setupMediaRecorder(outputFile: File) {
         createMediaRecorder(this).apply {
-            setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
+            setAudioSource(MediaRecorder.AudioSource.MIC)
             setAudioSamplingRate(44100)
             setAudioChannels(1)
-            setAudioEncodingBitRate(128000)
+            setAudioEncodingBitRate(16*44100)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setOutputFile(FileOutputStream(outputFile).fd)
@@ -526,7 +528,7 @@ class ChatActivity: BaseActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 audioFile = initFile()
 
-                MediaPlayerObject.pauseAudio(adapter = adapter)
+                mediaPlayer.pauseAudio(adapter = adapter)
 
                 startRecording(audioFile)
                 binding.chatRecordImage.setImageResource(R.drawable.ic_mic_off)
@@ -578,4 +580,5 @@ class ChatActivity: BaseActivity() {
     fun isRecording() = isRecording
     fun getHelper() = chatHelper
     fun getChatViewModel() = viewModel
+    fun getMediaPlayer() = mediaPlayer
 }

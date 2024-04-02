@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-object MediaPlayerObject {
+class MainMediaPlayer {
 
     private var mediaPlayer: MediaPlayer? = null
     private var playerStatus = ""
@@ -89,6 +89,8 @@ object MediaPlayerObject {
 
         try {
             durationMP.setDataSource(link)
+            durationMP.prepare()
+
             val duration = durationMP.duration
             durationMP.release()
 

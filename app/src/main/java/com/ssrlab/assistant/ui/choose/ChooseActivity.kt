@@ -9,7 +9,6 @@ import com.ssrlab.assistant.client.chat.ChatsInfoClient
 import com.ssrlab.assistant.databinding.ActivityChooseBinding
 import com.ssrlab.assistant.db.objects.ChatInfoObject
 import com.ssrlab.assistant.ui.chat.ChatActivity
-import com.ssrlab.assistant.ui.login.LaunchActivity
 import com.ssrlab.assistant.utils.CHAT_ID
 import com.ssrlab.assistant.utils.CHAT_IMAGE
 import com.ssrlab.assistant.utils.CHAT_NAME
@@ -111,19 +110,6 @@ class ChooseActivity : BaseActivity() {
     fun intentToMail() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:hello@asistent.by")
-        startActivity(intent)
-    }
-
-    fun intentBack() {
-        val intent = Intent(this@ChooseActivity, LaunchActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }
-
-    fun intentToLink(link: String) {
-        val webPage = Uri.parse(link)
-        val intent = Intent(Intent.ACTION_VIEW, webPage)
         startActivity(intent)
     }
 }
