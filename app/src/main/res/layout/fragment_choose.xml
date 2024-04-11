@@ -74,7 +74,7 @@
                     android:textColor="@color/donate_title"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:fontFamily="@font/roboto"
+                    android:fontFamily="@font/roboto_bold"
 
                     android:layout_marginTop="16dp"
                     android:layout_marginHorizontal="16dp"
@@ -103,13 +103,15 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/choose_donate_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
 
                     android:text="@string/donate_button"
                     android:textColor="@color/donate_button_text"
                     android:textSize="12sp"
                     android:textAllCaps="false"
                     android:fontFamily="@font/roboto"
+                    android:letterSpacing="0"
+                    android:includeFontPadding="false"
 
                     android:backgroundTint="@color/donate_button_back"
                     app:rippleColor="@color/speaker_ripple"

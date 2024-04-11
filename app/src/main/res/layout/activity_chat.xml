@@ -384,7 +384,7 @@
         android:elevation="4dp"
         android:visibility="gone"
 
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="42dp"
 
         app:layout_constraintBottom_toTopOf="@id/chat_bottom_bar"
         app:layout_constraintStart_toStartOf="parent"

@@ -221,31 +221,34 @@ class ChatMessagesClient(private val context: Context): CommonClient() {
     }
 
     fun getAudio(link: String, file: File, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        val request = Request.Builder()
-            .url(link)
-            .build()
+        if (link != NULL) {
+            val request = Request.Builder()
+                .url(link)
+                .build()
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onFailure(e.message!!)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    response.body?.string()?.let { onFailure(it) }
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailure(e.message!!)
                 }
 
-                else {
-                    val fos = FileOutputStream(file)
-                    fos.write(response.body?.bytes())
-                    fos.close()
+                override fun onResponse(call: Call, response: Response) {
+                    if (!response.isSuccessful) {
+                        response.body?.string()?.let { onFailure(it) }
+                    } else {
+                        val fos = FileOutputStream(file)
+                        fos.write(response.body?.bytes())
+                        fos.close()
 
-                    onSuccess()
+                        onSuccess()
+                    }
+
+                    response.close()
                 }
-
-                response.close()
-            }
-        })
+            })
+        } else {
+            val errorMessage = ContextCompat.getString(context, R.string.null_data)
+            onFailure(errorMessage)
+        }
     }
 
     private fun checkUid(onSuccess: (String) -> Unit, onFailure: () -> Unit) {

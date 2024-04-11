@@ -23,7 +23,7 @@
     <color name="error">#EB5757</color>
 
     <color name="sign_ic">#065986</color>
-    <color name="hint_color">#73747A</color>
+    <color name="hint_color">#D7D7D7</color>
 
     <!--  Choose  -->
     <color name="donate_gradient_1">#DEF0FC</color>

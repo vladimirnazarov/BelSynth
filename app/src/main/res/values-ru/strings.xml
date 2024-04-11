@@ -18,7 +18,7 @@
     <string name="to_sign_up">Зарегистрироваться</string>
     <string name="sign_up">Регистрация</string>
     <string name="sign_up_button">Зарегистрироваться</string>
-    <string name="sign_up_with_google">Зарегистрироваться при помощи Google</string>
+    <string name="sign_up_with_google">Продолжить с Google</string>
     <string name="sign_up_confirm_start">Регистрируясь, вы соглашаетесь с</string>
     <string name="sign_up_confirm_tu">Правилами пользования</string>
     <string name="sign_up_confirm_and">и</string>
@@ -57,7 +57,7 @@
     <string name="assistant_common">Общие ассистенты</string>
 
     <string name="donate_title">Помогите приложению стать лучше!</string>
-    <string name="donate_sub">Пожертвуйте разработчику чашку кофе</string>
+    <string name="donate_sub">Подарите чашку кофе разработчику</string>
     <string name="donate_button">Пожертвовать</string>
 
     <!--  Role  -->
