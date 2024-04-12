@@ -1,7 +1,6 @@
 package com.ssrlab.assistant.utils.helpers.view
 
 import android.view.View
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.navigation.NavController
 import com.ssrlab.assistant.BaseActivity
@@ -18,11 +17,7 @@ class LaunchToolbarAnimHelper(private val activity: BaseActivity) {
             if (title == "") chooseActivityToolbarTitle.startAnimation(alphaOut)
             else chooseActivityToolbarTitle.startAnimation(alphaIn)
 
-            chooseActivityToolbarTitle.animation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(p0: Animation?) {}
-                override fun onAnimationEnd(p0: Animation?) { chooseActivityToolbarTitle.text = title }
-                override fun onAnimationRepeat(p0: Animation?) {}
-            })
+            chooseActivityToolbarTitle.text = title
 
             chooseActivityToolbarBack.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
 

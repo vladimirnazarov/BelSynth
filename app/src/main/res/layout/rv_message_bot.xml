@@ -92,9 +92,9 @@
                     android:src="@drawable/ic_clipboard"
                     android:background="@drawable/ripple_rounded"
 
-                    android:padding="4dp"
+                    android:padding="6dp"
 
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_marginEnd="16dp"
 
                     app:layout_constraintEnd_toEndOf="parent"
@@ -108,9 +108,9 @@
                     android:src="@drawable/ic_share"
                     android:background="@drawable/ripple_rounded"
 
-                    android:padding="4dp"
+                    android:padding="6dp"
 
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_marginEnd="8dp"
 
                     app:layout_constraintEnd_toStartOf="@id/rv_bot_clipboard"
@@ -124,9 +124,9 @@
                     android:src="@drawable/ic_volume_small"
                     android:background="@drawable/ripple_rounded"
 
-                    android:padding="4dp"
+                    android:padding="6dp"
 
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_marginEnd="8dp"
 
                     app:layout_constraintEnd_toStartOf="@id/rv_bot_share"
