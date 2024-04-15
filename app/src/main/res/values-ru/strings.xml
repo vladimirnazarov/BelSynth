@@ -75,6 +75,7 @@
     <string name="role_11">Программист</string>
     <string name="role_12">Учитель</string>
     <string name="role_13">Писатель</string>
+    <string name="role_14">Консультант по кодексам Беларуси</string>
 
     <!--  Settings  -->
     <string name="settings_title">Настройки</string>

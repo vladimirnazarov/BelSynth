@@ -75,6 +75,7 @@
     <string name="role_11">Programmer</string>
     <string name="role_12">Teacher</string>
     <string name="role_13">Writer</string>
+    <string name="role_14">Belarusian legal codes adviser</string>
     <string name="role_additional_1" translatable="false">Прывітанне, я <b>Агульны асістэнт</b>. Як я магу дапамагчы вам?</string>
     <string name="role_additional_2" translatable="false">Прывітанне, я <b>Архітэктар</b>. Гатовы дапамагчы вам з вашымі архітэктурнымі пытаннямі і прадметамі.</string>
     <string name="role_additional_3" translatable="false">Прывітанне, я <b>Бізнэс-аналітык</b>. Як я магу дапамагчы вам?</string>
@@ -88,6 +89,7 @@
     <string name="role_additional_11" translatable="false">Прывітанне, я <b>Праграміст</b>. Я гатовы стаць вашым супрацоўнікам і супольна адкрываць новыя горы ў сферы тэхналогій.</string>
     <string name="role_additional_12" translatable="false">Прывітанне, я <b>Настаўнік</b>. Як я магу дапамагчы вам?</string>
     <string name="role_additional_13" translatable="false">Прывітанне, я <b>Пісьменнік</b>. Я гатовы дапамагчы вам з ідэямі, развіццём сюжэтаў і стварэннем непаўторных літаратурных шэдэўраў.</string>
+    <string name="role_additional_14" translatable="false">Прывітанне, я <b>Кансультант па кодэксах Беларусі</b>. Як я магу дапамагчы вам?</string>
 
     <!--  Settings  -->
     <string name="settings_title">Settings</string>
